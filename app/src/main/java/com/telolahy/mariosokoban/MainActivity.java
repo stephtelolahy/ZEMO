@@ -2,6 +2,9 @@ package com.telolahy.mariosokoban;
 
 import android.view.KeyEvent;
 
+import com.telolahy.mariosokoban.manager.ResourcesManager;
+import com.telolahy.mariosokoban.manager.SceneManager;
+
 import org.andengine.engine.Engine;
 import org.andengine.engine.LimitedFPSEngine;
 import org.andengine.engine.camera.BoundCamera;
@@ -19,9 +22,6 @@ import java.io.IOException;
  */
 public class MainActivity extends BaseGameActivity {
 
-    private static final int CAMERA_WIDTH = 320;
-    private static final int CAMERA_HEIGHT = 480;
-
     private BoundCamera mCamera;
 
     @Override
@@ -31,7 +31,7 @@ public class MainActivity extends BaseGameActivity {
 
     @Override
     public EngineOptions onCreateEngineOptions() {
-        mCamera = new BoundCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+        mCamera = new BoundCamera(0, 0, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED, new FillResolutionPolicy(), mCamera);
         engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
         engineOptions.getRenderOptions().getConfigChooserOptions().setRequestedMultiSampling(true);
@@ -41,14 +41,15 @@ public class MainActivity extends BaseGameActivity {
 
     @Override
     public void onCreateResources(OnCreateResourcesCallback pOnCreateResourcesCallback) throws IOException {
-//        ResourcesManager.prepareManager(mEngine, this, mCamera, getVertexBufferObjectManager());
+
+        ResourcesManager.prepareManager(mEngine, this, mCamera, getVertexBufferObjectManager());
         pOnCreateResourcesCallback.onCreateResourcesFinished();
     }
 
     @Override
     public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback) throws Exception {
 
-//        SceneManager.getInstance().createSplashScene(pOnCreateSceneCallback);
+        SceneManager.getInstance().createSplashScene(pOnCreateSceneCallback);
     }
 
     @Override
