@@ -46,11 +46,9 @@ public class ResourcesManager {
     public ITextureRegion menuParallaxLayerBackRegion;
     public ITextureRegion menuParallaxLayerMidRegion;
     public ITextureRegion menuParallaxLayerFrontRegion;
-    public ITextureRegion menuParallaxLayerSuperFrontRegion;
     public ITextureRegion menuPlayTextureRegion;
     public ITextureRegion menuHelpTextureRegion;
     public TiledTextureRegion menuPlayerTextureRegion;
-    public ITextureRegion menuBoxTextureRegion;
 
     public Font font;
 
@@ -102,10 +100,7 @@ public class ResourcesManager {
         menuParallaxLayerFrontRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_front.png");
         menuParallaxLayerBackRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_back.png");
         menuParallaxLayerMidRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_mid.png");
-        menuParallaxLayerSuperFrontRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_super_front.png");
         menuPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(menuTextureAtlas, activity, "player.png", 4, 4);
-        menuBoxTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "box.png");
-
         menuPlayTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
         menuHelpTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "help.png");
         try {
@@ -125,8 +120,7 @@ public class ResourcesManager {
         font.load();
     }
 
-    private void loadMenuMusics()
-    {
+    private void loadMenuMusics() {
         MusicFactory.setAssetBasePath("mfx/");
         try {
             menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mainscreen.ogg");
