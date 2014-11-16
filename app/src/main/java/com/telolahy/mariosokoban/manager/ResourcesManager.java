@@ -46,6 +46,7 @@ public class ResourcesManager {
     public ITextureRegion menuParallaxLayerBackRegion;
     public ITextureRegion menuParallaxLayerMidRegion;
     public ITextureRegion menuParallaxLayerFrontRegion;
+    public ITextureRegion menuParallaxLayerSuperFrontRegion;
     public ITextureRegion menuPlayTextureRegion;
     public ITextureRegion menuHelpTextureRegion;
     public TiledTextureRegion menuPlayerTextureRegion;
@@ -101,7 +102,8 @@ public class ResourcesManager {
         menuParallaxLayerFrontRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_front.png");
         menuParallaxLayerBackRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_back.png");
         menuParallaxLayerMidRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_mid.png");
-        menuPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(menuTextureAtlas, activity, "player.png", 8, 4);
+        menuParallaxLayerSuperFrontRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_super_front.png");
+        menuPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(menuTextureAtlas, activity, "player.png", 4, 4);
         menuBoxTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "box.png");
 
         menuPlayTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
@@ -128,7 +130,6 @@ public class ResourcesManager {
         MusicFactory.setAssetBasePath("mfx/");
         try {
             menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mainscreen.ogg");
-            menuMusic.setLooping(true);
         } catch (final IOException e) {
             Debug.e(e);
         }

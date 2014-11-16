@@ -29,7 +29,8 @@ public class MainMenuScene extends BaseScene {
         createBackground();
         createMenuChildScene();
 
-        if(! mResourcesManager.menuMusic.isPlaying()) {
+        if (!mResourcesManager.menuMusic.isPlaying()) {
+            mResourcesManager.menuMusic.setLooping(true);
             mResourcesManager.menuMusic.play();
         }
     }
@@ -38,23 +39,23 @@ public class MainMenuScene extends BaseScene {
 
         final AutoParallaxBackground autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0, new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, mResourcesManager.menuParallaxLayerBackRegion, mVertexBufferObjectManager)));
-        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3.f, new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT - mResourcesManager.menuParallaxLayerMidRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegion, mVertexBufferObjectManager)));
+        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-2.f, new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT - mResourcesManager.menuParallaxLayerMidRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegion, mVertexBufferObjectManager)));
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5.f, new Sprite(Constants.CAMERA_WIDTH / 2, mResourcesManager.menuParallaxLayerFrontRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerFrontRegion, mVertexBufferObjectManager)));
+//        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.f, new Sprite(Constants.CAMERA_WIDTH / 2, mResourcesManager.menuParallaxLayerSuperFrontRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerSuperFrontRegion, mVertexBufferObjectManager)));
         setBackground(autoParallaxBackground);
 
-        final int groundY = 32;
+        final int groundY = 28;
         final AnimatedSprite player = new AnimatedSprite(Constants.CAMERA_WIDTH / 2, mResourcesManager.menuPlayerTextureRegion.getHeight() / 2 + groundY, mResourcesManager.menuPlayerTextureRegion, mVertexBufferObjectManager);
-        player.animate(new long[]{200, 200, 200,200, 200, 200,200, 200}, 24, 31, true);
+        player.animate(new long[]{250, 250, 250, 250}, 8, 11, true);
         attachChild(player);
 
-        final Sprite box = new Sprite(player.getX() + player.getWidth() / 2 + mResourcesManager.menuBoxTextureRegion.getWidth() / 2, mResourcesManager.menuBoxTextureRegion.getHeight() / 2 + groundY, mResourcesManager.menuBoxTextureRegion, mVertexBufferObjectManager);
+//        final Sprite box = new Sprite(player.getX() + player.getWidth() / 2 + mResourcesManager.menuBoxTextureRegion.getWidth() / 2, mResourcesManager.menuBoxTextureRegion.getHeight() / 2 + groundY, mResourcesManager.menuBoxTextureRegion, mVertexBufferObjectManager);
 //        attachChild(box);
     }
 
     private void createMenuChildScene() {
 
         mMenuChildScene = new MenuScene(mCamera);
-        mMenuChildScene.setPosition(0, 0);
 
         IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, mResourcesManager.menuPlayTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
         IMenuItem helpMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_HELP, mResourcesManager.menuHelpTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
@@ -93,7 +94,7 @@ public class MainMenuScene extends BaseScene {
     @Override
     public void disposeScene() {
 
-        if(mResourcesManager.menuMusic.isPlaying()) {
+        if (mResourcesManager.menuMusic.isPlaying()) {
             mResourcesManager.menuMusic.pause();
         }
 
