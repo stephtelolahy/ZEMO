@@ -32,15 +32,19 @@ public class ResourcesManager {
     public BoundCamera camera;
     public VertexBufferObjectManager vertexBufferObjectManager;
 
-    public Font font;
-
-    public ITextureRegion splashTextureRegion;
+    // splash resources
     private BitmapTextureAtlas splashTextureAtlas;
+    public ITextureRegion splashTextureRegion;
 
-    public ITextureRegion menuBackgroundTextureRegion;
+    // menu resources
+    private BuildableBitmapTextureAtlas menuTextureAtlas;
+    public ITextureRegion menuParallaxLayerBackRegion;
+    public ITextureRegion menuParallaxLayerMidRegion;
+    public ITextureRegion menuParallaxLayerFrontRegion;
     public ITextureRegion menuPlayTextureRegion;
     public ITextureRegion menuHelpTextureRegion;
-    private BuildableBitmapTextureAtlas menuTextureAtlas;
+
+    public Font font;
 
 
     //---------------------------------------------
@@ -82,18 +86,19 @@ public class ResourcesManager {
     private void loadMenuGraphics() {
 
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
-        menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
-        menuBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_background.png");
+
+        menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024);
+        menuParallaxLayerFrontRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_front.png");
+        menuParallaxLayerBackRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_back.png");
+        menuParallaxLayerMidRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_mid.png");
         menuPlayTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
         menuHelpTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "help.png");
-
         try {
             menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
             menuTextureAtlas.load();
         } catch (final ITextureAtlasBuilder.TextureAtlasBuilderException e) {
             Debug.e(e);
         }
-
     }
 
     private void loadMenuFonts() {
