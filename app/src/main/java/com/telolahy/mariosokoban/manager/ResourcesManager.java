@@ -138,4 +138,11 @@ public class ResourcesManager {
     }
 
 
+    public void loadGameResources() {
+
+    }
+
+    public void unloadGameTextures() {
+
+    }
 }

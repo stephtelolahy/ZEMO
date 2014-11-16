@@ -1,6 +1,7 @@
 package com.telolahy.mariosokoban.scene;
 
 import com.telolahy.mariosokoban.Constants;
+import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
@@ -20,8 +21,6 @@ public class MainMenuScene extends BaseScene {
 
     private static final int MENU_PLAY = 0;
     private static final int MENU_HELP = 1;
-
-    private Sprite mBackground;
 
     @Override
     public void createScene() {
@@ -67,7 +66,7 @@ public class MainMenuScene extends BaseScene {
 
                 switch (pMenuItem.getID()) {
                     case MENU_PLAY:
-//                        SceneManager.getInstance().loadGameScene();
+                        SceneManager.getInstance().createGameScene();
                         return true;
                     case MENU_HELP:
                         return true;
@@ -94,8 +93,6 @@ public class MainMenuScene extends BaseScene {
             mResourcesManager.menuMusic.pause();
         }
 
-        mBackground.detachSelf();
-        mBackground.dispose();
         this.detachSelf();
         this.dispose();
     }
