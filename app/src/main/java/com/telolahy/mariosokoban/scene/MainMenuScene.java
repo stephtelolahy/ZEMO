@@ -8,6 +8,7 @@ import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 
 /**
@@ -32,10 +33,18 @@ public class MainMenuScene extends BaseScene {
     private void createBackground() {
 
         final AutoParallaxBackground autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
-        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0.0f, new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, mResourcesManager.menuParallaxLayerBackRegion, mVertexBufferObjectManager)));
-        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5.0f, new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT  - mResourcesManager.menuParallaxLayerMidRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegion, mVertexBufferObjectManager)));
-        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.0f, new Sprite(Constants.CAMERA_WIDTH / 2, mResourcesManager.menuParallaxLayerFrontRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerFrontRegion, mVertexBufferObjectManager)));
+        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0, new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, mResourcesManager.menuParallaxLayerBackRegion, mVertexBufferObjectManager)));
+        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5.f, new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT - mResourcesManager.menuParallaxLayerMidRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegion, mVertexBufferObjectManager)));
+        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.f, new Sprite(Constants.CAMERA_WIDTH / 2, mResourcesManager.menuParallaxLayerFrontRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerFrontRegion, mVertexBufferObjectManager)));
         setBackground(autoParallaxBackground);
+
+        final int groundY = 32;
+        final AnimatedSprite player = new AnimatedSprite(Constants.CAMERA_WIDTH / 3, mResourcesManager.menuPlayerTextureRegion.getHeight() / 2 + groundY, mResourcesManager.menuPlayerTextureRegion, mVertexBufferObjectManager);
+        player.animate(new long[]{200, 200, 200}, 3, 5, true);
+        attachChild(player);
+
+        final Sprite box = new Sprite(player.getX() + player.getWidth() / 2 + mResourcesManager.menuBoxTextureRegion.getWidth() / 2, mResourcesManager.menuBoxTextureRegion.getHeight() / 2 + groundY, mResourcesManager.menuBoxTextureRegion, mVertexBufferObjectManager);
+        attachChild(box);
     }
 
     private void createMenuChildScene() {

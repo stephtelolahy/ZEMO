@@ -17,6 +17,7 @@ import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSourc
 import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
 import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 
@@ -43,6 +44,8 @@ public class ResourcesManager {
     public ITextureRegion menuParallaxLayerFrontRegion;
     public ITextureRegion menuPlayTextureRegion;
     public ITextureRegion menuHelpTextureRegion;
+    public TiledTextureRegion menuPlayerTextureRegion;
+    public ITextureRegion menuBoxTextureRegion;
 
     public Font font;
 
@@ -87,10 +90,13 @@ public class ResourcesManager {
 
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
 
-        menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024);
+        menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
         menuParallaxLayerFrontRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_front.png");
         menuParallaxLayerBackRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_back.png");
         menuParallaxLayerMidRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_mid.png");
+        menuPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(menuTextureAtlas, activity, "player.png", 3, 4);
+        menuBoxTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "box.png");
+
         menuPlayTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
         menuHelpTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "help.png");
         try {
