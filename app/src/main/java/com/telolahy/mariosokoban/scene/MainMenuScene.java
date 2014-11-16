@@ -2,6 +2,8 @@ package com.telolahy.mariosokoban.scene;
 
 import com.telolahy.mariosokoban.Constants;
 
+import org.andengine.entity.scene.background.AutoParallaxBackground;
+import org.andengine.entity.scene.background.ParallaxBackground;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
@@ -29,8 +31,13 @@ public class MainMenuScene extends BaseScene {
 
     private void createBackground() {
 
-        mBackground = new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, mResourcesManager.menuBackgroundTextureRegion, mVertexBufferObjectManager);
-        attachChild(mBackground);
+//        mBackground = new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, mResourcesManager.menuBackgroundTextureRegion, mVertexBufferObjectManager);
+//        attachChild(mBackground);
+
+        final AutoParallaxBackground autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
+        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.0f, new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, mResourcesManager.menuBackgroundTextureRegion, mVertexBufferObjectManager)));
+        setBackground(autoParallaxBackground);
+
     }
 
     private void createMenuChildScene() {
