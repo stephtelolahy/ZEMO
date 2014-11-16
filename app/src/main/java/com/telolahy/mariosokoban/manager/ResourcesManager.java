@@ -4,6 +4,8 @@ import android.graphics.Color;
 
 import com.telolahy.mariosokoban.MainActivity;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
 import org.andengine.opengl.font.Font;
@@ -20,6 +22,8 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
+
+import java.io.IOException;
 
 /**
  * Created by stephanohuguestelolahy on 11/15/14.
@@ -48,6 +52,8 @@ public class ResourcesManager {
     public ITextureRegion menuBoxTextureRegion;
 
     public Font font;
+
+    public Music menuMusic;
 
 
     //---------------------------------------------
@@ -84,6 +90,7 @@ public class ResourcesManager {
 
         loadMenuGraphics();
         loadMenuFonts();
+        loadMenuMusics();
     }
 
     private void loadMenuGraphics() {
@@ -94,7 +101,7 @@ public class ResourcesManager {
         menuParallaxLayerFrontRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_front.png");
         menuParallaxLayerBackRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_back.png");
         menuParallaxLayerMidRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_mid.png");
-        menuPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(menuTextureAtlas, activity, "player.png", 3, 4);
+        menuPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(menuTextureAtlas, activity, "player.png", 8, 4);
         menuBoxTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "box.png");
 
         menuPlayTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
@@ -114,6 +121,17 @@ public class ResourcesManager {
 
         font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
         font.load();
+    }
+
+    private void loadMenuMusics()
+    {
+        MusicFactory.setAssetBasePath("mfx/");
+        try {
+            menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mainscreen.ogg");
+            menuMusic.setLooping(true);
+        } catch (final IOException e) {
+            Debug.e(e);
+        }
     }
 
     public void unloadMenuTextures() {
