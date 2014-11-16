@@ -54,6 +54,15 @@ public class ResourcesManager {
 
     public Music menuMusic;
 
+    // game resources
+    private BuildableBitmapTextureAtlas gameTextureAtlas;
+    public ITextureRegion gameGrassBackgroundTextureRegion;
+    public ITextureRegion gameBoxTextureRegion;
+    public ITextureRegion gameBoxOKTextureRegion;
+    public ITextureRegion gameWallTextureRegion;
+    public ITextureRegion gameTargetTextureRegion;
+    public TiledTextureRegion gamePlayerTextureRegion;
+
 
     //---------------------------------------------
     // GETTERS AND SETTERS
@@ -121,6 +130,7 @@ public class ResourcesManager {
     }
 
     private void loadMenuMusics() {
+
         MusicFactory.setAssetBasePath("mfx/");
         try {
             menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mainscreen.ogg");
@@ -140,9 +150,30 @@ public class ResourcesManager {
 
     public void loadGameResources() {
 
+        loadGameGraphics();
+    }
+
+    private void loadGameGraphics() {
+
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
+
+        gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 256, 256);
+        gameGrassBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "background_grass.png");
+        gameBoxTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "box.png");
+        gameBoxOKTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "box_ok.png");
+        gameWallTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "wall.png");
+        gameTargetTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "target.png");
+        gamePlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 4, 1);
+        try {
+            gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+            gameTextureAtlas.load();
+        } catch (final ITextureAtlasBuilder.TextureAtlasBuilderException e) {
+            Debug.e(e);
+        }
     }
 
     public void unloadGameTextures() {
 
+        gameTextureAtlas.unload();
     }
 }
