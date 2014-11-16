@@ -12,8 +12,13 @@ import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
+import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
+import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
+import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+import org.andengine.util.debug.Debug;
 
 /**
  * Created by stephanohuguestelolahy on 11/15/14.
@@ -31,6 +36,11 @@ public class ResourcesManager {
 
     public ITextureRegion splashTextureRegion;
     private BitmapTextureAtlas splashTextureAtlas;
+
+    public ITextureRegion menuBackgroundTextureRegion;
+    public ITextureRegion menuPlayTextureRegion;
+    public ITextureRegion menuHelpTextureRegion;
+    private BuildableBitmapTextureAtlas menuTextureAtlas;
 
 
     //---------------------------------------------
@@ -71,6 +81,19 @@ public class ResourcesManager {
 
     private void loadMenuGraphics() {
 
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
+        menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+        menuBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_background.png");
+        menuPlayTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
+        menuHelpTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "help.png");
+
+        try {
+            menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+            menuTextureAtlas.load();
+        } catch (final ITextureAtlasBuilder.TextureAtlasBuilderException e) {
+            Debug.e(e);
+        }
+
     }
 
     private void loadMenuFonts() {
@@ -80,6 +103,14 @@ public class ResourcesManager {
 
         font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
         font.load();
+    }
+
+    public void unloadMenuTextures() {
+        menuTextureAtlas.unload();
+    }
+
+    public void loadMenuTextures() {
+        menuTextureAtlas.load();
     }
 
 

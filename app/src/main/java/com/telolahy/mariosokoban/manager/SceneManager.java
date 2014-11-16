@@ -1,6 +1,7 @@
 package com.telolahy.mariosokoban.manager;
 
 import com.telolahy.mariosokoban.scene.BaseScene;
+import com.telolahy.mariosokoban.scene.MainMenuScene;
 import com.telolahy.mariosokoban.scene.SplashScene;
 
 import org.andengine.engine.Engine;
@@ -16,6 +17,7 @@ public class SceneManager {
     private Engine mEngine = ResourcesManager.getInstance().engine;
     private BaseScene mCurrentScene;
     private BaseScene mSplashScene;
+    private BaseScene mMenuScene;
 
     public static SceneManager getInstance() {
         return INSTANCE;
@@ -25,6 +27,11 @@ public class SceneManager {
 
         mEngine.setScene(scene);
         mCurrentScene = scene;
+    }
+
+    public BaseScene getCurrentScene() {
+
+        return mCurrentScene;
     }
 
     public void createSplashScene(IGameInterface.OnCreateSceneCallback pOnCreateSceneCallback) {
@@ -42,9 +49,12 @@ public class SceneManager {
         mSplashScene = null;
     }
 
-    public BaseScene getCurrentScene() {
+    public void createMenuScene() {
 
-        return mCurrentScene;
+        ResourcesManager.getInstance().loadMenuResources();
+        mMenuScene = new MainMenuScene();
+//        mLoadingScene = new LoadingScene();
+        setScene(mMenuScene);
+        disposeSplashScene();
     }
-
 }
