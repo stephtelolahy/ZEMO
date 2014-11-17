@@ -1,5 +1,6 @@
 package com.telolahy.mariosokoban.scene;
 
+import android.graphics.Point;
 import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
@@ -31,10 +32,11 @@ public class GameScene extends BaseScene {
 
 
     private RepeatingSpriteBackground mGrassBackground;
-    private AnimatedSprite mPlayer;
+    private AnimatedSprite mMario;
+    private Point mMarioPosition;
     private ArrayList<Sprite> mBoxes;
 
-    private GameMap mMap;
+    private GameMap mGameMap;
 
     @Override
     public void createScene() {
@@ -93,16 +95,16 @@ public class GameScene extends BaseScene {
 
     private void loadLevel(int level) {
 
-        GameMap gameMap = new GameMap();
-        gameMap.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
+        mGameMap = new GameMap();
+        mGameMap.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
 
-        for (int y = 0; y < gameMap.getSizeY(); y++) {
-            for (int x = 0; x < gameMap.getSizeX(); x++) {
+        for (int y = 0; y < mGameMap.getSizeY(); y++) {
+            for (int x = 0; x < mGameMap.getSizeX(); x++) {
 
                 int posX = X0 + x * BLOC_SIZE + BLOC_SIZE / 2;
                 int posY = Y0 + y * BLOC_SIZE + BLOC_SIZE / 2;
 
-                switch (gameMap.getElement(x, y)) {
+                switch (mGameMap.getElement(x, y)) {
 
                     case GameMap.WALL:
 
@@ -130,8 +132,9 @@ public class GameScene extends BaseScene {
 
                     case GameMap.PLAYER:
 
-                        mPlayer = new AnimatedSprite(posX, posY, mResourcesManager.gamePlayerTextureRegion, mVertexBufferObjectManager);
-                        attachChild(mPlayer);
+                        mMario = new AnimatedSprite(posX, posY, mResourcesManager.gamePlayerTextureRegion, mVertexBufferObjectManager);
+                        attachChild(mMario);
+                        mMarioPosition = new Point(x, y);
                         break;
 
                     case GameMap.PLAYER_ON_GOAL:
@@ -169,119 +172,110 @@ public class GameScene extends BaseScene {
         int direction = getDirection(dx, dy);
         Log.i("", "dx:" + dx + " dy:" + dy + " dir: " + direction);
 
+        int x = mMarioPosition.x;
+        int y = mMarioPosition.y;
+
         switch (direction) {
             case UP:
-                mPlayer.setPosition(mPlayer.getX(), mPlayer.getY() + BLOC_SIZE);
-                mPlayer.setCurrentTileIndex(direction);
-                break;
 
-            case DOWN:
-                mPlayer.setPosition(mPlayer.getX(), mPlayer.getY() - BLOC_SIZE);
-                mPlayer.setCurrentTileIndex(direction);
-                break;
-
-            case LEFT:
-                mPlayer.setPosition(mPlayer.getX() - BLOC_SIZE, mPlayer.getY());
-                mPlayer.setCurrentTileIndex(direction);
-                break;
-
-            case RIGHT:
-                mPlayer.setPosition(mPlayer.getX() + BLOC_SIZE, mPlayer.getY());
-                mPlayer.setCurrentTileIndex(direction);
-                break;
-
-            default:
-                break;
-        }
-
-        /*
-        int x = pos_mario.x;
-        int y = pos_mario.y;
-
-        switch (dir) {
-
-            case UP:
                 // Si le joueur dÈpasse l'Ècran, ou
                 // s'il y a un mur, on arrÍte
-                if (y - 1 < 0 || map.getEl(x, y - 1) == Map.WALL)
+                if (y + 1 >= mGameMap.getSizeY() || mGameMap.getElement(x, y + 1) == GameMap.WALL) {
                     break;
-                // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
-                // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (map.getEl(x, y - 1) == Map.BOX || map.getEl(x, y - 1) == Map.OK_BOX) {
-                    if (y - 2 >= 0 && (map.getEl(x, y - 2) == Map.EMPTY || map.getEl(x, y - 2) == Map.GOAL))
-                        // Il y a une caisse ‡ dÈplacer
-                        moveBox(x, y - 1, x, y - 2);
-                    else
-                        break; //sinon on arrÍte
                 }
-                pos_mario.y--; // On peut enfin faire monter mario (oufff !)
-                break;
 
-            case DOWN:
-                // Si le joueur dÈpasse l'Ècran, ou
-                // s'il y a un mur, on arrÍte
-                if (y + 1 >= map.ym || map.getEl(x, y + 1) == Map.WALL)
-                    break;
                 // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
-                // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (map.getEl(x, y + 1) == Map.BOX || map.getEl(x, y + 1) == Map.OK_BOX) {
-                    if (y + 2 < map.ym && (map.getEl(x, y + 2) == Map.EMPTY || map.getEl(x, y + 2) == Map.GOAL))
+                // de mur derriËre (ou une autre caisse)
+                if (mGameMap.getElement(x, y + 1) == GameMap.BOX || mGameMap.getElement(x, y + 1) == GameMap.BOX_OK) {
+
+                    if (y + 2 < mGameMap.getSizeY()
+                            && (mGameMap.getElement(x, y + 2) == GameMap.EMPTY || mGameMap.getElement(x, y + 2) == GameMap.GOAL))
                         // Il y a une caisse ‡ dÈplacer
                         moveBox(x, y + 1, x, y + 2);
                     else
                         break; //sinon on arrÍte
                 }
-                pos_mario.y++; // On peut enfin faire descendre mario (oufff !)
+
+                mMarioPosition.y++; // On peut enfin faire monter mario (oufff !)
+                mMario.setPosition(mMario.getX(), mMario.getY() + BLOC_SIZE);
+                mMario.setCurrentTileIndex(direction);
+                break;
+
+            case DOWN:
+
+                // Si le joueur dÈpasse l'Ècran, ou
+                // s'il y a un mur, on arrÍte
+                if (y - 1 < 0 || mGameMap.getElement(x, y - 1) == GameMap.WALL)
+                    break;
+
+                // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
+                // de mur derriËre (ou une autre caisse, ou la limite du monde)
+                if (mGameMap.getElement(x, y - 1) == GameMap.BOX || mGameMap.getElement(x, y - 1) == GameMap.BOX_OK) {
+                    if (y - 2 < 0 && (mGameMap.getElement(x, y - 2) == GameMap.EMPTY || mGameMap.getElement(x, y - 2) == GameMap.GOAL))
+                        // Il y a une caisse ‡ dÈplacer
+                        moveBox(x, y - 1, x, y - 2);
+                    else
+                        break; //sinon on arrÍte
+                }
+                mMarioPosition.y--; // On peut enfin faire descendre mario (oufff !)
+                mMario.setPosition(mMario.getX(), mMario.getY() - BLOC_SIZE);
+                mMario.setCurrentTileIndex(direction);
                 break;
 
             case LEFT:
                 // Si le joueur dÈpasse l'Ècran, ou
                 // s'il y a un mur, on arrÍte
-                if (x - 1 < 0 || map.getEl(x - 1, y) == Map.WALL)
+                if (x - 1 < 0 || mGameMap.getElement(x - 1, y) == GameMap.WALL)
                     break;
                 // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
                 // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (map.getEl(x - 1, y) == Map.BOX || map.getEl(x - 1, y) == Map.OK_BOX) {
-                    if (x - 2 >= 0 && (map.getEl(x - 2, y) == Map.EMPTY || map.getEl(x - 2, y) == Map.GOAL))
+                if (mGameMap.getElement(x - 1, y) == GameMap.BOX || mGameMap.getElement(x - 1, y) == GameMap.BOX_OK) {
+                    if (x - 2 >= 0 && (mGameMap.getElement(x - 2, y) == GameMap.EMPTY || mGameMap.getElement(x - 2, y) == GameMap.GOAL))
                         // Il y a une caisse ‡ dÈplacer
                         moveBox(x - 1, y, x - 2, y);
                     else
                         break; //sinon on arrÍte
                 }
-                pos_mario.x--; // On peut enfin faire bouger mario ‡ gauche (oufff !)
+                mMarioPosition.x--; // On peut enfin faire bouger mario ‡ gauche (oufff !)
+                mMario.setPosition(mMario.getX() - BLOC_SIZE, mMario.getY());
+                mMario.setCurrentTileIndex(direction);
                 break;
 
             case RIGHT:
                 // Si le joueur dÈpasse l'Ècran, ou
                 // s'il y a un mur, on arrÍte
-                if (x + 1 >= map.ym || map.getEl(x + 1, y) == Map.WALL)
+                if (x + 1 >= mGameMap.getSizeX() || mGameMap.getElement(x + 1, y) == GameMap.WALL)
                     break;
                 // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
                 // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (map.getEl(x + 1, y) == Map.BOX || map.getEl(x + 1, y) == Map.OK_BOX) {
-                    if (x + 2 < map.xm && (map.getEl(x + 2, y) == Map.EMPTY || map.getEl(x + 2, y) == Map.GOAL))
+                if (mGameMap.getElement(x + 1, y) == GameMap.BOX || mGameMap.getElement(x + 1, y) == GameMap.BOX_OK) {
+                    if (x + 2 < mGameMap.getSizeX() && (mGameMap.getElement(x + 2, y) == GameMap.EMPTY || mGameMap.getElement(x + 2, y) == GameMap.GOAL))
                         // Il y a une caisse ‡ dÈplacer
                         moveBox(x + 1, y, x + 2, y);
                     else
                         break; //sinon on arrÍte
                 }
-                pos_mario.x++; // On peut enfin faire descendre mario (oufff !)
+                mMarioPosition.x++; // On peut enfin faire descendre mario (oufff !)
+                mMario.setPosition(mMario.getX() + BLOC_SIZE, mMario.getY());
+                mMario.setCurrentTileIndex(direction);
+                break;
+
+            default:
                 break;
         }
-        */
     }
 
     private void moveBox(int sourceX, int sourceY, int targetX, int targetY) {
 
-        if (mMap.getElement(sourceX, sourceY) == GameMap.BOX_OK)
-            mMap.setElement(sourceX, sourceY, GameMap.GOAL);
+        if (mGameMap.getElement(sourceX, sourceY) == GameMap.BOX_OK)
+            mGameMap.setElement(sourceX, sourceY, GameMap.GOAL);
         else
-            mMap.setElement(sourceX, sourceY, GameMap.EMPTY);
+            mGameMap.setElement(sourceX, sourceY, GameMap.EMPTY);
 
-        if (mMap.getElement(targetX, targetY) == GameMap.GOAL)
-            mMap.setElement(targetX, targetY, GameMap.BOX_OK);
+        if (mGameMap.getElement(targetX, targetY) == GameMap.GOAL)
+            mGameMap.setElement(targetX, targetY, GameMap.BOX_OK);
         else
-            mMap.setElement(targetX, targetY, GameMap.BOX);
+            mGameMap.setElement(targetX, targetY, GameMap.BOX);
     }
 
 }
