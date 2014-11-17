@@ -1,5 +1,6 @@
 package com.telolahy.mariosokoban.scene;
 
+import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.entity.scene.background.RepeatingSpriteBackground;
@@ -14,9 +15,9 @@ public class GameScene extends BaseScene {
     @Override
     public void createScene() {
 
-        createHUD();
         createBackground();
         loadLevel(1);
+        createHUD();
     }
 
 
@@ -33,6 +34,8 @@ public class GameScene extends BaseScene {
 
     private void createBackground() {
 
+        mGrassBackground = new RepeatingSpriteBackground(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
+        setBackground(mGrassBackground);
     }
 
     private void createHUD() {

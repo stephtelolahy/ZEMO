@@ -18,7 +18,9 @@ import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
 import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
 import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder;
+import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
@@ -56,12 +58,14 @@ public class ResourcesManager {
 
     // game resources
     private BuildableBitmapTextureAtlas gameTextureAtlas;
-    public ITextureRegion gameGrassBackgroundTextureRegion;
     public ITextureRegion gameBoxTextureRegion;
     public ITextureRegion gameBoxOKTextureRegion;
     public ITextureRegion gameWallTextureRegion;
     public ITextureRegion gameTargetTextureRegion;
     public TiledTextureRegion gamePlayerTextureRegion;
+
+    private ITexture gameBackgroundTexture;
+    public ITextureRegion gameGrassBackgroundTextureRegion;
 
 
     //---------------------------------------------
@@ -102,6 +106,7 @@ public class ResourcesManager {
     }
 
     private void loadMenuGraphics() {
+
 
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
 
@@ -158,7 +163,6 @@ public class ResourcesManager {
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
 
         gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 256, 256);
-        gameGrassBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "background_grass.png");
         gameBoxTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "box.png");
         gameBoxOKTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "box_ok.png");
         gameWallTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "wall.png");
@@ -168,6 +172,14 @@ public class ResourcesManager {
             gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
             gameTextureAtlas.load();
         } catch (final ITextureAtlasBuilder.TextureAtlasBuilderException e) {
+            Debug.e(e);
+        }
+
+        try {
+            gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/background_grass.png", TextureOptions.REPEATING_NEAREST);
+            gameBackgroundTexture.load();
+            gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
+        } catch (IOException e) {
             Debug.e(e);
         }
     }
