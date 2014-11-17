@@ -1,7 +1,6 @@
 package com.telolahy.mariosokoban.core;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,13 +16,13 @@ public class GameMap {
     public static final char EMPTY = ' ';
     public static final char WALL = '#';
     public static final char BOX = '$';
-    public static final char OK_BOX = '*';
+    public static final char BOX_OK = '*';
     public static final char GOAL = '.';
     public static final char PLAYER = '@';
     public static final char PLAYER_ON_GOAL = '+';
 
-    public int sizeX;
-    public int sizeY;
+    private int mSizeX;
+    private int mSizeY;
     private char mElement[][];
 
     public void loadLevel(String file, Context context) {
@@ -50,15 +49,15 @@ public class GameMap {
             e.printStackTrace();
         }
 
-        sizeX = columnsCount;
-        sizeY = linesCount;
-        mElement = new char[sizeX][sizeY];
+        mSizeX = columnsCount;
+        mSizeY = linesCount;
+        mElement = new char[columnsCount][linesCount];
 
-        for (int y = 0; y < sizeY; y++) {
+        for (int y = 0; y < linesCount; y++) {
 
             String line = lines.get(linesCount - 1 - y);
             int lineLengh = line.length();
-            for (int x = 0; x < sizeX; x++) {
+            for (int x = 0; x < columnsCount; x++) {
 
                 if (x < lineLengh) {
                     mElement[x][y] = line.charAt(x);
@@ -67,13 +66,14 @@ public class GameMap {
                 }
             }
         }
+    }
 
-        Log.i("", "loaded level: " + sizeX + "x" + sizeY);
-        for (int y = 0; y < sizeY; y++) {
-            for (int x = 0; x < sizeX; x++) {
-                Log.i("", y + ":" + x + ": '" + mElement[x][y] + "'");
-            }
-        }
+    public int getSizeX() {
+        return mSizeX;
+    }
+
+    public int getSizeY() {
+        return mSizeY;
     }
 
     public int getElement(int x, int y) {
