@@ -30,6 +30,7 @@ public class MainMenuScene extends BaseScene {
 
         if (!mResourcesManager.menuMusic.isPlaying()) {
             mResourcesManager.menuMusic.setLooping(true);
+            mResourcesManager.menuMusic.setVolume(0.4f);
             mResourcesManager.menuMusic.play();
         }
     }
