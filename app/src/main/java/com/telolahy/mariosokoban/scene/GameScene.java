@@ -8,7 +8,6 @@ import com.telolahy.mariosokoban.manager.SceneManager;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.entity.scene.background.RepeatingSpriteBackground;
-import org.andengine.entity.sprite.Sprite;
 
 /**
  * Created by stephanohuguestelolahy on 11/16/14.

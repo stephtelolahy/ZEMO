@@ -13,11 +13,6 @@ import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
-import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
-import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
-import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
-import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
@@ -40,11 +35,16 @@ public class ResourcesManager {
     public VertexBufferObjectManager vertexBufferObjectManager;
 
     // splash resources
-    private BitmapTextureAtlas splashTextureAtlas;
+    private ITexture splashTexture;
     public ITextureRegion splashTextureRegion;
 
     // menu resources
-    private BuildableBitmapTextureAtlas menuTextureAtlas;
+    private ITexture menuParallaxLayerBackTexture;
+    private ITexture menuParallaxLayerMidTexture;
+    private ITexture menuParallaxLayerFrontTexture;
+    private ITexture menuPlayTexture;
+    private ITexture menuHelpTexture;
+    private ITexture menuPlayerTexture;
     public ITextureRegion menuParallaxLayerBackRegion;
     public ITextureRegion menuParallaxLayerMidRegion;
     public ITextureRegion menuParallaxLayerFrontRegion;
@@ -53,11 +53,14 @@ public class ResourcesManager {
     public TiledTextureRegion menuPlayerTextureRegion;
 
     public Font font;
-
     public Music menuMusic;
 
     // game resources
-    private BuildableBitmapTextureAtlas gameTextureAtlas;
+    private ITexture gameBoxTexture;
+    private ITexture gameBoxOKTexture;
+    private ITexture gameWallTexture;
+    private ITexture gameTargetTexture;
+    private ITexture gamePlayerTexture;
     public ITextureRegion gameBoxTextureRegion;
     public ITextureRegion gameBoxOKTextureRegion;
     public ITextureRegion gameWallTextureRegion;
@@ -90,15 +93,18 @@ public class ResourcesManager {
 
     public void loadSplashResources() {
 
-        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/splash/");
-        splashTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
-        splashTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(splashTextureAtlas, activity, "creative_games_logo.png", 0, 0);
-        splashTextureAtlas.load();
+        try {
+            splashTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/splash/creative_games_logo.png", TextureOptions.BILINEAR);
+            splashTextureRegion = TextureRegionFactory.extractFromTexture(splashTexture);
+            splashTexture.load();
+        } catch (IOException e) {
+            Debug.e(e);
+        }
     }
 
     public void unloadSplashResources() {
 
-        splashTextureAtlas.unload();
+        splashTexture.unload();
         splashTextureRegion = null;
     }
 
@@ -111,49 +117,77 @@ public class ResourcesManager {
 
     private void loadMenuGraphics() {
 
-
-        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
-
-        menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
-        menuParallaxLayerFrontRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_front.png");
-        menuParallaxLayerBackRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_back.png");
-        menuParallaxLayerMidRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "parallax_background_layer_mid.png");
-        menuPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(menuTextureAtlas, activity, "player.png", 4, 4);
-        menuPlayTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
-        menuHelpTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "help.png");
         try {
-            menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
-            menuTextureAtlas.load();
-        } catch (final ITextureAtlasBuilder.TextureAtlasBuilderException e) {
+            menuParallaxLayerFrontTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/parallax_background_layer_front.png", TextureOptions.BILINEAR);
+            menuParallaxLayerFrontRegion = TextureRegionFactory.extractFromTexture(menuParallaxLayerFrontTexture);
+            menuParallaxLayerFrontTexture.load();
+
+            menuParallaxLayerMidTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/parallax_background_layer_mid.png", TextureOptions.BILINEAR);
+            menuParallaxLayerMidRegion = TextureRegionFactory.extractFromTexture(menuParallaxLayerMidTexture);
+            menuParallaxLayerMidTexture.load();
+
+            menuParallaxLayerBackTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/parallax_background_layer_back.png", TextureOptions.BILINEAR);
+            menuParallaxLayerBackRegion = TextureRegionFactory.extractFromTexture(menuParallaxLayerBackTexture);
+            menuParallaxLayerBackTexture.load();
+
+            menuPlayTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/play.png", TextureOptions.BILINEAR);
+            menuPlayTextureRegion = TextureRegionFactory.extractFromTexture(menuPlayTexture);
+            menuPlayTexture.load();
+
+            menuHelpTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/help.png", TextureOptions.BILINEAR);
+            menuHelpTextureRegion = TextureRegionFactory.extractFromTexture(menuHelpTexture);
+            menuHelpTexture.load();
+
+            menuPlayerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/player.png", TextureOptions.BILINEAR);
+            menuPlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(menuPlayerTexture, 4, 4);
+            menuPlayerTexture.load();
+
+        } catch (IOException e) {
             Debug.e(e);
         }
     }
 
     private void loadMenuFonts() {
 
-        FontFactory.setAssetBasePath("font/");
         final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-
-        font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
+        font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font/font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
         font.load();
     }
 
     private void loadMenuMusics() {
 
-        MusicFactory.setAssetBasePath("mfx/");
         try {
-            menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mainscreen.ogg");
+            menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/mainscreen.ogg");
         } catch (final IOException e) {
             Debug.e(e);
         }
     }
 
     public void unloadMenuTextures() {
-        menuTextureAtlas.unload();
+
+        menuParallaxLayerBackTexture.unload();
+        menuParallaxLayerMidTexture.unload();
+        menuParallaxLayerFrontTexture.unload();
+        menuPlayTexture.unload();
+        menuHelpTexture.unload();
+        menuPlayerTexture.unload();
+
+        menuParallaxLayerBackRegion = null;
+        menuParallaxLayerMidRegion = null;
+        menuParallaxLayerFrontRegion = null;
+        menuPlayTextureRegion = null;
+        menuHelpTextureRegion = null;
+        menuPlayerTextureRegion = null;
     }
 
     public void loadMenuTextures() {
-        menuTextureAtlas.load();
+
+        menuParallaxLayerBackTexture.load();
+        menuParallaxLayerMidTexture.load();
+        menuParallaxLayerFrontTexture.load();
+        menuPlayTexture.load();
+        menuHelpTexture.load();
+        menuPlayerTexture.load();
     }
 
 
@@ -164,48 +198,62 @@ public class ResourcesManager {
 
     private void loadGameGraphics() {
 
-        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
-
-        gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 256, 256);
-        gameBoxTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "box.png");
-        gameBoxOKTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "box_ok.png");
-        gameWallTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "wall.png");
-        gameTargetTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "target.png");
-        gamePlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 4, 1);
         try {
-            gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
-            gameTextureAtlas.load();
-        } catch (final ITextureAtlasBuilder.TextureAtlasBuilderException e) {
-            Debug.e(e);
-        }
+            gameBoxTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/box.png", TextureOptions.BILINEAR);
+            gameBoxTextureRegion = TextureRegionFactory.extractFromTexture(gameBoxTexture);
+            gameBoxTexture.load();
 
-        try {
+            gameBoxOKTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/box_ok.png", TextureOptions.BILINEAR);
+            gameBoxOKTextureRegion = TextureRegionFactory.extractFromTexture(gameBoxOKTexture);
+            gameBoxOKTexture.load();
+
+            gameWallTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/wall.png", TextureOptions.BILINEAR);
+            gameWallTextureRegion = TextureRegionFactory.extractFromTexture(gameWallTexture);
+            gameWallTexture.load();
+
+            gameTargetTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/target.png", TextureOptions.BILINEAR);
+            gameTargetTextureRegion = TextureRegionFactory.extractFromTexture(gameTargetTexture);
+            gameTargetTexture.load();
+
+            gamePlayerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/player.png", TextureOptions.BILINEAR);
+            gamePlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(gamePlayerTexture, 4, 1);
+            gamePlayerTexture.load();
+
             gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/background_grass.png", TextureOptions.REPEATING_NEAREST);
             gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
             gameBackgroundTexture.load();
-        } catch (IOException e) {
-            Debug.e(e);
-        }
 
-        try {
             gameOnScreenControlBaseTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/onscreen_control_base.png", TextureOptions.BILINEAR);
             gameOnScreenControlBaseTextureRegion = TextureRegionFactory.extractFromTexture(gameOnScreenControlBaseTexture);
             gameOnScreenControlBaseTexture.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        try {
             gameOnScreenControlKnobTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/onscreen_control_knob.png", TextureOptions.BILINEAR);
             gameOnScreenControlKnobTextureRegion = TextureRegionFactory.extractFromTexture(gameOnScreenControlKnobTexture);
             gameOnScreenControlKnobTexture.load();
+
         } catch (IOException e) {
-            e.printStackTrace();
+            Debug.e(e);
         }
     }
 
     public void unloadGameTextures() {
 
-        gameTextureAtlas.unload();
+        gameBoxTexture.unload();
+        gameBoxOKTexture.unload();
+        gameWallTexture.unload();
+        gameTargetTexture.unload();
+        gamePlayerTexture.unload();
+        gameBackgroundTexture.unload();
+        gameOnScreenControlBaseTexture.unload();
+        gameOnScreenControlKnobTexture.unload();
+
+        gameBoxTextureRegion = null;
+        gameBoxOKTextureRegion = null;
+        gameWallTextureRegion = null;
+        gameTargetTextureRegion = null;
+        gamePlayerTextureRegion = null;
+        gameGrassBackgroundTextureRegion = null;
+        gameOnScreenControlBaseTextureRegion = null;
+        gameOnScreenControlKnobTextureRegion = null;
     }
 }
