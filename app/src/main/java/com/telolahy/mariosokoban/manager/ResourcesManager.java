@@ -67,6 +67,10 @@ public class ResourcesManager {
     private ITexture gameBackgroundTexture;
     public ITextureRegion gameGrassBackgroundTextureRegion;
 
+    private ITexture gameOnScreenControlBaseTexture;
+    public ITextureRegion gameOnScreenControlBaseTextureRegion;
+    private ITexture gameOnScreenControlKnobTexture;
+    public ITextureRegion gameOnScreenControlKnobTextureRegion;
 
     //---------------------------------------------
     // GETTERS AND SETTERS
@@ -177,10 +181,26 @@ public class ResourcesManager {
 
         try {
             gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/background_grass.png", TextureOptions.REPEATING_NEAREST);
-            gameBackgroundTexture.load();
             gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
+            gameBackgroundTexture.load();
         } catch (IOException e) {
             Debug.e(e);
+        }
+
+        try {
+            gameOnScreenControlBaseTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/onscreen_control_base.png", TextureOptions.BILINEAR);
+            gameOnScreenControlBaseTextureRegion = TextureRegionFactory.extractFromTexture(gameOnScreenControlBaseTexture);
+            gameOnScreenControlBaseTexture.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            gameOnScreenControlKnobTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/onscreen_control_knob.png", TextureOptions.BILINEAR);
+            gameOnScreenControlKnobTextureRegion = TextureRegionFactory.extractFromTexture(gameOnScreenControlKnobTexture);
+            gameOnScreenControlKnobTexture.load();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
