@@ -3,6 +3,7 @@ package com.telolahy.mariosokoban.scene;
 import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
+import com.telolahy.mariosokoban.core.GameMap;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
@@ -71,6 +72,9 @@ public class GameScene extends BaseScene {
     }
 
     private void loadLevel(int level) {
+
+        GameMap gameMap = new GameMap();
+        gameMap.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
 
     }
 
