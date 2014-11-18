@@ -68,11 +68,6 @@ public class ResourcesManager {
     private ITexture gameBackgroundTexture;
     public ITextureRegion gameGrassBackgroundTextureRegion;
 
-    private ITexture gameOnScreenControlBaseTexture;
-    public ITextureRegion gameOnScreenControlBaseTextureRegion;
-    private ITexture gameOnScreenControlKnobTexture;
-    public ITextureRegion gameOnScreenControlKnobTextureRegion;
-
     //---------------------------------------------
     // GETTERS AND SETTERS
     //---------------------------------------------
@@ -217,14 +212,6 @@ public class ResourcesManager {
             gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
             gameBackgroundTexture.load();
 
-            gameOnScreenControlBaseTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/onscreen_control_base.png", TextureOptions.BILINEAR);
-            gameOnScreenControlBaseTextureRegion = TextureRegionFactory.extractFromTexture(gameOnScreenControlBaseTexture);
-            gameOnScreenControlBaseTexture.load();
-
-            gameOnScreenControlKnobTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/onscreen_control_knob.png", TextureOptions.BILINEAR);
-            gameOnScreenControlKnobTextureRegion = TextureRegionFactory.extractFromTexture(gameOnScreenControlKnobTexture);
-            gameOnScreenControlKnobTexture.load();
-
         } catch (IOException e) {
             Debug.e(e);
         }
@@ -237,15 +224,11 @@ public class ResourcesManager {
         gameTargetTexture.unload();
         gamePlayerTexture.unload();
         gameBackgroundTexture.unload();
-        gameOnScreenControlBaseTexture.unload();
-        gameOnScreenControlKnobTexture.unload();
 
         gameBoxTextureRegion = null;
         gameWallTextureRegion = null;
         gameTargetTextureRegion = null;
         gamePlayerTextureRegion = null;
         gameGrassBackgroundTextureRegion = null;
-        gameOnScreenControlBaseTextureRegion = null;
-        gameOnScreenControlKnobTextureRegion = null;
     }
 }

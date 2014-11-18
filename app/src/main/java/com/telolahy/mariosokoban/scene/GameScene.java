@@ -8,13 +8,13 @@ import com.telolahy.mariosokoban.core.Game;
 import com.telolahy.mariosokoban.core.MarioSprite;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
-import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
-import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
 import org.andengine.entity.scene.background.RepeatingSpriteBackground;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.SurfaceGestureDetector;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ import java.util.ArrayList;
  */
 public class GameScene extends BaseScene {
 
-    private static final int X0 = 200;
+    private static final int X0 = 100;
     private static final int Y0 = 40;
     private static final int BLOC_SIZE = 34;
 
@@ -39,35 +39,67 @@ public class GameScene extends BaseScene {
     private MarioSprite mMario;
     private ArrayList<BoxSprite> mBoxes;
 
+    private SurfaceGestureDetector mDetector;
+
+    @Override
+    public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
+
+        mDetector.onTouchEvent(pSceneTouchEvent);
+        return true;
+    }
+
     @Override
     public void createScene() {
 
         createBackground();
-        createAnalogOnScreenControl();
+        createGestureDetector();
         loadLevel(1);
         createHUD();
     }
 
-    private void createAnalogOnScreenControl() {
+    private void createGestureDetector() {
 
-        final AnalogOnScreenControl analogOnScreenControl = new AnalogOnScreenControl(0, 0, this.mCamera, mResourcesManager.gameOnScreenControlBaseTextureRegion, mResourcesManager.gameOnScreenControlKnobTextureRegion, 0.1f, 200, mVertexBufferObjectManager, new AnalogOnScreenControl.IAnalogOnScreenControlListener() {
+        mActivity.runOnUiThread(new Runnable() {
             @Override
-            public void onControlChange(final BaseOnScreenControl pBaseOnScreenControl, final float pValueX, final float pValueY) {
+            public void run() {
 
-                handleInput(pValueX, pValueY);
-            }
+                mDetector = new SurfaceGestureDetector(mActivity) {
+                    @Override
+                    protected boolean onSingleTap() {
+                        return false;
+                    }
 
-            @Override
-            public void onControlClick(final AnalogOnScreenControl pAnalogOnScreenControl) {
+                    @Override
+                    protected boolean onDoubleTap() {
+                        return false;
+                    }
 
+                    @Override
+                    protected boolean onSwipeUp() {
+                        handleInput(new Point(0, 1));
+                        return true;
+                    }
+
+                    @Override
+                    protected boolean onSwipeDown() {
+                        handleInput(new Point(0, -1));
+                        return true;
+                    }
+
+                    @Override
+                    protected boolean onSwipeLeft() {
+                        handleInput(new Point(-1, 0));
+                        return true;
+                    }
+
+                    @Override
+                    protected boolean onSwipeRight() {
+                        handleInput(new Point(1, 0));
+                        return true;
+                    }
+                };
             }
         });
-
-        analogOnScreenControl.getControlBase().setAlpha(0.5f);
-        analogOnScreenControl.getControlBase().setOffsetCenter(0, 0);
-        analogOnScreenControl.getControlKnob().setScale(1.25f);
-
-        setChildScene(analogOnScreenControl);
     }
 
 
@@ -149,35 +181,7 @@ public class GameScene extends BaseScene {
         }
     }
 
-    private Point getDirection(float dx, float dy) {
-
-        float THRESHOLD = 0.4f;
-        if (Math.abs(dx) < THRESHOLD && Math.abs(dy) < THRESHOLD) {
-            return new Point(0, 0);     // none
-        }
-
-        if (Math.abs(dx) > Math.abs(dy)) {
-            if (dx > 0) {
-                return new Point(1, 0);     // Right
-            } else {
-                return new Point(-1, 0);    // Left
-            }
-        } else {
-            if (dy > 0) {
-                return new Point(0, 1);     //Up
-            } else {
-                return new Point(0, -1);    // Down
-            }
-        }
-    }
-
-    private void handleInput(float dx, float dy) {
-
-        Point direction = getDirection(dx, dy);
-
-        if (direction.x == 0 && direction.y == 0) {
-            return; // invalid input
-        }
+    private void handleInput(Point direction) {
 
         if (mMario.active) {
             return; // mario is busy
