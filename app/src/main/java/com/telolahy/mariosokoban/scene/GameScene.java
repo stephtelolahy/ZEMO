@@ -158,21 +158,17 @@ public class GameScene extends BaseScene {
                     case Game.BOX:
                         BoxSprite box = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, false);
                         mBoxes.add(box);
-                        attachChild(box);
                         break;
 
                     case Game.BOX_OK:
                         BoxSprite boxOk = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, true);
                         boxOk.setCurrentTileIndex(1);
                         mBoxes.add(boxOk);
-                        attachChild(boxOk);
                         break;
-
 
                     case Game.PLAYER:
                         MarioSprite player = new MarioSprite(posX, posY, mResourcesManager.gamePlayerTextureRegion, mVertexBufferObjectManager, x, y);
                         mMario = player;
-                        attachChild(player);
                         break;
 
                     case Game.PLAYER_ON_GOAL:
@@ -183,6 +179,12 @@ public class GameScene extends BaseScene {
                 }
             }
         }
+
+        for (BoxSprite box : mBoxes) {
+            attachChild(box);
+        }
+
+        attachChild(mMario);
     }
 
     private void handleInput(Point direction) {
@@ -270,17 +272,21 @@ public class GameScene extends BaseScene {
 
     private void moveBox(Point source, Point destination) {
 
-        if (mGame.getElement(source) == Game.BOX_OK)
-            mGame.setElement(source, Game.GOAL);
-        else
-            mGame.setElement(source, Game.EMPTY);
-
-        if (mGame.getElement(destination) == Game.GOAL)
-            mGame.setElement(destination, Game.BOX_OK);
-        else
-            mGame.setElement(destination, Game.BOX);
-
         BoxSprite box = getBoxAt(source);
+
+        if (mGame.getElement(source) == Game.BOX_OK) {
+            mGame.setElement(source, Game.GOAL);
+            box.setCurrentTileIndex(0);
+        } else {
+            mGame.setElement(source, Game.EMPTY);
+        }
+
+        if (mGame.getElement(destination) == Game.GOAL) {
+            mGame.setElement(destination, Game.BOX_OK);
+            box.setCurrentTileIndex(1);
+        } else {
+            mGame.setElement(destination, Game.BOX);
+        }
 
         box.position = destination;
 
