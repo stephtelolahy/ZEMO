@@ -25,7 +25,7 @@ public class GameScene extends BaseScene {
 
     private static final int X0 = 100;
     private static final int Y0 = 40;
-    private static final int BLOC_SIZE = 34;
+    private static final int BLOC_SIZE = 58;
 
     private static final int NONE = -1;
     private static final int DOWN = 0;
@@ -122,8 +122,11 @@ public class GameScene extends BaseScene {
 
     private void createBackground() {
 
-        mGrassBackground = new RepeatingSpriteBackground(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
-        setBackground(mGrassBackground);
+        Sprite repeatingBackground = new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
+        attachChild(repeatingBackground);
+
+//        mGrassBackground = new RepeatingSpriteBackground(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
+//        setBackground(mGrassBackground);
     }
 
     private void createHUD() {
@@ -185,6 +188,8 @@ public class GameScene extends BaseScene {
         }
 
         attachChild(mMario);
+
+        mCamera.setChaseEntity(mMario);
     }
 
     private void handleInput(Point direction) {

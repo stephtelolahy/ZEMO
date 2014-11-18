@@ -2,6 +2,7 @@ package com.telolahy.mariosokoban.manager;
 
 import android.graphics.Color;
 
+import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.MainActivity;
 
 import org.andengine.audio.music.Music;
@@ -186,11 +187,13 @@ public class ResourcesManager {
             gameBoxTexture.load();
 
             gamePlayerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/player.png", TextureOptions.BILINEAR);
-            gamePlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(gamePlayerTexture, 4, 1);
+            gamePlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(gamePlayerTexture, 4, 4);
             gamePlayerTexture.load();
 
-            gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/background_grass.png", TextureOptions.REPEATING_NEAREST);
+            gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/background_grass.png", TextureOptions.REPEATING_NEAREST_PREMULTIPLYALPHA);
             gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
+            gameGrassBackgroundTextureRegion.setTextureWidth(Constants.CAMERA_WIDTH * 2);
+            gameGrassBackgroundTextureRegion.setTextureHeight(Constants.CAMERA_HEIGHT * 2);
             gameBackgroundTexture.load();
 
         } catch (IOException e) {

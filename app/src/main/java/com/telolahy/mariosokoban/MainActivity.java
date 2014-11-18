@@ -92,6 +92,7 @@ public class MainActivity extends BaseGameActivity {
     @Override
     protected synchronized void onResume() {
         super.onResume();
+        System.gc();
         if (ResourcesManager.getInstance().menuMusic != null) {
             ResourcesManager.getInstance().menuMusic.play();
         }
