@@ -19,11 +19,6 @@ public class SplashScene extends BaseScene {
     }
 
     @Override
-    public void onBackKeyPressed() {
-
-    }
-
-    @Override
     public void disposeScene() {
 
         mBackground.detachSelf();

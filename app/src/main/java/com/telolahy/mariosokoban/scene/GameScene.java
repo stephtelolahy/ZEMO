@@ -41,6 +41,11 @@ public class GameScene extends BaseScene {
 
     private SurfaceGestureDetector mDetector;
 
+    public GameScene() {
+        super();
+        setupGestureDetector();
+    }
+
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
 
@@ -52,12 +57,11 @@ public class GameScene extends BaseScene {
     public void createScene() {
 
         createBackground();
-        createGestureDetector();
-        loadLevel(1);
         createHUD();
+        loadLevel(1);
     }
 
-    private void createGestureDetector() {
+    private void setupGestureDetector() {
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
@@ -217,7 +221,6 @@ public class GameScene extends BaseScene {
 
         moveMario(destination);
     }
-
 
     private void moveMario(Point destination) {
 

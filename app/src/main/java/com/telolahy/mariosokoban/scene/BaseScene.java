@@ -39,5 +39,6 @@ public abstract class BaseScene extends Scene {
 
     public abstract void disposeScene();
 
-    public abstract void onBackKeyPressed();
+    public void onBackKeyPressed() {
+    }
 }

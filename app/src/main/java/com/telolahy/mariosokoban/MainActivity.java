@@ -80,4 +80,20 @@ public class MainActivity extends BaseGameActivity {
         super.onDestroy();
         System.exit(0);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (ResourcesManager.getInstance().menuMusic != null && ResourcesManager.getInstance().menuMusic.isPlaying()) {
+            ResourcesManager.getInstance().menuMusic.pause();
+        }
+    }
+
+    @Override
+    protected synchronized void onResume() {
+        super.onResume();
+        if (ResourcesManager.getInstance().menuMusic != null) {
+            ResourcesManager.getInstance().menuMusic.play();
+        }
+    }
 }
