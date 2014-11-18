@@ -11,7 +11,6 @@ import com.telolahy.mariosokoban.manager.SceneManager;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.entity.IEntity;
-import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
 import org.andengine.entity.scene.background.RepeatingSpriteBackground;
@@ -108,30 +107,30 @@ public class GameScene extends BaseScene {
                 int posX = X0 + x * BLOC_SIZE + BLOC_SIZE / 2;
                 int posY = Y0 + y * BLOC_SIZE + BLOC_SIZE / 2;
 
-                switch (mGame.getElement(x, y)) {
+                switch (mGame.getElement(new Point(x, y))) {
 
                     case Game.WALL:
                         Sprite wall = new Sprite(posX, posY, mResourcesManager.gameWallTextureRegion, mVertexBufferObjectManager);
                         attachChild(wall);
                         break;
 
-//                    case Game.GOAL:
-//                        Sprite goal = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
-//                        attachChild(goal);
-//                        break;
-//
-//                    case Game.BOX:
-//                        BoxSprite box = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, false);
-//                        mBoxes.add(box);
-//                        attachChild(box);
-//                        break;
-//
-//                    case Game.BOX_OK:
-//                        BoxSprite boxOk = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, true);
-//                        boxOk.setCurrentTileIndex(1);
-//                        mBoxes.add(boxOk);
-//                        attachChild(boxOk);
-//                        break;
+                    case Game.GOAL:
+                        Sprite goal = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
+                        attachChild(goal);
+                        break;
+
+                    case Game.BOX:
+                        BoxSprite box = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, false);
+                        mBoxes.add(box);
+                        attachChild(box);
+                        break;
+
+                    case Game.BOX_OK:
+                        BoxSprite boxOk = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, true);
+                        boxOk.setCurrentTileIndex(1);
+                        mBoxes.add(boxOk);
+                        attachChild(boxOk);
+                        break;
 
 
                     case Game.PLAYER:
@@ -190,135 +189,52 @@ public class GameScene extends BaseScene {
             return; // reached limit of he world
         }
 
-        if (mGame.getElement(destination.x, destination.y) == Game.WALL) {
+        if (mGame.getElement(destination) == Game.WALL) {
             return; // blocked by a wall
         }
 
-        moveMario(destination);
+        if (mGame.getElement(destination) == Game.BOX
+                || mGame.getElement(destination) == Game.BOX_OK) {
 
+            Point behindDestination = new Point(destination.x + direction.x, destination.y + direction.y);
 
+            if (behindDestination.x < 0 || behindDestination.x > mGame.getSizeX() - 1 || behindDestination.y < 0 || behindDestination.y > mGame.getSizeY() - 1) {
+                return; // reached limit of he world
+            }
 
-        /*
+            if (mGame.getElement(behindDestination) == Game.WALL
+                    || mGame.getElement(behindDestination) == Game.BOX
+                    || mGame.getElement(behindDestination) == Game.BOX_OK) {
+                return; // blocked by a wall, box
+            }
 
-        int x = mMarioPosition.x;
-        int y = mMarioPosition.y;
-
-        switch (direction) {
-            case UP:
-
-                // Si le joueur dÈpasse l'Ècran, ou
-                // s'il y a un mur, on arrÍte
-                if (y + 1 >= mGame.getSizeY() || mGame.getElement(x, y + 1) == Game.WALL) {
-                    break;
-                }
-
-                // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
-                // de mur derriËre (ou une autre caisse)
-                if (mGame.getElement(x, y + 1) == Game.BOX || mGame.getElement(x, y + 1) == Game.BOX_OK) {
-
-                    if (y + 2 < mGame.getSizeY()
-                            && (mGame.getElement(x, y + 2) == Game.EMPTY || mGame.getElement(x, y + 2) == Game.GOAL))
-                        // Il y a une caisse ‡ dÈplacer
-                        moveBox(x, y + 1, x, y + 2);
-                    else
-                        break; //sinon on arrÍte
-                }
-
-                mMarioPosition.y++; // On peut enfin faire monter mario (oufff !)
-                mMario.setPosition(mMario.getX(), mMario.getY() + BLOC_SIZE);
-                mMario.setCurrentTileIndex(direction);
-                break;
-
-            case DOWN:
-
-                // Si le joueur dÈpasse l'Ècran, ou
-                // s'il y a un mur, on arrÍte
-                if (y - 1 < 0 || mGame.getElement(x, y - 1) == Game.WALL)
-                    break;
-
-                // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
-                // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (mGame.getElement(x, y - 1) == Game.BOX || mGame.getElement(x, y - 1) == Game.BOX_OK) {
-                    if (y - 2 < 0 && (mGame.getElement(x, y - 2) == Game.EMPTY || mGame.getElement(x, y - 2) == Game.GOAL))
-                        // Il y a une caisse ‡ dÈplacer
-                        moveBox(x, y - 1, x, y - 2);
-                    else
-                        break; //sinon on arrÍte
-                }
-                mMarioPosition.y--; // On peut enfin faire descendre mario (oufff !)
-                mMario.setPosition(mMario.getX(), mMario.getY() - BLOC_SIZE);
-                mMario.setCurrentTileIndex(direction);
-                break;
-
-            case LEFT:
-                // Si le joueur dÈpasse l'Ècran, ou
-                // s'il y a un mur, on arrÍte
-                if (x - 1 < 0 || mGame.getElement(x - 1, y) == Game.WALL)
-                    break;
-                // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
-                // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (mGame.getElement(x - 1, y) == Game.BOX || mGame.getElement(x - 1, y) == Game.BOX_OK) {
-                    if (x - 2 >= 0 && (mGame.getElement(x - 2, y) == Game.EMPTY || mGame.getElement(x - 2, y) == Game.GOAL))
-                        // Il y a une caisse ‡ dÈplacer
-                        moveBox(x - 1, y, x - 2, y);
-                    else
-                        break; //sinon on arrÍte
-                }
-                mMarioPosition.x--; // On peut enfin faire bouger mario ‡ gauche (oufff !)
-                mMario.setPosition(mMario.getX() - BLOC_SIZE, mMario.getY());
-                mMario.setCurrentTileIndex(direction);
-                break;
-
-            case RIGHT:
-                // Si le joueur dÈpasse l'Ècran, ou
-                // s'il y a un mur, on arrÍte
-                if (x + 1 >= mGame.getSizeX() || mGame.getElement(x + 1, y) == Game.WALL)
-                    break;
-                // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
-                // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (mGame.getElement(x + 1, y) == Game.BOX || mGame.getElement(x + 1, y) == Game.BOX_OK) {
-                    if (x + 2 < mGame.getSizeX() && (mGame.getElement(x + 2, y) == Game.EMPTY || mGame.getElement(x + 2, y) == Game.GOAL))
-                        // Il y a une caisse ‡ dÈplacer
-                        moveBox(x + 1, y, x + 2, y);
-                    else
-                        break; //sinon on arrÍte
-                }
-                mMarioPosition.x++; // On peut enfin faire descendre mario (oufff !)
-                mMario.setPosition(mMario.getX() + BLOC_SIZE, mMario.getY());
-                mMario.setCurrentTileIndex(direction);
-                break;
-
-            default:
-                break;
+            moveBox(destination, behindDestination);
         }
-        */
+
+        moveMario(destination);
     }
 
-    private void moveBox(int sourceX, int sourceY, int targetX, int targetY) {
 
-        if (mGame.getElement(sourceX, sourceY) == Game.BOX_OK)
-            mGame.setElement(sourceX, sourceY, Game.GOAL);
+    private void moveMario(Point destination) {
+
+        Point source = mMario.position;
+        if (mGame.getElement(source) == Game.PLAYER_ON_GOAL)
+            mGame.setElement(source, Game.GOAL);
         else
-            mGame.setElement(sourceX, sourceY, Game.EMPTY);
+            mGame.setElement(source, Game.EMPTY);
 
-        if (mGame.getElement(targetX, targetY) == Game.GOAL)
-            mGame.setElement(targetX, targetY, Game.BOX_OK);
+        if (mGame.getElement(destination) == Game.GOAL)
+            mGame.setElement(destination, Game.PLAYER_ON_GOAL);
         else
-            mGame.setElement(targetX, targetY, Game.BOX);
-    }
-
-    private void moveBox(Point source, Point destination) {
-
-    }
-
-    private void moveMario(Point destination){
+            mGame.setElement(destination, Game.EMPTY);
 
         mMario.position = destination;
-        float x0 = mMario.getX();
-        float y0 = mMario.getY();
-        float x1 = X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
-        float y1 = Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
-        final Path marioPath= new Path(2).to(x0, y0).to(x1, y1);
+
+        float x1 = mMario.getX();
+        float y1 = mMario.getY();
+        float x2 = X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
+        float y2 = Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
+        final Path marioPath = new Path(2).to(x1, y1).to(x2, y2);
         mMario.registerEntityModifier(new PathModifier(0.5f, marioPath, null, new PathModifier.IPathModifierListener() {
 
             @Override
@@ -343,6 +259,61 @@ public class GameScene extends BaseScene {
                 mMario.active = false;
             }
         }));
+    }
+
+    private void moveBox(Point source, Point destination) {
+
+        if (mGame.getElement(source) == Game.BOX_OK)
+            mGame.setElement(source, Game.GOAL);
+        else
+            mGame.setElement(source, Game.EMPTY);
+
+        if (mGame.getElement(destination) == Game.GOAL)
+            mGame.setElement(destination, Game.BOX_OK);
+        else
+            mGame.setElement(destination, Game.BOX);
+
+        BoxSprite box = getBoxAt(source);
+
+        box.position = destination;
+
+        float x1 = box.getX();
+        float y1 = box.getY();
+        float x2 = X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
+        float y2 = Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
+        final Path boxPath = new Path(2).to(x1, y1).to(x2, y2);
+        box.registerEntityModifier(new PathModifier(0.5f, boxPath, null, new PathModifier.IPathModifierListener() {
+
+            @Override
+            public void onPathStarted(final PathModifier pPathModifier, final IEntity pEntity) {
+
+            }
+
+            @Override
+            public void onPathWaypointStarted(final PathModifier pPathModifier, final IEntity pEntity, final int pWaypointIndex) {
+
+            }
+
+            @Override
+            public void onPathWaypointFinished(final PathModifier pPathModifier, final IEntity pEntity, final int pWaypointIndex) {
+
+            }
+
+            @Override
+            public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
+
+            }
+        }));
+
+    }
+
+    private BoxSprite getBoxAt(Point position) {
+
+        for (BoxSprite box : mBoxes) {
+            if (box.position.x == position.x && box.position.y == position.y)
+                return box;
+        }
+        return null;
     }
 
 }

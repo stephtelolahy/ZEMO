@@ -1,6 +1,7 @@
 package com.telolahy.mariosokoban.core;
 
 import android.content.Context;
+import android.graphics.Point;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,12 +34,12 @@ public class Game {
         return mSizeY;
     }
 
-    public int getElement(int x, int y) {
-        return mElement[x][y];
+    public int getElement(Point position) {
+        return mElement[position.x][position.y];
     }
 
-    public void setElement(int x, int y, char e) {
-        mElement[x][y] = e;
+    public void setElement(Point position, char element) {
+        mElement[position.x][position.y] = element;
     }
 
     public void loadLevel(String file, Context context) {
