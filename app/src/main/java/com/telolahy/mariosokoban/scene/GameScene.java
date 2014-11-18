@@ -11,7 +11,6 @@ import com.telolahy.mariosokoban.manager.SceneManager;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
-import org.andengine.entity.scene.background.RepeatingSpriteBackground;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.SurfaceGestureDetector;
@@ -26,15 +25,14 @@ public class GameScene extends BaseScene {
     private static final int X0 = 100;
     private static final int Y0 = 40;
     private static final int BLOC_SIZE = 58;
+    private static final int STEP_DURATION_MILLIS = 800; // time to move one block
 
     private static final int NONE = -1;
     private static final int DOWN = 0;
-    private static final int UP = 1;
+    private static final int LEFT = 1;
     private static final int RIGHT = 2;
-    private static final int LEFT = 3;
+    private static final int UP = 3;
 
-
-    private RepeatingSpriteBackground mGrassBackground;
     private Game mGame;
     private MarioSprite mMario;
     private ArrayList<BoxSprite> mBoxes;
@@ -125,8 +123,8 @@ public class GameScene extends BaseScene {
         Sprite repeatingBackground = new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
         attachChild(repeatingBackground);
 
-//        mGrassBackground = new RepeatingSpriteBackground(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
-//        setBackground(mGrassBackground);
+//        RepeatingSpriteBackground grassBackground = new RepeatingSpriteBackground(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
+//        setBackground(grassBackground);
     }
 
     private void createHUD() {
@@ -232,6 +230,9 @@ public class GameScene extends BaseScene {
     private void moveMario(Point destination) {
 
         Point source = mMario.position;
+
+        final int direction = getDirection(source, destination);
+
         if (mGame.getElement(source) == Game.PLAYER_ON_GOAL)
             mGame.setElement(source, Game.GOAL);
         else
@@ -249,12 +250,15 @@ public class GameScene extends BaseScene {
         float x2 = X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
         float y2 = Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
         final Path marioPath = new Path(2).to(x1, y1).to(x2, y2);
-        mMario.registerEntityModifier(new PathModifier(0.5f, marioPath, null, new PathModifier.IPathModifierListener() {
+        float pathAnimationDuration = (float) STEP_DURATION_MILLIS / 1000;
+        mMario.registerEntityModifier(new PathModifier(pathAnimationDuration, marioPath, null, new PathModifier.IPathModifierListener() {
 
             @Override
             public void onPathStarted(final PathModifier pPathModifier, final IEntity pEntity) {
 
                 mMario.active = true;
+                final long tileDuration = STEP_DURATION_MILLIS / 4;
+                mMario.animate(new long[]{tileDuration, tileDuration, tileDuration, tileDuration}, direction * 4, direction * 4 + 3, true);
             }
 
             @Override
@@ -271,6 +275,8 @@ public class GameScene extends BaseScene {
             public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
 
                 mMario.active = false;
+                mMario.stopAnimation();
+                mMario.setCurrentTileIndex(direction * 4);
             }
         }));
     }
@@ -332,6 +338,21 @@ public class GameScene extends BaseScene {
                 return box;
         }
         return null;
+    }
+
+    private static int getDirection(Point source, Point destination) {
+
+        if (destination.x - source.x > 0) {
+            return RIGHT;
+        } else if (destination.x - source.x < 0) {
+            return LEFT;
+        } else if (destination.y - source.y > 0) {
+            return UP;
+        } else if (destination.y - source.y < 0) {
+            return DOWN;
+        } else {
+            return NONE;
+        }
     }
 
 }
