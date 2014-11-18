@@ -1,13 +1,14 @@
 package com.telolahy.mariosokoban.scene;
 
 import com.telolahy.mariosokoban.Constants;
+import com.telolahy.mariosokoban.R;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
-import org.andengine.entity.scene.menu.item.SpriteMenuItem;
+import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
@@ -53,8 +54,10 @@ public class MainMenuScene extends BaseScene {
 
         mMenuChildScene = new MenuScene(mCamera);
 
-        IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, mResourcesManager.menuPlayTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
-        IMenuItem helpMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_HELP, mResourcesManager.menuHelpTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
+        TextMenuItem playTextMenuItem = new TextMenuItem(MENU_PLAY, mResourcesManager.font, mActivity.getResources().getString(R.string.play), mVertexBufferObjectManager);
+        IMenuItem playMenuItem = new ScaleMenuItemDecorator(playTextMenuItem, 1.2f, 1);
+        TextMenuItem helpTextMenuItem = new TextMenuItem(MENU_HELP, mResourcesManager.font, mActivity.getResources().getString(R.string.options), mVertexBufferObjectManager);
+        IMenuItem helpMenuItem = new ScaleMenuItemDecorator(helpTextMenuItem, 1.2f, 1);
         mMenuChildScene.addMenuItem(playMenuItem);
         mMenuChildScene.addMenuItem(helpMenuItem);
 

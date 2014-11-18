@@ -42,14 +42,10 @@ public class ResourcesManager {
     private ITexture menuParallaxLayerBackTexture;
     private ITexture menuParallaxLayerMidTexture;
     private ITexture menuParallaxLayerFrontTexture;
-    private ITexture menuPlayTexture;
-    private ITexture menuHelpTexture;
     private ITexture menuPlayerTexture;
     public ITextureRegion menuParallaxLayerBackRegion;
     public ITextureRegion menuParallaxLayerMidRegion;
     public ITextureRegion menuParallaxLayerFrontRegion;
-    public ITextureRegion menuPlayTextureRegion;
-    public ITextureRegion menuHelpTextureRegion;
     public TiledTextureRegion menuPlayerTextureRegion;
 
     public Font font;
@@ -64,7 +60,6 @@ public class ResourcesManager {
     public ITextureRegion gameTargetTextureRegion;
     public TiledTextureRegion gameBoxTextureRegion;
     public TiledTextureRegion gamePlayerTextureRegion;
-
     private ITexture gameBackgroundTexture;
     public ITextureRegion gameGrassBackgroundTextureRegion;
 
@@ -123,14 +118,6 @@ public class ResourcesManager {
             menuParallaxLayerBackRegion = TextureRegionFactory.extractFromTexture(menuParallaxLayerBackTexture);
             menuParallaxLayerBackTexture.load();
 
-            menuPlayTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/play.png", TextureOptions.BILINEAR);
-            menuPlayTextureRegion = TextureRegionFactory.extractFromTexture(menuPlayTexture);
-            menuPlayTexture.load();
-
-            menuHelpTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/help.png", TextureOptions.BILINEAR);
-            menuHelpTextureRegion = TextureRegionFactory.extractFromTexture(menuHelpTexture);
-            menuHelpTexture.load();
-
             menuPlayerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/player.png", TextureOptions.BILINEAR);
             menuPlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(menuPlayerTexture, 4, 4);
             menuPlayerTexture.load();
@@ -161,15 +148,11 @@ public class ResourcesManager {
         menuParallaxLayerBackTexture.unload();
         menuParallaxLayerMidTexture.unload();
         menuParallaxLayerFrontTexture.unload();
-        menuPlayTexture.unload();
-        menuHelpTexture.unload();
         menuPlayerTexture.unload();
 
         menuParallaxLayerBackRegion = null;
         menuParallaxLayerMidRegion = null;
         menuParallaxLayerFrontRegion = null;
-        menuPlayTextureRegion = null;
-        menuHelpTextureRegion = null;
         menuPlayerTextureRegion = null;
     }
 
@@ -178,8 +161,6 @@ public class ResourcesManager {
         menuParallaxLayerBackTexture.load();
         menuParallaxLayerMidTexture.load();
         menuParallaxLayerFrontTexture.load();
-        menuPlayTexture.load();
-        menuHelpTexture.load();
         menuPlayerTexture.load();
     }
 

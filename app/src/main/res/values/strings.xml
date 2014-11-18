@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Bouge vache</string>
-    <string name="loading">Loading ..</string>
+    <string name="loading">Chargement ..</string>
+    <string name="help">Aide</string>
+    <string name="play">Jouer</string>
+    <string name="options">Options</string>
 </resources>
