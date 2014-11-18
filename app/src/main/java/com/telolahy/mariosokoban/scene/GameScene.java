@@ -65,7 +65,7 @@ public class GameScene extends BaseScene {
             @Override
             public void run() {
 
-                mDetector = new SurfaceGestureDetector(mActivity) {
+                mDetector = new SurfaceGestureDetector(mActivity, 60) {
                     @Override
                     protected boolean onSingleTap() {
                         return false;
