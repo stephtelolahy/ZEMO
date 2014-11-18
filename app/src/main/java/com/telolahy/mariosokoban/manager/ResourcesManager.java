@@ -56,15 +56,13 @@ public class ResourcesManager {
     public Music menuMusic;
 
     // game resources
-    private ITexture gameBoxTexture;
-    private ITexture gameBoxOKTexture;
     private ITexture gameWallTexture;
     private ITexture gameTargetTexture;
+    private ITexture gameBoxTexture;
     private ITexture gamePlayerTexture;
-    public ITextureRegion gameBoxTextureRegion;
-    public ITextureRegion gameBoxOKTextureRegion;
     public ITextureRegion gameWallTextureRegion;
     public ITextureRegion gameTargetTextureRegion;
+    public TiledTextureRegion gameBoxTextureRegion;
     public TiledTextureRegion gamePlayerTextureRegion;
 
     private ITexture gameBackgroundTexture;
@@ -199,14 +197,6 @@ public class ResourcesManager {
     private void loadGameGraphics() {
 
         try {
-            gameBoxTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/box.png", TextureOptions.BILINEAR);
-            gameBoxTextureRegion = TextureRegionFactory.extractFromTexture(gameBoxTexture);
-            gameBoxTexture.load();
-
-            gameBoxOKTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/box_ok.png", TextureOptions.BILINEAR);
-            gameBoxOKTextureRegion = TextureRegionFactory.extractFromTexture(gameBoxOKTexture);
-            gameBoxOKTexture.load();
-
             gameWallTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/wall.png", TextureOptions.BILINEAR);
             gameWallTextureRegion = TextureRegionFactory.extractFromTexture(gameWallTexture);
             gameWallTexture.load();
@@ -214,6 +204,10 @@ public class ResourcesManager {
             gameTargetTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/target.png", TextureOptions.BILINEAR);
             gameTargetTextureRegion = TextureRegionFactory.extractFromTexture(gameTargetTexture);
             gameTargetTexture.load();
+
+            gameBoxTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/box.png", TextureOptions.BILINEAR);
+            gameBoxTextureRegion = TextureRegionFactory.extractTiledFromTexture(gameBoxTexture, 2, 1);
+            gameBoxTexture.load();
 
             gamePlayerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/player.png", TextureOptions.BILINEAR);
             gamePlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(gamePlayerTexture, 4, 1);
@@ -239,7 +233,6 @@ public class ResourcesManager {
     public void unloadGameTextures() {
 
         gameBoxTexture.unload();
-        gameBoxOKTexture.unload();
         gameWallTexture.unload();
         gameTargetTexture.unload();
         gamePlayerTexture.unload();
@@ -248,7 +241,6 @@ public class ResourcesManager {
         gameOnScreenControlKnobTexture.unload();
 
         gameBoxTextureRegion = null;
-        gameBoxOKTextureRegion = null;
         gameWallTextureRegion = null;
         gameTargetTextureRegion = null;
         gamePlayerTextureRegion = null;

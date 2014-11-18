@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by stephanohuguestelolahy on 11/17/14.
  */
-public class GameMap {
+public class Game {
 
     public static final char EMPTY = ' ';
     public static final char WALL = '#';
@@ -24,6 +24,22 @@ public class GameMap {
     private int mSizeX;
     private int mSizeY;
     private char mElement[][];
+
+    public int getSizeX() {
+        return mSizeX;
+    }
+
+    public int getSizeY() {
+        return mSizeY;
+    }
+
+    public int getElement(int x, int y) {
+        return mElement[x][y];
+    }
+
+    public void setElement(int x, int y, char e) {
+        mElement[x][y] = e;
+    }
 
     public void loadLevel(String file, Context context) {
 
@@ -56,10 +72,10 @@ public class GameMap {
         for (int y = 0; y < linesCount; y++) {
 
             String line = lines.get(linesCount - 1 - y);
-            int lineLengh = line.length();
+            int lineLength = line.length();
             for (int x = 0; x < columnsCount; x++) {
 
-                if (x < lineLengh) {
+                if (x < lineLength) {
                     mElement[x][y] = line.charAt(x);
                 } else {
                     mElement[x][y] = EMPTY;
@@ -68,19 +84,4 @@ public class GameMap {
         }
     }
 
-    public int getSizeX() {
-        return mSizeX;
-    }
-
-    public int getSizeY() {
-        return mSizeY;
-    }
-
-    public int getElement(int x, int y) {
-        return mElement[x][y];
-    }
-
-    public void setElement(int x, int y, char e) {
-        mElement[x][y] = e;
-    }
 }

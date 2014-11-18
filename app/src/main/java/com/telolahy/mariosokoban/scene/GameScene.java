@@ -1,16 +1,16 @@
 package com.telolahy.mariosokoban.scene;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
-import com.telolahy.mariosokoban.core.GameMap;
+import com.telolahy.mariosokoban.core.BoxSprite;
+import com.telolahy.mariosokoban.core.Game;
+import com.telolahy.mariosokoban.core.MarioSprite;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.entity.scene.background.RepeatingSpriteBackground;
-import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 
 import java.util.ArrayList;
@@ -32,11 +32,9 @@ public class GameScene extends BaseScene {
 
 
     private RepeatingSpriteBackground mGrassBackground;
-    private AnimatedSprite mMario;
-    private Point mMarioPosition;
-    private ArrayList<Sprite> mBoxes;
-
-    private GameMap mGameMap;
+    private Game mGame;
+    private MarioSprite mMario;
+    private ArrayList<BoxSprite> mBoxes;
 
     @Override
     public void createScene() {
@@ -95,49 +93,50 @@ public class GameScene extends BaseScene {
 
     private void loadLevel(int level) {
 
-        mGameMap = new GameMap();
-        mGameMap.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
+        mGame = new Game();
+        mGame.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
 
-        for (int y = 0; y < mGameMap.getSizeY(); y++) {
-            for (int x = 0; x < mGameMap.getSizeX(); x++) {
+        mBoxes = new ArrayList<BoxSprite>();
+
+        for (int y = 0; y < mGame.getSizeY(); y++) {
+            for (int x = 0; x < mGame.getSizeX(); x++) {
 
                 int posX = X0 + x * BLOC_SIZE + BLOC_SIZE / 2;
                 int posY = Y0 + y * BLOC_SIZE + BLOC_SIZE / 2;
 
-                switch (mGameMap.getElement(x, y)) {
+                switch (mGame.getElement(x, y)) {
 
-                    case GameMap.WALL:
-
+                    case Game.WALL:
                         Sprite wall = new Sprite(posX, posY, mResourcesManager.gameWallTextureRegion, mVertexBufferObjectManager);
                         attachChild(wall);
                         break;
 
-                    case GameMap.BOX:
-
-                        Sprite box = new Sprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager);
-                        attachChild(box);
-                        break;
-
-                    case GameMap.BOX_OK:
-
-                        Sprite boxOk = new Sprite(posX, posY, mResourcesManager.gameBoxOKTextureRegion, mVertexBufferObjectManager);
-                        attachChild(boxOk);
-                        break;
-
-                    case GameMap.GOAL:
-
+                    case Game.GOAL:
                         Sprite goal = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
                         attachChild(goal);
                         break;
 
-                    case GameMap.PLAYER:
-
-                        mMario = new AnimatedSprite(posX, posY, mResourcesManager.gamePlayerTextureRegion, mVertexBufferObjectManager);
-                        attachChild(mMario);
-                        mMarioPosition = new Point(x, y);
+                    case Game.BOX:
+                        BoxSprite box = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, false);
+                        mBoxes.add(box);
+                        attachChild(box);
                         break;
 
-                    case GameMap.PLAYER_ON_GOAL:
+                    case Game.BOX_OK:
+                        BoxSprite boxOk = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, true);
+                        boxOk.setCurrentTileIndex(1);
+                        mBoxes.add(boxOk);
+                        attachChild(boxOk);
+                        break;
+
+
+                    case Game.PLAYER:
+                        MarioSprite player = new MarioSprite(posX, posY, mResourcesManager.gamePlayerTextureRegion, mVertexBufferObjectManager, x, y);
+                        mMario = player;
+                        attachChild(player);
+                        break;
+
+                    case Game.PLAYER_ON_GOAL:
                         break;
 
                     default:
@@ -147,30 +146,54 @@ public class GameScene extends BaseScene {
         }
     }
 
-    private int getDirection(float dx, float dy) {
+    private Point getDirection(float dx, float dy) {
 
-        float threshold = 0.5f;
-        if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) {
-            return NONE;
+        float THRESHOLD = 0.2f;
+        if (Math.abs(dx) < THRESHOLD && Math.abs(dy) < THRESHOLD) {
+            return new Point(0, 0);     // none
         }
 
         if (Math.abs(dx) > Math.abs(dy)) {
-            if (dx > 0)
-                return RIGHT;
-            else
-                return LEFT;
+            if (dx > 0) {
+                return new Point(1, 0);     // Right
+            } else {
+                return new Point(-1, 0);    // Left
+            }
         } else {
-            if (dy > 0)
-                return UP;
-            else
-                return DOWN;
+            if (dy > 0) {
+                return new Point(0, 1);     //Up
+            } else {
+                return new Point(0, -1);    // Down
+            }
         }
     }
 
     private void moveMario(float dx, float dy) {
 
-        int direction = getDirection(dx, dy);
-        Log.i("", "dx:" + dx + " dy:" + dy + " dir: " + direction);
+        Point direction = getDirection(dx, dy);
+
+        if (direction.x == 0 && direction.y == 0) {
+            return; // invalid input
+        }
+
+        if (mMario.active) {
+            return; // mario is busy
+        }
+
+        Point destination = new Point(mMario.position.x + direction.x, mMario.position.y + direction.y);
+
+        if (destination.x < 0 || destination.x > mGame.getSizeX() - 1 || destination.y < 0 || destination.y > mGame.getSizeY() - 1) {
+            return; // reached limit of he world
+        }
+
+        if (mGame.getElement(destination.x, destination.y) == Game.WALL){
+            return; // blocked by a wall
+        }
+
+        mMario.position = destination;
+        mMario.setPosition(X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2, Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2);
+
+        /*
 
         int x = mMarioPosition.x;
         int y = mMarioPosition.y;
@@ -180,16 +203,16 @@ public class GameScene extends BaseScene {
 
                 // Si le joueur dÈpasse l'Ècran, ou
                 // s'il y a un mur, on arrÍte
-                if (y + 1 >= mGameMap.getSizeY() || mGameMap.getElement(x, y + 1) == GameMap.WALL) {
+                if (y + 1 >= mGame.getSizeY() || mGame.getElement(x, y + 1) == Game.WALL) {
                     break;
                 }
 
                 // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
                 // de mur derriËre (ou une autre caisse)
-                if (mGameMap.getElement(x, y + 1) == GameMap.BOX || mGameMap.getElement(x, y + 1) == GameMap.BOX_OK) {
+                if (mGame.getElement(x, y + 1) == Game.BOX || mGame.getElement(x, y + 1) == Game.BOX_OK) {
 
-                    if (y + 2 < mGameMap.getSizeY()
-                            && (mGameMap.getElement(x, y + 2) == GameMap.EMPTY || mGameMap.getElement(x, y + 2) == GameMap.GOAL))
+                    if (y + 2 < mGame.getSizeY()
+                            && (mGame.getElement(x, y + 2) == Game.EMPTY || mGame.getElement(x, y + 2) == Game.GOAL))
                         // Il y a une caisse ‡ dÈplacer
                         moveBox(x, y + 1, x, y + 2);
                     else
@@ -205,13 +228,13 @@ public class GameScene extends BaseScene {
 
                 // Si le joueur dÈpasse l'Ècran, ou
                 // s'il y a un mur, on arrÍte
-                if (y - 1 < 0 || mGameMap.getElement(x, y - 1) == GameMap.WALL)
+                if (y - 1 < 0 || mGame.getElement(x, y - 1) == Game.WALL)
                     break;
 
                 // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
                 // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (mGameMap.getElement(x, y - 1) == GameMap.BOX || mGameMap.getElement(x, y - 1) == GameMap.BOX_OK) {
-                    if (y - 2 < 0 && (mGameMap.getElement(x, y - 2) == GameMap.EMPTY || mGameMap.getElement(x, y - 2) == GameMap.GOAL))
+                if (mGame.getElement(x, y - 1) == Game.BOX || mGame.getElement(x, y - 1) == Game.BOX_OK) {
+                    if (y - 2 < 0 && (mGame.getElement(x, y - 2) == Game.EMPTY || mGame.getElement(x, y - 2) == Game.GOAL))
                         // Il y a une caisse ‡ dÈplacer
                         moveBox(x, y - 1, x, y - 2);
                     else
@@ -225,12 +248,12 @@ public class GameScene extends BaseScene {
             case LEFT:
                 // Si le joueur dÈpasse l'Ècran, ou
                 // s'il y a un mur, on arrÍte
-                if (x - 1 < 0 || mGameMap.getElement(x - 1, y) == GameMap.WALL)
+                if (x - 1 < 0 || mGame.getElement(x - 1, y) == Game.WALL)
                     break;
                 // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
                 // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (mGameMap.getElement(x - 1, y) == GameMap.BOX || mGameMap.getElement(x - 1, y) == GameMap.BOX_OK) {
-                    if (x - 2 >= 0 && (mGameMap.getElement(x - 2, y) == GameMap.EMPTY || mGameMap.getElement(x - 2, y) == GameMap.GOAL))
+                if (mGame.getElement(x - 1, y) == Game.BOX || mGame.getElement(x - 1, y) == Game.BOX_OK) {
+                    if (x - 2 >= 0 && (mGame.getElement(x - 2, y) == Game.EMPTY || mGame.getElement(x - 2, y) == Game.GOAL))
                         // Il y a une caisse ‡ dÈplacer
                         moveBox(x - 1, y, x - 2, y);
                     else
@@ -244,12 +267,12 @@ public class GameScene extends BaseScene {
             case RIGHT:
                 // Si le joueur dÈpasse l'Ècran, ou
                 // s'il y a un mur, on arrÍte
-                if (x + 1 >= mGameMap.getSizeX() || mGameMap.getElement(x + 1, y) == GameMap.WALL)
+                if (x + 1 >= mGame.getSizeX() || mGame.getElement(x + 1, y) == Game.WALL)
                     break;
                 // Si on veut pousser une caisse, il faut vÈrifier qu'il n'y a pas
                 // de mur derriËre (ou une autre caisse, ou la limite du monde)
-                if (mGameMap.getElement(x + 1, y) == GameMap.BOX || mGameMap.getElement(x + 1, y) == GameMap.BOX_OK) {
-                    if (x + 2 < mGameMap.getSizeX() && (mGameMap.getElement(x + 2, y) == GameMap.EMPTY || mGameMap.getElement(x + 2, y) == GameMap.GOAL))
+                if (mGame.getElement(x + 1, y) == Game.BOX || mGame.getElement(x + 1, y) == Game.BOX_OK) {
+                    if (x + 2 < mGame.getSizeX() && (mGame.getElement(x + 2, y) == Game.EMPTY || mGame.getElement(x + 2, y) == Game.GOAL))
                         // Il y a une caisse ‡ dÈplacer
                         moveBox(x + 1, y, x + 2, y);
                     else
@@ -263,19 +286,20 @@ public class GameScene extends BaseScene {
             default:
                 break;
         }
+        */
     }
 
     private void moveBox(int sourceX, int sourceY, int targetX, int targetY) {
 
-        if (mGameMap.getElement(sourceX, sourceY) == GameMap.BOX_OK)
-            mGameMap.setElement(sourceX, sourceY, GameMap.GOAL);
+        if (mGame.getElement(sourceX, sourceY) == Game.BOX_OK)
+            mGame.setElement(sourceX, sourceY, Game.GOAL);
         else
-            mGameMap.setElement(sourceX, sourceY, GameMap.EMPTY);
+            mGame.setElement(sourceX, sourceY, Game.EMPTY);
 
-        if (mGameMap.getElement(targetX, targetY) == GameMap.GOAL)
-            mGameMap.setElement(targetX, targetY, GameMap.BOX_OK);
+        if (mGame.getElement(targetX, targetY) == Game.GOAL)
+            mGame.setElement(targetX, targetY, Game.BOX_OK);
         else
-            mGameMap.setElement(targetX, targetY, GameMap.BOX);
+            mGame.setElement(targetX, targetY, Game.BOX);
     }
 
 }
