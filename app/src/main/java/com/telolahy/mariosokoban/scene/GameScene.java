@@ -10,6 +10,10 @@ import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.IEntityModifier;
+import org.andengine.entity.modifier.PathModifier;
+import org.andengine.entity.modifier.PathModifier.Path;
 import org.andengine.entity.scene.background.RepeatingSpriteBackground;
 import org.andengine.entity.sprite.Sprite;
 
@@ -51,7 +55,7 @@ public class GameScene extends BaseScene {
             @Override
             public void onControlChange(final BaseOnScreenControl pBaseOnScreenControl, final float pValueX, final float pValueY) {
 
-                moveMario(pValueX, pValueY);
+                handleInput(pValueX, pValueY);
             }
 
             @Override
@@ -111,23 +115,23 @@ public class GameScene extends BaseScene {
                         attachChild(wall);
                         break;
 
-                    case Game.GOAL:
-                        Sprite goal = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
-                        attachChild(goal);
-                        break;
-
-                    case Game.BOX:
-                        BoxSprite box = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, false);
-                        mBoxes.add(box);
-                        attachChild(box);
-                        break;
-
-                    case Game.BOX_OK:
-                        BoxSprite boxOk = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, true);
-                        boxOk.setCurrentTileIndex(1);
-                        mBoxes.add(boxOk);
-                        attachChild(boxOk);
-                        break;
+//                    case Game.GOAL:
+//                        Sprite goal = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
+//                        attachChild(goal);
+//                        break;
+//
+//                    case Game.BOX:
+//                        BoxSprite box = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, false);
+//                        mBoxes.add(box);
+//                        attachChild(box);
+//                        break;
+//
+//                    case Game.BOX_OK:
+//                        BoxSprite boxOk = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, true);
+//                        boxOk.setCurrentTileIndex(1);
+//                        mBoxes.add(boxOk);
+//                        attachChild(boxOk);
+//                        break;
 
 
                     case Game.PLAYER:
@@ -148,7 +152,7 @@ public class GameScene extends BaseScene {
 
     private Point getDirection(float dx, float dy) {
 
-        float THRESHOLD = 0.2f;
+        float THRESHOLD = 0.4f;
         if (Math.abs(dx) < THRESHOLD && Math.abs(dy) < THRESHOLD) {
             return new Point(0, 0);     // none
         }
@@ -168,7 +172,7 @@ public class GameScene extends BaseScene {
         }
     }
 
-    private void moveMario(float dx, float dy) {
+    private void handleInput(float dx, float dy) {
 
         Point direction = getDirection(dx, dy);
 
@@ -186,12 +190,13 @@ public class GameScene extends BaseScene {
             return; // reached limit of he world
         }
 
-        if (mGame.getElement(destination.x, destination.y) == Game.WALL){
+        if (mGame.getElement(destination.x, destination.y) == Game.WALL) {
             return; // blocked by a wall
         }
 
-        mMario.position = destination;
-        mMario.setPosition(X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2, Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2);
+        moveMario(destination);
+
+
 
         /*
 
@@ -300,6 +305,44 @@ public class GameScene extends BaseScene {
             mGame.setElement(targetX, targetY, Game.BOX_OK);
         else
             mGame.setElement(targetX, targetY, Game.BOX);
+    }
+
+    private void moveBox(Point source, Point destination) {
+
+    }
+
+    private void moveMario(Point destination){
+
+        mMario.position = destination;
+        float x0 = mMario.getX();
+        float y0 = mMario.getY();
+        float x1 = X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
+        float y1 = Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
+        final Path marioPath= new Path(2).to(x0, y0).to(x1, y1);
+        mMario.registerEntityModifier(new PathModifier(0.5f, marioPath, null, new PathModifier.IPathModifierListener() {
+
+            @Override
+            public void onPathStarted(final PathModifier pPathModifier, final IEntity pEntity) {
+
+                mMario.active = true;
+            }
+
+            @Override
+            public void onPathWaypointStarted(final PathModifier pPathModifier, final IEntity pEntity, final int pWaypointIndex) {
+
+            }
+
+            @Override
+            public void onPathWaypointFinished(final PathModifier pPathModifier, final IEntity pEntity, final int pWaypointIndex) {
+
+            }
+
+            @Override
+            public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
+
+                mMario.active = false;
+            }
+        }));
     }
 
 }
