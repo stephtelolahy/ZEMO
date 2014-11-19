@@ -13,7 +13,9 @@ import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.SurfaceGestureDetector;
+import org.andengine.input.touch.detector.SurfaceScrollDetector;
 
 import java.util.ArrayList;
 
@@ -37,7 +39,8 @@ public class GameScene extends BaseScene {
     private MarioSprite mMario;
     private ArrayList<BoxSprite> mBoxes;
 
-    private SurfaceGestureDetector mDetector;
+    private SurfaceGestureDetector gestureDetector;
+    private SurfaceScrollDetector scrollDetector;
 
     public GameScene() {
         super();
@@ -47,7 +50,8 @@ public class GameScene extends BaseScene {
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
 
-        mDetector.onTouchEvent(pSceneTouchEvent);
+//        gestureDetector.onTouchEvent(pSceneTouchEvent);
+        scrollDetector.onManagedTouchEvent(pSceneTouchEvent);
         return true;
     }
 
@@ -65,7 +69,35 @@ public class GameScene extends BaseScene {
             @Override
             public void run() {
 
-                mDetector = new SurfaceGestureDetector(mActivity, 60) {
+                scrollDetector = new SurfaceScrollDetector(25, new ScrollDetector.IScrollDetectorListener() {
+                    @Override
+                    public void onScrollStarted(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+
+                    }
+
+                    @Override
+                    public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+
+                        if (Math.abs(pDistanceX) > Math.abs(pDistanceY)) {
+                            if (pDistanceX > 0)
+                                handleInput(new Point(1, 0));
+                            else
+                                handleInput(new Point(-1, 0));
+                        } else {
+                            if (pDistanceY > 0)
+                                handleInput(new Point(0, -1));
+                            else
+                                handleInput(new Point(0, 1));
+                        }
+                    }
+
+                    @Override
+                    public void onScrollFinished(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+
+                    }
+                });
+
+                gestureDetector = new SurfaceGestureDetector(mActivity, 60) {
                     @Override
                     protected boolean onSingleTap() {
                         return false;
@@ -306,7 +338,8 @@ public class GameScene extends BaseScene {
         float x2 = X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
         float y2 = Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
         final Path boxPath = new Path(2).to(x1, y1).to(x2, y2);
-        box.registerEntityModifier(new PathModifier(0.5f, boxPath, null, new PathModifier.IPathModifierListener() {
+        float pathAnimationDuration = (float) STEP_DURATION_MILLIS / 1000;
+        box.registerEntityModifier(new PathModifier(pathAnimationDuration, boxPath, null, new PathModifier.IPathModifierListener() {
 
             @Override
             public void onPathStarted(final PathModifier pPathModifier, final IEntity pEntity) {
