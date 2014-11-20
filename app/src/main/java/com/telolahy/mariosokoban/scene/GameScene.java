@@ -106,24 +106,15 @@ public class GameScene extends BaseScene {
                 mDetector = new GameDetector(new GameDetector.IScrollDetectorListener() {
 
                     @Override
-                    public void onScroll(GameDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+                    public void onScrollVector(GameDetector pScollDetector, int pPointerID, Point vector) {
 
-                        if (Math.abs(pDistanceX) > Math.abs(pDistanceY)) {
-                            if (pDistanceX > 0)
-                                handleInput(new Point(1, 0));
-                            else
-                                handleInput(new Point(-1, 0));
-                        } else {
-                            if (pDistanceY > 0)
-                                handleInput(new Point(0, 1));
-                            else
-                                handleInput(new Point(0, -1));
+                        if (mMario.moving) {
+                            return; // mario is busy
                         }
-                    }
 
-                    @Override
-                    public void onScrollFinished(GameDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
-
+                        if (canMoveMario(vector)) {
+                            moveMario(vector);
+                        }
                     }
                 });
             }
@@ -244,17 +235,6 @@ public class GameScene extends BaseScene {
         return true;
     }
 
-    private void handleInput(Point vector) {
-
-        if (mMario.moving) {
-            return; // mario is busy
-        }
-
-        if (canMoveMario(vector)) {
-            moveMario(vector);
-        }
-    }
-
     private void moveMario(final Point vector) {
 
         Point source = mMario.gamePosition;
@@ -314,9 +294,15 @@ public class GameScene extends BaseScene {
             @Override
             public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
 
-                mMario.moving = false;
-                mMario.stopAnimation();
-                mMario.setCurrentTileIndex(direction * 4);
+                Point vector = mDetector.getVector();
+                if (vector != null && canMoveMario(vector)) {
+                    moveMario(vector);
+                } else {
+                    // finish animation
+                    mMario.moving = false;
+                    mMario.stopAnimation();
+                    mMario.setCurrentTileIndex(direction * 4);
+                }
             }
         }));
     }

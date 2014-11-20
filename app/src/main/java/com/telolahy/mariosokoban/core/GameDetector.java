@@ -1,5 +1,7 @@
 package com.telolahy.mariosokoban.core;
 
+import android.graphics.Point;
+
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.BaseDetector;
 
@@ -27,6 +29,7 @@ public class GameDetector extends BaseDetector {
 
     private float mLastX;
     private float mLastY;
+    private Point mLastVector;
 
     // ===========================================================
     // Constructors
@@ -57,6 +60,11 @@ public class GameDetector extends BaseDetector {
         return this.mTriggering;
     }
 
+    public Point getVector() {
+
+        return this.mLastVector;
+    }
+
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
@@ -64,12 +72,13 @@ public class GameDetector extends BaseDetector {
     @Override
     public void reset() {
         if (this.mTriggering) {
-            this.mScrollDetectorListener.onScrollFinished(this, this.mPointerID, 0, 0);
+            triggerOnScrollFinished(0, 0);
         }
 
         this.mLastX = 0;
         this.mLastY = 0;
         this.mTriggering = false;
+        this.mLastVector = null;
         this.mPointerID = TouchEvent.INVALID_POINTER_ID;
     }
 
@@ -132,6 +141,7 @@ public class GameDetector extends BaseDetector {
         this.mLastX = pTouchX;
         this.mLastY = pTouchY;
         this.mTriggering = false;
+        this.mLastVector = null;
         this.mPointerID = pPointerID;
     }
 
@@ -139,22 +149,41 @@ public class GameDetector extends BaseDetector {
         this.mTriggering = true;
         if (this.mPointerID != TouchEvent.INVALID_POINTER_ID) {
 //            this.mScrollDetectorListener.onScrollStarted(this, this.mPointerID, pDistanceX, pDistanceY);
-            this.mScrollDetectorListener.onScroll(this, this.mPointerID, pDistanceX, pDistanceY);
+            triggerOnScrollVector(pDistanceX, pDistanceY);
         }
     }
 
     private void triggerOnScroll(final float pDistanceX, final float pDistanceY) {
         if (this.mPointerID != TouchEvent.INVALID_POINTER_ID) {
-            this.mScrollDetectorListener.onScroll(this, this.mPointerID, pDistanceX, pDistanceY);
+//            this.mScrollDetectorListener.onScroll(this, this.mPointerID, pDistanceX, pDistanceY);
+            triggerOnScrollVector(pDistanceX, pDistanceY);
         }
     }
 
     private void triggerOnScrollFinished(final float pDistanceX, final float pDistanceY) {
         this.mTriggering = false;
-
+        this.mLastVector = null;
         if (this.mPointerID != TouchEvent.INVALID_POINTER_ID) {
-            this.mScrollDetectorListener.onScrollFinished(this, this.mPointerID, pDistanceX, pDistanceY);
+//            this.mScrollDetectorListener.onScrollFinished(this, this.mPointerID, pDistanceX, pDistanceY);
         }
+    }
+
+    private void triggerOnScrollVector(final float pDistanceX, final float pDistanceY) {
+
+        Point vector;
+        if (Math.abs(pDistanceX) > Math.abs(pDistanceY)) {
+            if (pDistanceX > 0)
+                vector = new Point(1, 0);
+            else
+                vector = new Point(-1, 0);
+        } else {
+            if (pDistanceY > 0)
+                vector = new Point(0, 1);
+            else
+                vector = new Point(0, -1);
+        }
+        this.mLastVector = vector;
+        this.mScrollDetectorListener.onScrollVector(this, this.mPointerID, vector);
     }
 
     protected float getX(final TouchEvent pTouchEvent) {
@@ -180,8 +209,10 @@ public class GameDetector extends BaseDetector {
 
 //        public void onScrollStarted(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
 
-        public void onScroll(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
+//        public void onScroll(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
 
-        public void onScrollFinished(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
+//        public void onScrollFinished(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
+
+        public void onScrollVector(final GameDetector pScollDetector, final int pPointerID, final Point vector);
     }
 }
