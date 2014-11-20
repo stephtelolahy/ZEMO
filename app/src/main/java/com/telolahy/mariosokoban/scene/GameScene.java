@@ -204,20 +204,25 @@ public class GameScene extends BaseScene {
         mCamera.setChaseEntity(mMario);
     }
 
-    private void handleInput(Point direction) {
+    private boolean isValidCoordinate(Point point) {
 
-        if (mMario.moving) {
-            return; // mario is busy
+        if (point.x < 0 || point.x > mGame.getSizeX() - 1 || point.y < 0 || point.y > mGame.getSizeY() - 1) {
+            return false; // reached limit of he world
+        } else {
+            return true;
         }
+    }
+
+    private boolean canMoveMario(Point direction) {
 
         Point destination = new Point(mMario.gamePosition.x + direction.x, mMario.gamePosition.y + direction.y);
 
-        if (destination.x < 0 || destination.x > mGame.getSizeX() - 1 || destination.y < 0 || destination.y > mGame.getSizeY() - 1) {
-            return; // reached limit of he world
+        if (!isValidCoordinate(destination)) {
+            return false; // reached limit of he world
         }
 
         if (mGame.getElement(destination) == GameMap.WALL) {
-            return; // blocked by a wall
+            return false; // blocked by a wall
         }
 
         if (mGame.getElement(destination) == GameMap.BOX
@@ -225,25 +230,46 @@ public class GameScene extends BaseScene {
 
             Point behindDestination = new Point(destination.x + direction.x, destination.y + direction.y);
 
-            if (behindDestination.x < 0 || behindDestination.x > mGame.getSizeX() - 1 || behindDestination.y < 0 || behindDestination.y > mGame.getSizeY() - 1) {
-                return; // reached limit of he world
+            if (!isValidCoordinate(behindDestination)) {
+                return false; // reached limit of he world
             }
 
             if (mGame.getElement(behindDestination) == GameMap.WALL
                     || mGame.getElement(behindDestination) == GameMap.BOX
                     || mGame.getElement(behindDestination) == GameMap.BOX_OK) {
-                return; // blocked by a wall, box
+                return false; // blocked by a wall, box
             }
-
-            moveBox(destination, behindDestination);
         }
 
-        moveMario(destination);
+        return true;
     }
 
-    private void moveMario(Point destination) {
+    private void handleInput(Point vector) {
+
+        if (mMario.moving) {
+            return; // mario is busy
+        }
+
+        if (canMoveMario(vector)) {
+            moveMario(vector);
+        }
+    }
+
+    private void moveMario(final Point vector) {
 
         Point source = mMario.gamePosition;
+        Point destination = new Point(mMario.gamePosition.x + vector.x, mMario.gamePosition.y + vector.y);
+
+        if (mGame.getElement(destination) == GameMap.BOX || mGame.getElement(destination) == GameMap.BOX_OK) {
+
+            Point behindDestination = new Point(destination.x + vector.x, destination.y + vector.y);
+            animateBox(destination, behindDestination);
+        }
+
+        animateMario(source, destination);
+    }
+
+    private void animateMario(Point source, Point destination) {
 
         final int direction = getDirection(source, destination);
 
@@ -295,7 +321,7 @@ public class GameScene extends BaseScene {
         }));
     }
 
-    private void moveBox(Point source, Point destination) {
+    private void animateBox(Point source, Point destination) {
 
         GameCharacter box = getBoxAt(source);
 
