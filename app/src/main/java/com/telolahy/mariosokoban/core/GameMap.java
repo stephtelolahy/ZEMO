@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by stephanohuguestelolahy on 11/17/14.
  */
-public class Game {
+public class GameMap {
 
     public static final char EMPTY = ' ';
     public static final char WALL = '#';

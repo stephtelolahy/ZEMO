@@ -3,10 +3,9 @@ package com.telolahy.mariosokoban.scene;
 import android.graphics.Point;
 
 import com.telolahy.mariosokoban.Constants;
-import com.telolahy.mariosokoban.core.BoxSprite;
-import com.telolahy.mariosokoban.core.Game;
+import com.telolahy.mariosokoban.core.GameCharacter;
 import com.telolahy.mariosokoban.core.GameDetector;
-import com.telolahy.mariosokoban.core.MarioSprite;
+import com.telolahy.mariosokoban.core.GameMap;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.entity.IEntity;
@@ -37,14 +36,17 @@ public class GameScene extends BaseScene {
     private static final int RIGHT = 2;
     private static final int UP = 3;
 
+    private static final int BOX_STATE_NONE = 0;
+    private static final int BOX_STATE_OK = 1;
+
     // ===========================================================
     // Fields
     // ===========================================================
 
-    private Game mGame;
-    private MarioSprite mMario;
-    private ArrayList<BoxSprite> mBoxes;
-    private GameDetector scrollDetector;
+    private GameMap mGame;
+    private GameCharacter mMario;
+    private ArrayList<GameCharacter> mBoxes;
+    private GameDetector mDetector;
 
     // ===========================================================
     // Constructors
@@ -66,7 +68,7 @@ public class GameScene extends BaseScene {
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
 
-        scrollDetector.onManagedTouchEvent(pSceneTouchEvent);
+        mDetector.onManagedTouchEvent(pSceneTouchEvent);
         return true;
     }
 
@@ -101,7 +103,7 @@ public class GameScene extends BaseScene {
             @Override
             public void run() {
 
-                scrollDetector = new GameDetector(new GameDetector.IScrollDetectorListener() {
+                mDetector = new GameDetector(new GameDetector.IScrollDetectorListener() {
                     @Override
                     public void onScrollStarted(GameDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
@@ -147,10 +149,10 @@ public class GameScene extends BaseScene {
 
     private void loadLevel(int level) {
 
-        mGame = new Game();
+        mGame = new GameMap();
         mGame.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
 
-        mBoxes = new ArrayList<BoxSprite>();
+        mBoxes = new ArrayList<GameCharacter>();
 
         for (int y = 0; y < mGame.getSizeY(); y++) {
             for (int x = 0; x < mGame.getSizeX(); x++) {
@@ -160,33 +162,35 @@ public class GameScene extends BaseScene {
 
                 switch (mGame.getElement(new Point(x, y))) {
 
-                    case Game.WALL:
+                    case GameMap.WALL:
                         Sprite wall = new Sprite(posX, posY, mResourcesManager.gameWallTextureRegion, mVertexBufferObjectManager);
                         attachChild(wall);
                         break;
 
-                    case Game.GOAL:
+                    case GameMap.GOAL:
                         Sprite goal = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
                         attachChild(goal);
                         break;
 
-                    case Game.BOX:
-                        BoxSprite box = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, false);
+                    case GameMap.BOX:
+                        GameCharacter box = new GameCharacter(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y);
+                        box.state = BOX_STATE_NONE;
                         mBoxes.add(box);
                         break;
 
-                    case Game.BOX_OK:
-                        BoxSprite boxOk = new BoxSprite(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y, true);
+                    case GameMap.BOX_OK:
+                        GameCharacter boxOk = new GameCharacter(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y);
+                        boxOk.state = BOX_STATE_OK;
                         boxOk.setCurrentTileIndex(1);
                         mBoxes.add(boxOk);
                         break;
 
-                    case Game.PLAYER:
-                        MarioSprite player = new MarioSprite(posX, posY, mResourcesManager.gamePlayerTextureRegion, mVertexBufferObjectManager, x, y);
+                    case GameMap.PLAYER:
+                        GameCharacter player = new GameCharacter(posX, posY, mResourcesManager.gamePlayerTextureRegion, mVertexBufferObjectManager, x, y);
                         mMario = player;
                         break;
 
-                    case Game.PLAYER_ON_GOAL:
+                    case GameMap.PLAYER_ON_GOAL:
                         break;
 
                     default:
@@ -195,7 +199,7 @@ public class GameScene extends BaseScene {
             }
         }
 
-        for (BoxSprite box : mBoxes) {
+        for (GameCharacter box : mBoxes) {
             attachChild(box);
         }
 
@@ -206,22 +210,22 @@ public class GameScene extends BaseScene {
 
     private void handleInput(Point direction) {
 
-        if (mMario.active) {
+        if (mMario.moving) {
             return; // mario is busy
         }
 
-        Point destination = new Point(mMario.position.x + direction.x, mMario.position.y + direction.y);
+        Point destination = new Point(mMario.gamePosition.x + direction.x, mMario.gamePosition.y + direction.y);
 
         if (destination.x < 0 || destination.x > mGame.getSizeX() - 1 || destination.y < 0 || destination.y > mGame.getSizeY() - 1) {
             return; // reached limit of he world
         }
 
-        if (mGame.getElement(destination) == Game.WALL) {
+        if (mGame.getElement(destination) == GameMap.WALL) {
             return; // blocked by a wall
         }
 
-        if (mGame.getElement(destination) == Game.BOX
-                || mGame.getElement(destination) == Game.BOX_OK) {
+        if (mGame.getElement(destination) == GameMap.BOX
+                || mGame.getElement(destination) == GameMap.BOX_OK) {
 
             Point behindDestination = new Point(destination.x + direction.x, destination.y + direction.y);
 
@@ -229,9 +233,9 @@ public class GameScene extends BaseScene {
                 return; // reached limit of he world
             }
 
-            if (mGame.getElement(behindDestination) == Game.WALL
-                    || mGame.getElement(behindDestination) == Game.BOX
-                    || mGame.getElement(behindDestination) == Game.BOX_OK) {
+            if (mGame.getElement(behindDestination) == GameMap.WALL
+                    || mGame.getElement(behindDestination) == GameMap.BOX
+                    || mGame.getElement(behindDestination) == GameMap.BOX_OK) {
                 return; // blocked by a wall, box
             }
 
@@ -243,21 +247,21 @@ public class GameScene extends BaseScene {
 
     private void moveMario(Point destination) {
 
-        Point source = mMario.position;
+        Point source = mMario.gamePosition;
 
         final int direction = getDirection(source, destination);
 
-        if (mGame.getElement(source) == Game.PLAYER_ON_GOAL)
-            mGame.setElement(source, Game.GOAL);
+        if (mGame.getElement(source) == GameMap.PLAYER_ON_GOAL)
+            mGame.setElement(source, GameMap.GOAL);
         else
-            mGame.setElement(source, Game.EMPTY);
+            mGame.setElement(source, GameMap.EMPTY);
 
-        if (mGame.getElement(destination) == Game.GOAL)
-            mGame.setElement(destination, Game.PLAYER_ON_GOAL);
+        if (mGame.getElement(destination) == GameMap.GOAL)
+            mGame.setElement(destination, GameMap.PLAYER_ON_GOAL);
         else
-            mGame.setElement(destination, Game.EMPTY);
+            mGame.setElement(destination, GameMap.EMPTY);
 
-        mMario.position = destination;
+        mMario.gamePosition = destination;
 
         float x1 = mMario.getX();
         float y1 = mMario.getY();
@@ -270,7 +274,7 @@ public class GameScene extends BaseScene {
             @Override
             public void onPathStarted(final PathModifier pPathModifier, final IEntity pEntity) {
 
-                mMario.active = true;
+                mMario.moving = true;
                 final long tileDuration = STEP_DURATION_MILLIS / 4;
                 mMario.animate(new long[]{tileDuration, tileDuration, tileDuration, tileDuration}, direction * 4, direction * 4 + 3, true);
             }
@@ -288,7 +292,7 @@ public class GameScene extends BaseScene {
             @Override
             public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
 
-                mMario.active = false;
+                mMario.moving = false;
                 mMario.stopAnimation();
                 mMario.setCurrentTileIndex(direction * 4);
             }
@@ -297,23 +301,23 @@ public class GameScene extends BaseScene {
 
     private void moveBox(Point source, Point destination) {
 
-        BoxSprite box = getBoxAt(source);
+        GameCharacter box = getBoxAt(source);
 
-        if (mGame.getElement(source) == Game.BOX_OK) {
-            mGame.setElement(source, Game.GOAL);
+        if (mGame.getElement(source) == GameMap.BOX_OK) {
+            mGame.setElement(source, GameMap.GOAL);
             box.setCurrentTileIndex(0);
         } else {
-            mGame.setElement(source, Game.EMPTY);
+            mGame.setElement(source, GameMap.EMPTY);
         }
 
-        if (mGame.getElement(destination) == Game.GOAL) {
-            mGame.setElement(destination, Game.BOX_OK);
+        if (mGame.getElement(destination) == GameMap.GOAL) {
+            mGame.setElement(destination, GameMap.BOX_OK);
             box.setCurrentTileIndex(1);
         } else {
-            mGame.setElement(destination, Game.BOX);
+            mGame.setElement(destination, GameMap.BOX);
         }
 
-        box.position = destination;
+        box.gamePosition = destination;
 
         float x1 = box.getX();
         float y1 = box.getY();
@@ -346,10 +350,10 @@ public class GameScene extends BaseScene {
 
     }
 
-    private BoxSprite getBoxAt(Point position) {
+    private GameCharacter getBoxAt(Point position) {
 
-        for (BoxSprite box : mBoxes) {
-            if (box.position.x == position.x && box.position.y == position.y)
+        for (GameCharacter box : mBoxes) {
+            if (box.gamePosition.x == position.x && box.gamePosition.y == position.y)
                 return box;
         }
         return null;

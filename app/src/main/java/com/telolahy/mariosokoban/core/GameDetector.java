@@ -173,7 +173,9 @@ public class GameDetector extends BaseDetector {
         // ===========================================================
 
         public void onScrollStarted(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
+
         public void onScroll(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
+
         public void onScrollFinished(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
     }
 }
