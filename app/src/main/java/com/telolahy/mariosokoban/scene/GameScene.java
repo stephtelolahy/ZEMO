@@ -5,6 +5,7 @@ import android.graphics.Point;
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.core.BoxSprite;
 import com.telolahy.mariosokoban.core.Game;
+import com.telolahy.mariosokoban.core.GameDetector;
 import com.telolahy.mariosokoban.core.MarioSprite;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
@@ -13,9 +14,6 @@ import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
-import org.andengine.input.touch.detector.ScrollDetector;
-import org.andengine.input.touch.detector.SurfaceGestureDetector;
-import org.andengine.input.touch.detector.SurfaceScrollDetector;
 
 import java.util.ArrayList;
 
@@ -23,6 +21,10 @@ import java.util.ArrayList;
  * Created by stephanohuguestelolahy on 11/16/14.
  */
 public class GameScene extends BaseScene {
+
+    // ===========================================================
+    // Constants
+    // ===========================================================
 
     private static final int X0 = 100;
     private static final int Y0 = 40;
@@ -35,22 +37,35 @@ public class GameScene extends BaseScene {
     private static final int RIGHT = 2;
     private static final int UP = 3;
 
+    // ===========================================================
+    // Fields
+    // ===========================================================
+
     private Game mGame;
     private MarioSprite mMario;
     private ArrayList<BoxSprite> mBoxes;
+    private GameDetector scrollDetector;
 
-    private SurfaceGestureDetector gestureDetector;
-    private SurfaceScrollDetector scrollDetector;
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     public GameScene() {
         super();
         setupGestureDetector();
     }
 
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods for/from SuperClass/Interfaces
+    // ===========================================================
+
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
 
-//        gestureDetector.onTouchEvent(pSceneTouchEvent);
         scrollDetector.onManagedTouchEvent(pSceneTouchEvent);
         return true;
     }
@@ -63,80 +78,6 @@ public class GameScene extends BaseScene {
         loadLevel(1);
     }
 
-    private void setupGestureDetector() {
-
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                scrollDetector = new SurfaceScrollDetector(25, new ScrollDetector.IScrollDetectorListener() {
-                    @Override
-                    public void onScrollStarted(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
-
-                    }
-
-                    @Override
-                    public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
-
-                        if (Math.abs(pDistanceX) > Math.abs(pDistanceY)) {
-                            if (pDistanceX > 0)
-                                handleInput(new Point(1, 0));
-                            else
-                                handleInput(new Point(-1, 0));
-                        } else {
-                            if (pDistanceY > 0)
-                                handleInput(new Point(0, -1));
-                            else
-                                handleInput(new Point(0, 1));
-                        }
-                    }
-
-                    @Override
-                    public void onScrollFinished(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
-
-                    }
-                });
-
-                gestureDetector = new SurfaceGestureDetector(mActivity, 60) {
-                    @Override
-                    protected boolean onSingleTap() {
-                        return false;
-                    }
-
-                    @Override
-                    protected boolean onDoubleTap() {
-                        return false;
-                    }
-
-                    @Override
-                    protected boolean onSwipeUp() {
-                        handleInput(new Point(0, 1));
-                        return true;
-                    }
-
-                    @Override
-                    protected boolean onSwipeDown() {
-                        handleInput(new Point(0, -1));
-                        return true;
-                    }
-
-                    @Override
-                    protected boolean onSwipeLeft() {
-                        handleInput(new Point(-1, 0));
-                        return true;
-                    }
-
-                    @Override
-                    protected boolean onSwipeRight() {
-                        handleInput(new Point(1, 0));
-                        return true;
-                    }
-                };
-            }
-        });
-    }
-
-
     @Override
     public void disposeScene() {
 
@@ -148,6 +89,47 @@ public class GameScene extends BaseScene {
     public void onBackKeyPressed() {
 
         SceneManager.getInstance().loadMenuScene();
+    }
+
+    // ===========================================================
+    // Methods
+    // ===========================================================
+
+    private void setupGestureDetector() {
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                scrollDetector = new GameDetector(new GameDetector.IScrollDetectorListener() {
+                    @Override
+                    public void onScrollStarted(GameDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+
+                    }
+
+                    @Override
+                    public void onScroll(GameDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+
+                        if (Math.abs(pDistanceX) > Math.abs(pDistanceY)) {
+                            if (pDistanceX > 0)
+                                handleInput(new Point(1, 0));
+                            else
+                                handleInput(new Point(-1, 0));
+                        } else {
+                            if (pDistanceY > 0)
+                                handleInput(new Point(0, 1));
+                            else
+                                handleInput(new Point(0, -1));
+                        }
+                    }
+
+                    @Override
+                    public void onScrollFinished(GameDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+
+                    }
+                });
+            }
+        });
     }
 
     private void createBackground() {
