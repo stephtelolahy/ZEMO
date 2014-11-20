@@ -19,6 +19,7 @@ import org.andengine.entity.sprite.Sprite;
 public class MainMenuScene extends BaseScene {
 
     private MenuScene mMenuChildScene;
+    private AnimatedSprite mBackgroundPlayer;
 
     private static final int MENU_PLAY = 0;
     private static final int MENU_HELP = 1;
@@ -45,9 +46,9 @@ public class MainMenuScene extends BaseScene {
         setBackground(autoParallaxBackground);
 
         final int groundY = 28;
-        final AnimatedSprite player = new AnimatedSprite(Constants.CAMERA_WIDTH / 2, mResourcesManager.menuPlayerTextureRegion.getHeight() / 2 + groundY, mResourcesManager.menuPlayerTextureRegion, mVertexBufferObjectManager);
-        player.animate(new long[]{250, 250, 250, 250}, 8, 11, true);
-        attachChild(player);
+        mBackgroundPlayer = new AnimatedSprite(Constants.CAMERA_WIDTH / 2, mResourcesManager.menuPlayerTextureRegion.getHeight() / 2 + groundY, mResourcesManager.menuPlayerTextureRegion, mVertexBufferObjectManager);
+        mBackgroundPlayer.animate(new long[]{250, 250, 250, 250}, 8, 11, true);
+        attachChild(mBackgroundPlayer);
     }
 
     private void createMenuChildScene() {
@@ -96,6 +97,8 @@ public class MainMenuScene extends BaseScene {
         if (mResourcesManager.menuMusic.isPlaying()) {
             mResourcesManager.menuMusic.pause();
         }
+
+        mBackgroundPlayer.detachSelf();
 
         this.detachSelf();
         this.dispose();
