@@ -104,10 +104,6 @@ public class GameScene extends BaseScene {
             public void run() {
 
                 mDetector = new GameDetector(new GameDetector.IScrollDetectorListener() {
-                    @Override
-                    public void onScrollStarted(GameDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
-
-                    }
 
                     @Override
                     public void onScroll(GameDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {

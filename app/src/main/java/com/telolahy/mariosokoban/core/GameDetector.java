@@ -53,6 +53,10 @@ public class GameDetector extends BaseDetector {
         this.mTriggerScrollMinimumDistance = pTriggerScrollMinimumDistance;
     }
 
+    public boolean isTriggering() {
+        return this.mTriggering;
+    }
+
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
@@ -87,7 +91,8 @@ public class GameDetector extends BaseDetector {
                     final float distanceY = touchY - this.mLastY;
 
                     final float triggerScrollMinimumDistance = this.mTriggerScrollMinimumDistance;
-                    if (this.mTriggering || Math.abs(distanceX) > triggerScrollMinimumDistance || Math.abs(distanceY) > triggerScrollMinimumDistance) {
+                    if (Math.abs(distanceX) > triggerScrollMinimumDistance || Math.abs(distanceY) > triggerScrollMinimumDistance) {
+
                         if (!this.mTriggering) {
                             this.triggerOnScrollStarted(distanceX, distanceY);
                         } else {
@@ -96,7 +101,6 @@ public class GameDetector extends BaseDetector {
 
                         this.mLastX = touchX;
                         this.mLastY = touchY;
-                        this.mTriggering = true;
                     }
                     return true;
                 } else {
@@ -132,8 +136,10 @@ public class GameDetector extends BaseDetector {
     }
 
     private void triggerOnScrollStarted(final float pDistanceX, final float pDistanceY) {
+        this.mTriggering = true;
         if (this.mPointerID != TouchEvent.INVALID_POINTER_ID) {
-            this.mScrollDetectorListener.onScrollStarted(this, this.mPointerID, pDistanceX, pDistanceY);
+//            this.mScrollDetectorListener.onScrollStarted(this, this.mPointerID, pDistanceX, pDistanceY);
+            this.mScrollDetectorListener.onScroll(this, this.mPointerID, pDistanceX, pDistanceY);
         }
     }
 
@@ -172,7 +178,7 @@ public class GameDetector extends BaseDetector {
         // Methods
         // ===========================================================
 
-        public void onScrollStarted(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
+//        public void onScrollStarted(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
 
         public void onScroll(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
 
