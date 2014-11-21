@@ -90,7 +90,7 @@ public class GameScene extends BaseScene {
         mMario.detachSelf();
 
         mCamera.setChaseEntity(null);
-        mCamera.setCenter(Constants.CAMERA_WIDTH / 2 , Constants.CAMERA_HEIGHT / 2);
+        mCamera.setCenter(Constants.SCREEN_WIDTH / 2 , Constants.SCREEN_HEIGHT / 2);
 
         engineLock.unlock();
 
@@ -134,7 +134,7 @@ public class GameScene extends BaseScene {
 
     private void createBackground() {
 
-        Sprite repeatingBackground = new Sprite(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
+        Sprite repeatingBackground = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
         attachChild(repeatingBackground);
 
 //        RepeatingSpriteBackground grassBackground = new RepeatingSpriteBackground(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
@@ -204,6 +204,8 @@ public class GameScene extends BaseScene {
         attachChild(mMario);
 
         mCamera.setChaseEntity(mMario);
+//        mCamera.setBounds(0, 0, 1024, 500);
+//        mCamera.setBoundsEnabled(true);
     }
 
     private boolean isValidCoordinate(Point point) {
