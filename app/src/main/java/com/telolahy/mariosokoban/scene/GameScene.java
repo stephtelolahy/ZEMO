@@ -204,8 +204,14 @@ public class GameScene extends BaseScene {
         attachChild(mMario);
 
         mCamera.setChaseEntity(mMario);
-//        mCamera.setBounds(0, 0, 1024, 500);
-//        mCamera.setBoundsEnabled(true);
+        int worldWidth = BLOC_SIZE * (mGame.getSizeX() + 1);
+        int worldHeight = BLOC_SIZE * (mGame.getSizeY() + 1);
+        int cameraMinX = 0;
+        int cameraMinY = 0;
+        int cameraMaxX = Math.max(X0 + worldWidth, Constants.SCREEN_WIDTH);
+        int cameraMaxY = Math.max(Y0 + worldHeight, Constants.SCREEN_HEIGHT);
+        mCamera.setBounds(cameraMinX, cameraMinY, cameraMaxX, cameraMaxY);
+        mCamera.setBoundsEnabled(true);
     }
 
     private boolean isValidCoordinate(Point point) {

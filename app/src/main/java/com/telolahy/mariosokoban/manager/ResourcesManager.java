@@ -192,8 +192,8 @@ public class ResourcesManager {
 
             gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/background_grass.png", TextureOptions.REPEATING_NEAREST_PREMULTIPLYALPHA);
             gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
-            gameGrassBackgroundTextureRegion.setTextureWidth(Constants.SCREEN_WIDTH * 2);
-            gameGrassBackgroundTextureRegion.setTextureHeight(Constants.SCREEN_HEIGHT * 2);
+            gameGrassBackgroundTextureRegion.setTextureWidth(Constants.SCREEN_WIDTH * 4);
+            gameGrassBackgroundTextureRegion.setTextureHeight(Constants.SCREEN_HEIGHT * 4);
             gameBackgroundTexture.load();
 
         } catch (IOException e) {
