@@ -8,6 +8,7 @@ import com.telolahy.mariosokoban.core.GameDetector;
 import com.telolahy.mariosokoban.core.GameMap;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
+import org.andengine.engine.Engine;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
@@ -82,6 +83,16 @@ public class GameScene extends BaseScene {
 
     @Override
     public void disposeScene() {
+
+        Engine.EngineLock engineLock = mActivity.getEngine().getEngineLock();
+        engineLock.lock();
+
+        mMario.detachSelf();
+
+        mCamera.setChaseEntity(null);
+        mCamera.setCenter(Constants.CAMERA_WIDTH / 2 , Constants.CAMERA_HEIGHT / 2);
+
+        engineLock.unlock();
 
         this.detachSelf();
         this.dispose();
