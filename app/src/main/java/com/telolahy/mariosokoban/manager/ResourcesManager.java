@@ -120,7 +120,7 @@ public class ResourcesManager {
             menuParallaxLayerBackTexture.load();
 
             menuPlayerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/player.png", TextureOptions.BILINEAR);
-            menuPlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(menuPlayerTexture, 4, 4);
+            menuPlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(menuPlayerTexture, 4, 1);
             menuPlayerTexture.load();
 
         } catch (IOException e) {

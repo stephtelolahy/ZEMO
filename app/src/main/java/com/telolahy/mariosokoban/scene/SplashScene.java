@@ -1,7 +1,6 @@
 package com.telolahy.mariosokoban.scene;
 
 import com.telolahy.mariosokoban.Constants;
-import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;

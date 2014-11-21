@@ -47,7 +47,7 @@ public class MainMenuScene extends BaseScene {
 
         final int groundY = 28;
         mBackgroundPlayer = new AnimatedSprite(Constants.SCREEN_WIDTH / 2, mResourcesManager.menuPlayerTextureRegion.getHeight() / 2 + groundY, mResourcesManager.menuPlayerTextureRegion, mVertexBufferObjectManager);
-        mBackgroundPlayer.animate(new long[]{250, 250, 250, 250}, 8, 11, true);
+        mBackgroundPlayer.animate(new long[]{250, 250, 250, 250}, 0, 3, true);
         attachChild(mBackgroundPlayer);
     }
 
