@@ -26,8 +26,8 @@ public class GameScene extends BaseScene {
     // Constants
     // ===========================================================
 
-    private static final int X0 = 100;
-    private static final int Y0 = 40;
+    private static final int WORLD_MARGIN_LEFT = 100;
+    private static final int WORLD_MARGIN = 40;
     private static final int BLOC_SIZE = 58;
     private static final int STEP_DURATION_MILLIS = 800; // time to move one block
 
@@ -48,6 +48,8 @@ public class GameScene extends BaseScene {
     private GameCharacter mMario;
     private ArrayList<GameCharacter> mBoxes;
     private GameDetector mDetector;
+    private static int X0;
+    private static int Y0;
 
     // ===========================================================
     // Constructors
@@ -148,8 +150,25 @@ public class GameScene extends BaseScene {
     private void loadLevel(int level) {
 
         mGame = new GameMap();
-//        level = 2;
         mGame.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
+
+        int worldWidth = BLOC_SIZE * mGame.getSizeX() + WORLD_MARGIN;
+        int worldHeight = BLOC_SIZE * mGame.getSizeY() + WORLD_MARGIN;
+        X0 = WORLD_MARGIN_LEFT;
+        Y0 = WORLD_MARGIN;
+
+        if (X0 + worldWidth < Constants.SCREEN_WIDTH) {
+            X0 = ((Constants.SCREEN_WIDTH - X0) - worldWidth) / 2 + X0;
+        }
+        if (Y0 + worldHeight < Constants.SCREEN_HEIGHT) {
+            Y0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
+        }
+        int cameraMinX = 0;
+        int cameraMinY = 0;
+        int cameraMaxX = Math.max(X0 + worldWidth, Constants.SCREEN_WIDTH);
+        int cameraMaxY = Math.max(Y0 + worldHeight, Constants.SCREEN_HEIGHT);
+        mCamera.setBounds(cameraMinX, cameraMinY, cameraMaxX, cameraMaxY);
+        mCamera.setBoundsEnabled(true);
 
         mBoxes = new ArrayList<GameCharacter>();
 
@@ -205,14 +224,6 @@ public class GameScene extends BaseScene {
         attachChild(mMario);
 
         mCamera.setChaseEntity(mMario);
-        int worldWidth = BLOC_SIZE * (mGame.getSizeX() + 1);
-        int worldHeight = BLOC_SIZE * (mGame.getSizeY() + 1);
-        int cameraMinX = 0;
-        int cameraMinY = 0;
-        int cameraMaxX = Math.max(X0 + worldWidth, Constants.SCREEN_WIDTH);
-        int cameraMaxY = Math.max(Y0 + worldHeight, Constants.SCREEN_HEIGHT);
-        mCamera.setBounds(cameraMinX, cameraMinY, cameraMaxX, cameraMaxY);
-        mCamera.setBoundsEnabled(true);
     }
 
     private boolean isValidCoordinate(Point point) {
