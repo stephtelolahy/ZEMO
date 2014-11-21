@@ -13,7 +13,6 @@ import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.util.FPSLogger;
-import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.input.touch.detector.ClickDetector.IClickDetectorListener;
@@ -32,25 +31,24 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
     // ===========================================================
     // Constants
     // ===========================================================
-    protected static int CAMERA_WIDTH = 720;
+    protected static int CAMERA_WIDTH = 800;
     protected static int CAMERA_HEIGHT = 480;
 
-    protected static int FONT_SIZE = 24;
+    protected static int FONT_SIZE = 26;
 
     protected static int LEVELS = 30;
     protected static int LEVEL_COLUMNS_PER_SCREEN = 4;
     protected static int LEVEL_ROWS_PER_SCREEN = 3;
     protected static int LEVEL_PADDING = 50;
+    protected static int LEVEL_BOX_SIZE = 50;
 
     // ===========================================================
     // Fields
     // ===========================================================
     private Scene mScene;
     private Camera mCamera;
-    protected PhysicsWorld mPhysicsWorld;
 
     private Font mDroidFont;
-
     private Texture mDroidFontTexture;
 
     // Scrolling
@@ -86,7 +84,7 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
 
         this.mDroidFontTexture = new BitmapTextureAtlas(this.getTextureManager(), 512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
-        this.mDroidFont = FontFactory.createFromAsset(this.getFontManager(), mDroidFontTexture, this.getAssets(), "font.ttf", 26, true, Color.WHITE);
+        this.mDroidFont = FontFactory.createFromAsset(this.getFontManager(), mDroidFontTexture, this.getAssets(), "font.ttf", FONT_SIZE, true, Color.WHITE);
         this.mDroidFont.load();
 
         this.mEngine.getTextureManager().loadTexture(mDroidFontTexture);
@@ -96,10 +94,11 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
 
     @Override
     protected Scene onCreateScene() {
+
         this.mEngine.registerUpdateHandler(new FPSLogger());
 
         this.mScene = new Scene();
-        //     this.mScene.setBackground(new ColorBackground(0.9f, 0.9f, 0.9f));
+//        this.mScene.setBackground(new Background(0.9f, 0.9f, 0.9f));
 
         this.mScrollDetector = new SurfaceScrollDetector(this);
         this.mClickDetector = new ClickDetector(this);
@@ -150,7 +149,7 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
 
                 // Create the rectangle. If the level selected
                 // has not been unlocked yet, don't allow loading.
-                Rectangle box = new Rectangle(boxX, boxY, 50, 50, this.getVertexBufferObjectManager()) {
+                Rectangle box = new Rectangle(boxX, boxY, LEVEL_BOX_SIZE, LEVEL_BOX_SIZE, this.getVertexBufferObjectManager()) {
                     @Override
                     public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                         if (levelToLoad >= mMaxLevelReached)
@@ -190,7 +189,7 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
                 break;
 
             boxY += spaceBetweenRows + LEVEL_PADDING;
-            boxX = 50;
+            boxX = LEVEL_BOX_SIZE;
         }
 
         //Set the max scroll possible, so it does not go over the boundaries.
@@ -230,6 +229,9 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
     @Override
     public void onScroll(ScrollDetector pScollDetector, int pPointerID,
                          float pDistanceX, float pDistanceY) {
+
+        pDistanceY *= -1;
+
         // TODO Auto-generated method stub
         if (((mCurrentY - pDistanceY) < mMinY) || ((mCurrentY - pDistanceY) > mMaxY))
             return;
