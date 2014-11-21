@@ -8,14 +8,13 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.FillResolutionPolicy;
+import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.util.FPSLogger;
 import org.andengine.input.touch.TouchEvent;
-import org.andengine.input.touch.detector.ClickDetector;
-import org.andengine.input.touch.detector.ClickDetector.IClickDetectorListener;
 import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
@@ -26,7 +25,7 @@ import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 
-public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrollDetectorListener, IOnSceneTouchListener, IClickDetectorListener {
+public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrollDetectorListener, IOnSceneTouchListener {
 
     // ===========================================================
     // Constants
@@ -53,15 +52,15 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
 
     // Scrolling
     private SurfaceScrollDetector mScrollDetector;
-    private ClickDetector mClickDetector;
 
     private float mMinY = 0;
     private float mMaxY = 0;
     private float mCurrentY = 0;
-    private int iLevelClicked = -1;
 
     //This value will be loaded from whatever method used to store data.
     private int mMaxLevelReached = 7;
+
+    private Entity mMenuLayer;
 
     // ===========================================================
     // Constructors
@@ -98,10 +97,8 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
         this.mEngine.registerUpdateHandler(new FPSLogger());
 
         this.mScene = new Scene();
-//        this.mScene.setBackground(new Background(0.9f, 0.9f, 0.9f));
 
         this.mScrollDetector = new SurfaceScrollDetector(this);
-        this.mClickDetector = new ClickDetector(this);
 
         this.mScene.setOnSceneTouchListener(this);
         this.mScene.setTouchAreaBindingOnActionDownEnabled(true);
@@ -116,7 +113,7 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
 
     @Override
     public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
-        this.mClickDetector.onTouchEvent(pSceneTouchEvent);
+
         this.mScrollDetector.onTouchEvent(pSceneTouchEvent);
         return true;
     }
@@ -128,13 +125,20 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
 
     private void CreateLevelBoxes() {
 
+
+        mMenuLayer = new Entity(0, 0);
+        this.mScene.attachChild(mMenuLayer);
+
+//        final Rectangle coloredRect = new Rectangle(0, 0, 1024, 1024, this.getVertexBufferObjectManager());
+//        coloredRect.setColor(1, 1, 0, 1);
+//        layer.attachChild(coloredRect);
+
         // calculate the amount of required columns for the level count
         int totalRows = (LEVELS / LEVEL_COLUMNS_PER_SCREEN) + 1;
 
         // Calculate space between each level square
         int spaceBetweenRows = (CAMERA_HEIGHT / LEVEL_ROWS_PER_SCREEN) - LEVEL_PADDING;
         int spaceBetweenColumns = (CAMERA_WIDTH / LEVEL_COLUMNS_PER_SCREEN) - LEVEL_PADDING;
-
 
         //Current Level Counter
         int iLevel = 1;
@@ -152,10 +156,15 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
                 Rectangle box = new Rectangle(boxX, boxY, LEVEL_BOX_SIZE, LEVEL_BOX_SIZE, this.getVertexBufferObjectManager()) {
                     @Override
                     public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-                        if (levelToLoad >= mMaxLevelReached)
-                            iLevelClicked = -1;
-                        else
-                            iLevelClicked = levelToLoad;
+
+                        if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
+
+                            if (levelToLoad < mMaxLevelReached) {
+                                loadLevel(levelToLoad);
+                            }
+                            return true;
+                        }
+
                         return false;
                     }
                 };
@@ -166,14 +175,11 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
                     box.setColor(0, 0.9f, 0f);
                 box.setAlpha(0.5f);
 
-                this.mScene.attachChild(box);
+                mMenuLayer.attachChild(box);
 
                 //Center for different font size
-                if (iLevel < 10) {
-                    this.mScene.attachChild(new Text(boxX + 18, boxY + 15, this.mDroidFont, String.valueOf(iLevel), this.getVertexBufferObjectManager()));
-                } else {
-                    this.mScene.attachChild(new Text(boxX + 10, boxY + 15, this.mDroidFont, String.valueOf(iLevel), this.getVertexBufferObjectManager()));
-                }
+                int textMargin = iLevel < 10 ? 18 : 10;
+                mMenuLayer.attachChild(new Text(boxX + textMargin, boxY + 15, this.mDroidFont, String.valueOf(iLevel), this.getVertexBufferObjectManager()));
 
 
                 this.mScene.registerTouchArea(box);
@@ -204,7 +210,6 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
                 @Override
                 public void run() {
                     Toast.makeText(ScrollMenuActivity.this, "Loads Level " + String.valueOf(iLevel), Toast.LENGTH_SHORT).show();
-                    iLevelClicked = -1;
                 }
             });
         }
@@ -212,17 +217,8 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
 
 
     @Override
-    public void onClick(ClickDetector pClickDetector, int pPointerID,
-                        float pSceneX, float pSceneY) {
-        // TODO Auto-generated method stub
-        loadLevel(iLevelClicked);
-
-    }
-
-    @Override
     public void onScrollStarted(ScrollDetector pScollDetector,
                                 int pPointerID, float pDistanceX, float pDistanceY) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -232,11 +228,10 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
 
         pDistanceY *= -1;
 
-        // TODO Auto-generated method stub
         if (((mCurrentY - pDistanceY) < mMinY) || ((mCurrentY - pDistanceY) > mMaxY))
             return;
 
-        this.mCamera.offsetCenter(0, -pDistanceY);
+        mMenuLayer.setPosition(0, mMenuLayer.getY() + pDistanceY);
 
         mCurrentY -= pDistanceY;
     }
@@ -244,7 +239,6 @@ public class ScrollMenuActivity extends SimpleBaseGameActivity implements IScrol
     @Override
     public void onScrollFinished(ScrollDetector pScollDetector,
                                  int pPointerID, float pDistanceX, float pDistanceY) {
-        // TODO Auto-generated method stub
 
     }
 
