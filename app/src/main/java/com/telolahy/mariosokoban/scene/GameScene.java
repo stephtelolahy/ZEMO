@@ -90,7 +90,7 @@ public class GameScene extends BaseScene {
         mMario.detachSelf();
 
         mCamera.setChaseEntity(null);
-        mCamera.setCenter(Constants.SCREEN_WIDTH / 2 , Constants.SCREEN_HEIGHT / 2);
+        mCamera.setCenter(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2);
 
         engineLock.unlock();
 
@@ -148,6 +148,7 @@ public class GameScene extends BaseScene {
     private void loadLevel(int level) {
 
         mGame = new GameMap();
+//        level = 2;
         mGame.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
 
         mBoxes = new ArrayList<GameCharacter>();
