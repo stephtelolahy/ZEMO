@@ -4,6 +4,7 @@ import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
+import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
@@ -14,10 +15,12 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.util.adt.align.HorizontalAlign;
 
 /**
  * Created by stephanohuguestelolahy on 11/16/14.
@@ -45,6 +48,8 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
     // main menu scene
     private MenuScene mMenuChildScene;
+
+    private HUD mHUD;
 
     private float mMinX;
     private float mMaxX;
@@ -77,12 +82,18 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         createLevelSelection();
         setupTouchGesture();
         startMusic();
+        createHUD();
     }
 
     @Override
     public void onBackKeyPressed() {
 
-        System.exit(0);
+        if (!mMenuChildScene.isVisible()) {
+            mMenuChildScene.setVisible(true);
+            mLevelSelectionLayer.setVisible(false);
+        } else {
+            System.exit(0);
+        }
     }
 
     @Override
@@ -129,6 +140,16 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         final AnimatedSprite player = new AnimatedSprite(Constants.SCREEN_WIDTH / 2, mResourcesManager.menuPlayerTextureRegion.getHeight() / 2 + groundY, mResourcesManager.menuPlayerTextureRegion, mVertexBufferObjectManager);
         player.animate(new long[]{250, 250, 250, 250}, 0, 3, true);
         attachChild(player);
+    }
+
+    private void createHUD() {
+
+        mHUD = new HUD();
+
+        String gameTitle = mResourcesManager.activity.getResources().getString(R.string.app_name);
+        mHUD.attachChild(new Text(Constants.SCREEN_WIDTH / 2, 400, mResourcesManager.font, gameTitle, new TextOptions(HorizontalAlign.LEFT), mVertexBufferObjectManager));
+
+        mCamera.setHUD(mHUD);
     }
 
     private void createMenuChildScene() {
