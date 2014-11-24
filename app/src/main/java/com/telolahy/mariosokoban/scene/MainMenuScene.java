@@ -34,7 +34,6 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private static final int LEVEL_MARGIN_BOTTOM = 170;
     private static final int LEVEL_MARGIN_LEFT = 200;
     private static final int LEVEL_MARGIN_RIGHT = 200;
-    private static final int LEVEL_BOX_SIZE = 50;
     private static final int LEVELS_COUNT = 30;
 
     private static final int MENU_PLAY = 0;
@@ -197,7 +196,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
                     //On Touch, save the clicked level in case it's a click and not a scroll.
                     final int levelToLoad = iLevel;
-                    final boolean isUnlocked = levelToLoad < mMaxLevelReached;
+                    final boolean isUnlocked = levelToLoad <= mMaxLevelReached;
 
                     int boxX = pageX + LEVEL_MARGIN_LEFT + spaceBetweenColumns * x;
 
