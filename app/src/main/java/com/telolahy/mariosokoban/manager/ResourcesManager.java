@@ -42,12 +42,18 @@ public class ResourcesManager {
     // menu resources
     private ITexture menuParallaxLayerBackTexture;
     private ITexture menuParallaxLayerMidTexture;
+    private ITexture menuLevelLockedTexture;
+    private ITexture menuLevelUnlockedTexture;
     private ITexture menuParallaxLayerFrontTexture;
     private ITexture menuPlayerTexture;
     public ITextureRegion menuParallaxLayerBackRegion;
     public ITextureRegion menuParallaxLayerMidRegion;
     public ITextureRegion menuParallaxLayerFrontRegion;
     public TiledTextureRegion menuPlayerTextureRegion;
+    public Font menuLevelFont;
+    public ITextureRegion menuLevelLockedRegion;
+    public ITextureRegion menuLevelUnlockedRegion;
+
 
     public Font font;
     public Music menuMusic;
@@ -123,6 +129,14 @@ public class ResourcesManager {
             menuPlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(menuPlayerTexture, 4, 1);
             menuPlayerTexture.load();
 
+            menuLevelLockedTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/level_locked.png", TextureOptions.BILINEAR);
+            menuLevelLockedRegion = TextureRegionFactory.extractFromTexture(menuLevelLockedTexture);
+            menuLevelLockedTexture.load();
+
+            menuLevelUnlockedTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/level_unlocked.png", TextureOptions.BILINEAR);
+            menuLevelUnlockedRegion = TextureRegionFactory.extractFromTexture(menuLevelUnlockedTexture);
+            menuLevelUnlockedTexture.load();
+
         } catch (IOException e) {
             Debug.e(e);
         }
@@ -133,6 +147,10 @@ public class ResourcesManager {
         final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font/font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
         font.load();
+
+        final ITexture menuFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        menuLevelFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuFontTexture, activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 2, Color.TRANSPARENT);
+        menuLevelFont.load();
     }
 
     private void loadMenuMusics() {
