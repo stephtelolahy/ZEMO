@@ -6,6 +6,8 @@ import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -47,18 +49,16 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     // ===========================================================
 
     // main menu scene
-    private MenuScene mMenuChildScene;
-
     private HUD mHUD;
-
-    private float mMinX;
-    private float mMaxX;
-    private float mOffsetX;
+    private MenuScene mMenuChildScene;
 
     //This value will be loaded from whatever method used to store data.
     private int mMaxLevelReached;
 
     private Entity mLevelSelectionLayer;
+    private boolean mIsAnimating;
+    private float mMinX;
+    private float mMaxX;
 
     // ===========================================================
     // Constructors
@@ -102,6 +102,8 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         if (mResourcesManager.menuMusic.isPlaying()) {
             mResourcesManager.menuMusic.pause();
         }
+
+        mHUD.detachSelf();
 
         this.detachSelf();
         this.dispose();
@@ -257,8 +259,8 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         }
 
         //Set the max scroll possible, so it does not go over the boundaries.
-        mMinX = 0;
-        mMaxX = (totalPages - 1) * Constants.SCREEN_WIDTH;
+        mMinX = -(totalPages - 1) * Constants.SCREEN_WIDTH;
+        mMaxX = 0;
     }
 
     //Here is where you call the level load.
@@ -278,17 +280,16 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     @Override
     public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
-        if (!mLevelSelectionLayer.isVisible()) {
+        if (!mLevelSelectionLayer.isVisible() || mIsAnimating) {
             return;
         }
 
-        float newX = mOffsetX - pDistanceX;
-        if (newX < mMinX || newX > mMaxX) {
-            return;
-        }
+        float currentX = mLevelSelectionLayer.getX();
+        float newX = currentX + pDistanceX;
 
-        mLevelSelectionLayer.setPosition(-newX, 0);
-        mOffsetX = newX;
+        if (newX < mMinX || newX > mMaxX) return;
+
+        mLevelSelectionLayer.setPosition(newX, 0);
     }
 
     @Override
@@ -298,6 +299,44 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
     @Override
     public void onScrollFinished(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+
+        if (!mLevelSelectionLayer.isVisible() || mIsAnimating) {
+            return;
+        }
+
+
+        // move to nearest offset
+        float currentX = mLevelSelectionLayer.getX();
+        float nearestX = Math.round(currentX / Constants.SCREEN_WIDTH) * Constants.SCREEN_WIDTH;
+
+        if (nearestX == currentX) return;
+
+        final PathModifier.Path path = new PathModifier.Path(2).to(currentX, 0).to(nearestX, 0);
+        float pathAnimationDuration = .4f;
+        mIsAnimating = true;
+        mLevelSelectionLayer.registerEntityModifier(new PathModifier(pathAnimationDuration, path, null, new PathModifier.IPathModifierListener() {
+
+            @Override
+            public void onPathStarted(PathModifier pPathModifier, IEntity pEntity) {
+
+            }
+
+            @Override
+            public void onPathWaypointStarted(PathModifier pPathModifier, IEntity pEntity, int pWaypointIndex) {
+
+            }
+
+            @Override
+            public void onPathWaypointFinished(PathModifier pPathModifier, IEntity pEntity, int pWaypointIndex) {
+
+            }
+
+            @Override
+            public void onPathFinished(PathModifier pPathModifier, IEntity pEntity) {
+
+                mIsAnimating = false;
+            }
+        }));
 
     }
 }
