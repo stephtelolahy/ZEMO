@@ -39,6 +39,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private static final int LEVEL_MARGIN_BOTTOM = 170;
     private static final int LEVEL_MARGIN_LEFT = 200;
     private static final int LEVEL_MARGIN_RIGHT = 200;
+    private static final int LEVEL_PAGE_WIDTH = 600;
     private static final int LEVELS_COUNT = 30;
 
     private static final int MENU_PLAY = 0;
@@ -208,7 +209,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         // Create the level selectors, one page at a time
         for (int page = 0; page < totalPages; page++) {
 
-            int pageX = page * Constants.SCREEN_WIDTH;
+            int pageX = page * LEVEL_PAGE_WIDTH;
 
             //Create the Level selectors, one row at a time.
             for (int y = 0; y < LEVEL_ROWS_PER_SCREEN && iLevel <= LEVELS_COUNT; y++) {
@@ -259,7 +260,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         }
 
         //Set the max scroll possible, so it does not go over the boundaries.
-        mMinX = -(totalPages - 1) * Constants.SCREEN_WIDTH;
+        mMinX = -(totalPages - 1) * LEVEL_PAGE_WIDTH;
         mMaxX = 0;
     }
 
@@ -307,7 +308,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
         // move to nearest offset
         float currentX = mLevelSelectionLayer.getX();
-        float nearestX = Math.round(currentX / Constants.SCREEN_WIDTH) * Constants.SCREEN_WIDTH;
+        float nearestX = Math.round(currentX / LEVEL_PAGE_WIDTH) * LEVEL_PAGE_WIDTH;
 
         if (nearestX == currentX) return;
 
