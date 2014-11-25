@@ -4,9 +4,9 @@ import android.graphics.Point;
 import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
-import com.telolahy.mariosokoban.core.GameCharacter;
-import com.telolahy.mariosokoban.core.GameDetector;
-import com.telolahy.mariosokoban.core.GameMap;
+import com.telolahy.mariosokoban.object.GameCharacter;
+import com.telolahy.mariosokoban.event.LongScrollDetector;
+import com.telolahy.mariosokoban.object.GameMap;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.entity.IEntity;
@@ -49,7 +49,7 @@ public class GameScene extends BaseScene {
     private GameMap mGame;
     private GameCharacter mMario;
     private ArrayList<GameCharacter> mBoxes;
-    private GameDetector mDetector;
+    private LongScrollDetector mDetector;
     private static int X0;
     private static int Y0;
 
@@ -112,10 +112,10 @@ public class GameScene extends BaseScene {
             @Override
             public void run() {
 
-                mDetector = new GameDetector(new GameDetector.IScrollDetectorListener() {
+                mDetector = new LongScrollDetector(new LongScrollDetector.IScrollDetectorListener() {
 
                     @Override
-                    public void onScrollVector(GameDetector pScollDetector, int pPointerID, Point vector) {
+                    public void onScrollVector(LongScrollDetector pScollDetector, int pPointerID, Point vector) {
 
                         if (mMario.moving) {
                             return; // mario is busy

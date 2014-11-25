@@ -1,4 +1,4 @@
-package com.telolahy.mariosokoban.core;
+package com.telolahy.mariosokoban.event;
 
 import android.graphics.Point;
 
@@ -8,7 +8,7 @@ import org.andengine.input.touch.detector.BaseDetector;
 /**
  * Created by stephanohuguestelolahy on 11/20/14.
  */
-public class GameDetector extends BaseDetector {
+public class LongScrollDetector extends BaseDetector {
 
     // ===========================================================
     // Constants
@@ -35,11 +35,11 @@ public class GameDetector extends BaseDetector {
     // Constructors
     // ===========================================================
 
-    public GameDetector(final IScrollDetectorListener pScrollDetectorListener) {
-        this(GameDetector.TRIGGER_SCROLL_MINIMUM_DISTANCE_DEFAULT, pScrollDetectorListener);
+    public LongScrollDetector(final IScrollDetectorListener pScrollDetectorListener) {
+        this(LongScrollDetector.TRIGGER_SCROLL_MINIMUM_DISTANCE_DEFAULT, pScrollDetectorListener);
     }
 
-    public GameDetector(final float pTriggerScrollMinimumDistance, final IScrollDetectorListener pScrollDetectorListener) {
+    public LongScrollDetector(final float pTriggerScrollMinimumDistance, final IScrollDetectorListener pScrollDetectorListener) {
         this.mTriggerScrollMinimumDistance = pTriggerScrollMinimumDistance;
         this.mScrollDetectorListener = pScrollDetectorListener;
     }
@@ -213,6 +213,6 @@ public class GameDetector extends BaseDetector {
 
 //        public void onScrollFinished(final GameDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
 
-        public void onScrollVector(final GameDetector pScollDetector, final int pPointerID, final Point vector);
+        public void onScrollVector(final LongScrollDetector pScollDetector, final int pPointerID, final Point vector);
     }
 }

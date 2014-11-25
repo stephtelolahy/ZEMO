@@ -177,10 +177,7 @@ public class ResourcesManager {
 
     public void loadMenuTextures() {
 
-        menuParallaxLayerBackTexture.load();
-        menuParallaxLayerMidTexture.load();
-        menuParallaxLayerFrontTexture.load();
-        menuPlayerTexture.load();
+        loadMenuGraphics();
     }
 
 

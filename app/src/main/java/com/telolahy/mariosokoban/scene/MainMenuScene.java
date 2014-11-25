@@ -45,6 +45,10 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private static final int MENU_PLAY = 0;
     private static final int MENU_OPTIONS = 1;
 
+    public static final int MENU_TYPE_HOME = 0;
+    public static final int MENU_TYPE_LEVEL_SELECTOR = 1;
+    public static final int MENU_TYPE_OPTIONS = 2;
+
     // ===========================================================
     // Fields
     // ===========================================================
@@ -55,6 +59,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private MenuScene mOptionsMenuScene;
 
     private int mMaxLevelReached;
+    private int mMenuType;
 
     private Entity mLevelSelectorLayer;
     private boolean mLevelSelectorIsAnimating;
@@ -83,17 +88,23 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     protected void onCreateScene(int... params) {
 
         mMaxLevelReached = params[0];
+        mMenuType = params[1];
         createBackground();
         createMenuChildScene();
         createLevelSelection();
         startMusic();
         createHUD();
         setupTouchGesture();
+
+        if (mMenuType == MENU_TYPE_LEVEL_SELECTOR){
+            displayLevelSelector();
+        }
     }
 
     @Override
     protected void onDisposeScene() {
 
+        mCamera.setHUD(null);
         mHUD.detachSelf();
     }
 
@@ -101,8 +112,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     public void onBackKeyPressed() {
 
         if (!mHomeMenuScene.isVisible()) {
-            mHomeMenuScene.setVisible(true);
-            mLevelSelectorLayer.setVisible(false);
+            displayHomeMenu();
         } else {
             System.exit(0);
         }
@@ -173,8 +183,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
                 switch (pMenuItem.getID()) {
                     case MENU_PLAY:
-                        mLevelSelectorLayer.setVisible(true);
-                        mHomeMenuScene.setVisible(false);
+                        displayLevelSelector();
                         return true;
                     case MENU_OPTIONS:
                         return true;
@@ -268,6 +277,19 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         SceneManager.getInstance().createGameScene(iLevel);
     }
 
+    private void displayLevelSelector() {
+
+        mMenuType = MENU_TYPE_LEVEL_SELECTOR;
+        mLevelSelectorLayer.setVisible(true);
+        mHomeMenuScene.setVisible(false);
+    }
+
+    private void displayHomeMenu() {
+
+        mMenuType = MENU_TYPE_HOME;
+        mHomeMenuScene.setVisible(true);
+        mLevelSelectorLayer.setVisible(false);
+    }
 
     // ===========================================================
     // Implemented interfaces

@@ -50,25 +50,32 @@ public class SceneManager {
 
     private void disposeSplashScene() {
 
-        ResourcesManager.getInstance().unloadSplashResources();
         mSplashScene.disposeScene();
         mSplashScene = null;
+        ResourcesManager.getInstance().unloadSplashResources();
     }
 
     public void createMenuScene() {
 
         ResourcesManager.getInstance().loadMenuResources();
-        int maxLevelReached = 2;
-        mMenuScene = new MainMenuScene(maxLevelReached);
+        int maxLevelReached = GameManager.getInstance().maxLevelReached();
+        mMenuScene = new MainMenuScene(maxLevelReached, MainMenuScene.MENU_TYPE_HOME);
         mLoadingScene = new LoadingScene();
         setScene(mMenuScene);
         disposeSplashScene();
     }
 
+    private void disposeMenuScene() {
+
+        mMenuScene.disposeScene();
+        mMenuScene = null;
+        ResourcesManager.getInstance().unloadMenuTextures();
+    }
+
     public void createGameScene(final int level) {
 
         setScene(mLoadingScene);
-        ResourcesManager.getInstance().unloadMenuTextures();
+        disposeMenuScene();
         mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
             public void onTimePassed(final TimerHandler pTimerHandler) {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
@@ -79,15 +86,24 @@ public class SceneManager {
         }));
     }
 
+    private void disposeGameScene() {
+
+        mGameScene.disposeScene();
+        mGameScene = null;
+        ResourcesManager.getInstance().unloadGameTextures();
+    }
+
     public void loadMenuScene() {
 
         setScene(mLoadingScene);
-        mGameScene.disposeScene();
-        ResourcesManager.getInstance().unloadGameTextures();
+        disposeGameScene();
         mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
             public void onTimePassed(final TimerHandler pTimerHandler) {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 ResourcesManager.getInstance().loadMenuTextures();
+                int maxLevelReached = GameManager.getInstance().maxLevelReached();
+                mMenuScene = new MainMenuScene(maxLevelReached, MainMenuScene.MENU_TYPE_LEVEL_SELECTOR);
+                mLoadingScene = new LoadingScene();
                 setScene(mMenuScene);
             }
         }));
