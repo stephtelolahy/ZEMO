@@ -13,7 +13,7 @@ import org.andengine.util.adt.color.Color;
 public class LoadingScene extends BaseScene {
 
     @Override
-    public void createScene() {
+    public void createScene(String... params) {
 
         setBackground(new Background(Color.BLACK));
         String text = mActivity.getResources().getString(R.string.loading);

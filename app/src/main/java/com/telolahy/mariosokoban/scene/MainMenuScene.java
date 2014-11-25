@@ -63,6 +63,10 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private float mLevelSelectorMaxX;
     private MenuScene mLevelSelectorMenuScene;
 
+    public MainMenuScene(String... params) {
+        super(params);
+    }
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -77,9 +81,9 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
 
     @Override
-    public void createScene() {
+    public void createScene(String... params) {
 
-        mMaxLevelReached = 2;
+        mMaxLevelReached = Integer.parseInt(params[0]);
         createBackground();
         createMenuChildScene();
         createLevelSelection();

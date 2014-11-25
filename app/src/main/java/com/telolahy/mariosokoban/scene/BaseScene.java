@@ -21,21 +21,21 @@ public abstract class BaseScene extends Scene {
     // CONSTRUCTOR
     //---------------------------------------------
 
-    public BaseScene() {
+    public BaseScene(String... params) {
 
         mResourcesManager = ResourcesManager.getInstance();
         mVertexBufferObjectManager = ResourcesManager.getInstance().vertexBufferObjectManager;
         mCamera = ResourcesManager.getInstance().camera;
         mActivity = ResourcesManager.getInstance().activity;
 
-        createScene();
+        createScene(params);
     }
 
     //---------------------------------------------
     // ABSTRACTION
     //---------------------------------------------
 
-    public abstract void createScene();
+    public abstract void createScene(String... params);
 
     public abstract void disposeScene();
 

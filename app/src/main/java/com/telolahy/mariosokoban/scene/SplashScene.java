@@ -15,7 +15,7 @@ public class SplashScene extends BaseScene {
     private Sprite mBackground;
 
     @Override
-    public void createScene() {
+    public void createScene(String... params) {
 
         mBackground = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.splashTextureRegion, mVertexBufferObjectManager);
         mBackground.setAlpha(0);

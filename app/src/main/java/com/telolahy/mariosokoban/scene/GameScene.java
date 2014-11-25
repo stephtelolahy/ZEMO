@@ -45,7 +45,7 @@ public class GameScene extends BaseScene {
     // Fields
     // ===========================================================
 
-    private final int mLevel = 1;
+    private int mLevel;
 
     private GameMap mGame;
     private GameCharacter mMario;
@@ -53,6 +53,10 @@ public class GameScene extends BaseScene {
     private GameDetector mDetector;
     private static int X0;
     private static int Y0;
+
+    public GameScene(String... params) {
+        super(params);
+    }
 
     // ===========================================================
     // Constructors
@@ -74,8 +78,9 @@ public class GameScene extends BaseScene {
     }
 
     @Override
-    public void createScene() {
+    public void createScene(String... params) {
 
+        mLevel = Integer.parseInt(params[0]);
         setupGestureDetector();
         createBackground();
         createHUD();
