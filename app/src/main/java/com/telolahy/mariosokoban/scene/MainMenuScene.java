@@ -51,15 +51,17 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
     // main menu scene
     private HUD mHUD;
-    private MenuScene mMenuChildScene;
+    private MenuScene mHomeMenuScene;
+    private MenuScene mOptionsMenuScene;
 
     //This value will be loaded from whatever method used to store data.
     private int mMaxLevelReached;
 
-    private Entity mLevelSelectionLayer;
-    private boolean mIsAnimating;
-    private float mMinX;
-    private float mMaxX;
+    private Entity mLevelSelectorLayer;
+    private boolean mLevelSelectorIsAnimating;
+    private float mLevelSelectorMinX;
+    private float mLevelSelectorMaxX;
+    private MenuScene mLevelSelectorMenuScene;
 
     // ===========================================================
     // Constructors
@@ -77,7 +79,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     @Override
     public void createScene() {
 
-        mMaxLevelReached = 7;
+        mMaxLevelReached = 2;
         createBackground();
         createMenuChildScene();
         createLevelSelection();
@@ -89,9 +91,9 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     @Override
     public void onBackKeyPressed() {
 
-        if (!mMenuChildScene.isVisible()) {
-            mMenuChildScene.setVisible(true);
-            mLevelSelectionLayer.setVisible(false);
+        if (!mHomeMenuScene.isVisible()) {
+            mHomeMenuScene.setVisible(true);
+            mLevelSelectorLayer.setVisible(false);
         } else {
             System.exit(0);
         }
@@ -99,10 +101,6 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
     @Override
     public void disposeScene() {
-
-        if (mResourcesManager.menuMusic.isPlaying()) {
-            mResourcesManager.menuMusic.pause();
-        }
 
         mHUD.detachSelf();
 
@@ -157,26 +155,26 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
     private void createMenuChildScene() {
 
-        mMenuChildScene = new MenuScene(mCamera);
+        mHomeMenuScene = new MenuScene(mCamera);
 
         TextMenuItem playTextMenuItem = new TextMenuItem(MENU_PLAY, mResourcesManager.font, mActivity.getResources().getString(R.string.play), mVertexBufferObjectManager);
         IMenuItem playMenuItem = new ScaleMenuItemDecorator(playTextMenuItem, 1.2f, 1);
         TextMenuItem optionsTextMenuItem = new TextMenuItem(MENU_OPTIONS, mResourcesManager.font, mActivity.getResources().getString(R.string.options), mVertexBufferObjectManager);
         IMenuItem helpMenuItem = new ScaleMenuItemDecorator(optionsTextMenuItem, 1.2f, 1);
-        mMenuChildScene.addMenuItem(playMenuItem);
-        mMenuChildScene.addMenuItem(helpMenuItem);
+        mHomeMenuScene.addMenuItem(playMenuItem);
+        mHomeMenuScene.addMenuItem(helpMenuItem);
 
-        mMenuChildScene.buildAnimations();
-        mMenuChildScene.setBackgroundEnabled(false);
+        mHomeMenuScene.buildAnimations();
+        mHomeMenuScene.setBackgroundEnabled(false);
 
-        mMenuChildScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
+        mHomeMenuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
                 switch (pMenuItem.getID()) {
                     case MENU_PLAY:
-                        mLevelSelectionLayer.setVisible(true);
-                        mMenuChildScene.setVisible(false);
+                        mLevelSelectorLayer.setVisible(true);
+                        mHomeMenuScene.setVisible(false);
                         return true;
                     case MENU_OPTIONS:
                         return true;
@@ -186,14 +184,14 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
             }
         });
 
-        setChildScene(mMenuChildScene);
+        setChildScene(mHomeMenuScene);
     }
 
     private void createLevelSelection() {
 
-        mLevelSelectionLayer = new Entity(0, 0);
-        mLevelSelectionLayer.setVisible(false);
-        attachChild(mLevelSelectionLayer);
+        mLevelSelectorLayer = new Entity(0, 0);
+        mLevelSelectorLayer.setVisible(false);
+        attachChild(mLevelSelectorLayer);
 
         // calculate the amount of required columns for the level count
         int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
@@ -245,11 +243,11 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
                         }
                     };
 
-                    mLevelSelectionLayer.attachChild(box);
+                    mLevelSelectorLayer.attachChild(box);
 
                     // display level number
                     if (isUnlocked) {
-                        mLevelSelectionLayer.attachChild(new Text(boxX, boxY, mResourcesManager.menuLevelFont, String.valueOf(iLevel), mVertexBufferObjectManager));
+                        mLevelSelectorLayer.attachChild(new Text(boxX, boxY, mResourcesManager.menuLevelFont, String.valueOf(iLevel), mVertexBufferObjectManager));
                     }
 
                     this.registerTouchArea(box);
@@ -260,16 +258,14 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         }
 
         //Set the max scroll possible, so it does not go over the boundaries.
-        mMinX = -(totalPages - 1) * LEVEL_PAGE_WIDTH;
-        mMaxX = 0;
+        mLevelSelectorMinX = -(totalPages - 1) * LEVEL_PAGE_WIDTH;
+        mLevelSelectorMaxX = 0;
     }
 
     //Here is where you call the level load.
     private void loadLevel(final int iLevel) {
-        if (iLevel != -1) {
 
-            SceneManager.getInstance().createGameScene();
-        }
+        SceneManager.getInstance().createGameScene(iLevel);
     }
 
 
@@ -281,16 +277,16 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     @Override
     public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
-        if (!mLevelSelectionLayer.isVisible() || mIsAnimating) {
+        if (!mLevelSelectorLayer.isVisible() || mLevelSelectorIsAnimating) {
             return;
         }
 
-        float currentX = mLevelSelectionLayer.getX();
+        float currentX = mLevelSelectorLayer.getX();
         float newX = currentX + pDistanceX;
 
-        if (newX < mMinX || newX > mMaxX) return;
+        if (newX < mLevelSelectorMinX || newX > mLevelSelectorMaxX) return;
 
-        mLevelSelectionLayer.setPosition(newX, 0);
+        mLevelSelectorLayer.setPosition(newX, 0);
     }
 
     @Override
@@ -301,21 +297,21 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     @Override
     public void onScrollFinished(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
-        if (!mLevelSelectionLayer.isVisible() || mIsAnimating) {
+        if (!mLevelSelectorLayer.isVisible() || mLevelSelectorIsAnimating) {
             return;
         }
 
 
         // move to nearest offset
-        float currentX = mLevelSelectionLayer.getX();
+        float currentX = mLevelSelectorLayer.getX();
         float nearestX = Math.round(currentX / LEVEL_PAGE_WIDTH) * LEVEL_PAGE_WIDTH;
 
         if (nearestX == currentX) return;
 
         final PathModifier.Path path = new PathModifier.Path(2).to(currentX, 0).to(nearestX, 0);
         float pathAnimationDuration = .4f;
-        mIsAnimating = true;
-        mLevelSelectionLayer.registerEntityModifier(new PathModifier(pathAnimationDuration, path, null, new PathModifier.IPathModifierListener() {
+        mLevelSelectorIsAnimating = true;
+        mLevelSelectorLayer.registerEntityModifier(new PathModifier(pathAnimationDuration, path, null, new PathModifier.IPathModifierListener() {
 
             @Override
             public void onPathStarted(PathModifier pPathModifier, IEntity pEntity) {
@@ -335,7 +331,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
             @Override
             public void onPathFinished(PathModifier pPathModifier, IEntity pEntity) {
 
-                mIsAnimating = false;
+                mLevelSelectorIsAnimating = false;
             }
         }));
 

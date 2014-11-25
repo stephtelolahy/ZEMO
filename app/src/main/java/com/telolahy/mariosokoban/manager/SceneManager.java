@@ -1,5 +1,7 @@
 package com.telolahy.mariosokoban.manager;
 
+import android.util.Log;
+
 import com.telolahy.mariosokoban.scene.BaseScene;
 import com.telolahy.mariosokoban.scene.GameScene;
 import com.telolahy.mariosokoban.scene.LoadingScene;
@@ -64,14 +66,16 @@ public class SceneManager {
         disposeSplashScene();
     }
 
-    public void createGameScene() {
+    public void createGameScene(final int level) {
 
+        Log.i("", "createGameScene " + level);
         setScene(mLoadingScene);
         ResourcesManager.getInstance().unloadMenuTextures();
         mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
             public void onTimePassed(final TimerHandler pTimerHandler) {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 ResourcesManager.getInstance().loadGameResources();
+                Log.i("", "createGameScene " + level);
                 mGameScene = new GameScene();
                 setScene(mGameScene);
             }

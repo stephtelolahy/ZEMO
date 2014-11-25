@@ -1,6 +1,7 @@
 package com.telolahy.mariosokoban.scene;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.core.GameCharacter;
@@ -29,7 +30,7 @@ public class GameScene extends BaseScene {
     private static final int WORLD_MARGIN_LEFT = 100;
     private static final int WORLD_MARGIN = 40;
     private static final int BLOC_SIZE = 58;
-    private static final int STEP_DURATION_MILLIS = 800; // time to move one block
+    private static final int STEP_DURATION_MILLIS = 600; // time to move one block
 
     private static final int NONE = -1;
     private static final int DOWN = 0;
@@ -44,6 +45,8 @@ public class GameScene extends BaseScene {
     // Fields
     // ===========================================================
 
+    private final int mLevel = 1;
+
     private GameMap mGame;
     private GameCharacter mMario;
     private ArrayList<GameCharacter> mBoxes;
@@ -54,11 +57,6 @@ public class GameScene extends BaseScene {
     // ===========================================================
     // Constructors
     // ===========================================================
-
-    public GameScene() {
-        super();
-        setupGestureDetector();
-    }
 
     // ===========================================================
     // Getter & Setter
@@ -78,9 +76,10 @@ public class GameScene extends BaseScene {
     @Override
     public void createScene() {
 
+        setupGestureDetector();
         createBackground();
         createHUD();
-        loadLevel(1);
+        loadLevel(mLevel);
     }
 
     @Override
@@ -149,6 +148,7 @@ public class GameScene extends BaseScene {
 
     private void loadLevel(int level) {
 
+        Log.i("", "loadLevel " + level + " mLevel:" + mLevel);
         mGame = new GameMap();
         mGame.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
 
