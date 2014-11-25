@@ -15,7 +15,7 @@ public class SplashScene extends BaseScene {
     private Sprite mBackground;
 
     @Override
-    public void createScene(String... params) {
+    protected void onCreateScene(int... params) {
 
         mBackground = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.splashTextureRegion, mVertexBufferObjectManager);
         mBackground.setAlpha(0);
@@ -27,15 +27,17 @@ public class SplashScene extends BaseScene {
                 mBackground.registerEntityModifier(fadeInModifier);
             }
         }));
-
     }
 
     @Override
-    public void disposeScene() {
+    protected void onDisposeScene() {
 
         mBackground.detachSelf();
         mBackground.dispose();
-        this.detachSelf();
-        this.dispose();
+    }
+
+    @Override
+    public void onBackKeyPressed() {
+
     }
 }

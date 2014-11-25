@@ -3,6 +3,7 @@ package com.telolahy.mariosokoban.scene;
 import com.telolahy.mariosokoban.MainActivity;
 import com.telolahy.mariosokoban.manager.ResourcesManager;
 
+import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
@@ -21,24 +22,43 @@ public abstract class BaseScene extends Scene {
     // CONSTRUCTOR
     //---------------------------------------------
 
-    public BaseScene(String... params) {
+    public BaseScene(int... params) {
 
         mResourcesManager = ResourcesManager.getInstance();
         mVertexBufferObjectManager = ResourcesManager.getInstance().vertexBufferObjectManager;
         mCamera = ResourcesManager.getInstance().camera;
         mActivity = ResourcesManager.getInstance().activity;
 
-        createScene(params);
+        onCreateScene(params);
     }
+
 
     //---------------------------------------------
     // ABSTRACTION
     //---------------------------------------------
 
-    public abstract void createScene(String... params);
+    protected abstract void onCreateScene(int... params);
 
-    public abstract void disposeScene();
+    protected abstract void onDisposeScene();
 
-    public void onBackKeyPressed() {
+    public abstract void onBackKeyPressed();
+
+
+    // ===========================================================
+    // METHODS
+    // ===========================================================
+
+    public void disposeScene() {
+
+        Engine.EngineLock engineLock = mActivity.getEngine().getEngineLock();
+        engineLock.lock();
+
+        onDisposeScene();
+
+        engineLock.unlock();
+
+        this.detachSelf();
+        this.dispose();
     }
+
 }

@@ -13,7 +13,7 @@ import org.andengine.util.adt.color.Color;
 public class LoadingScene extends BaseScene {
 
     @Override
-    public void createScene(String... params) {
+    protected void onCreateScene(int... params) {
 
         setBackground(new Background(Color.BLACK));
         String text = mActivity.getResources().getString(R.string.loading);
@@ -21,7 +21,12 @@ public class LoadingScene extends BaseScene {
     }
 
     @Override
-    public void disposeScene() {
+    protected void onDisposeScene() {
+
+    }
+
+    @Override
+    public void onBackKeyPressed() {
 
     }
 }

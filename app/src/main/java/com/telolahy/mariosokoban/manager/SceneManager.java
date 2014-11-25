@@ -58,7 +58,8 @@ public class SceneManager {
     public void createMenuScene() {
 
         ResourcesManager.getInstance().loadMenuResources();
-        mMenuScene = new MainMenuScene("" + 2);
+        int maxLevelReached = 2;
+        mMenuScene = new MainMenuScene(maxLevelReached);
         mLoadingScene = new LoadingScene();
         setScene(mMenuScene);
         disposeSplashScene();
@@ -72,7 +73,7 @@ public class SceneManager {
             public void onTimePassed(final TimerHandler pTimerHandler) {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 ResourcesManager.getInstance().loadGameResources();
-                mGameScene = new GameScene("" + level);
+                mGameScene = new GameScene(level);
                 setScene(mGameScene);
             }
         }));

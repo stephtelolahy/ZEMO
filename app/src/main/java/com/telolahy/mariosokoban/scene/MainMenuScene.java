@@ -54,7 +54,6 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private MenuScene mHomeMenuScene;
     private MenuScene mOptionsMenuScene;
 
-    //This value will be loaded from whatever method used to store data.
     private int mMaxLevelReached;
 
     private Entity mLevelSelectorLayer;
@@ -63,7 +62,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private float mLevelSelectorMaxX;
     private MenuScene mLevelSelectorMenuScene;
 
-    public MainMenuScene(String... params) {
+    public MainMenuScene(int... params) {
         super(params);
     }
 
@@ -81,15 +80,21 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
 
     @Override
-    public void createScene(String... params) {
+    protected void onCreateScene(int... params) {
 
-        mMaxLevelReached = Integer.parseInt(params[0]);
+        mMaxLevelReached = params[0];
         createBackground();
         createMenuChildScene();
         createLevelSelection();
-        setupTouchGesture();
         startMusic();
         createHUD();
+        setupTouchGesture();
+    }
+
+    @Override
+    protected void onDisposeScene() {
+
+        mHUD.detachSelf();
     }
 
     @Override
@@ -101,15 +106,6 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         } else {
             System.exit(0);
         }
-    }
-
-    @Override
-    public void disposeScene() {
-
-        mHUD.detachSelf();
-
-        this.detachSelf();
-        this.dispose();
     }
 
     // ===========================================================

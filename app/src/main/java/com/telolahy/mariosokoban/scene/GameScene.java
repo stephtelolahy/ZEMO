@@ -9,7 +9,6 @@ import com.telolahy.mariosokoban.core.GameDetector;
 import com.telolahy.mariosokoban.core.GameMap;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
-import org.andengine.engine.Engine;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
@@ -54,7 +53,7 @@ public class GameScene extends BaseScene {
     private static int X0;
     private static int Y0;
 
-    public GameScene(String... params) {
+    public GameScene(int... params) {
         super(params);
     }
 
@@ -77,31 +76,24 @@ public class GameScene extends BaseScene {
         return true;
     }
 
-    @Override
-    public void createScene(String... params) {
 
-        mLevel = Integer.parseInt(params[0]);
-        setupGestureDetector();
+    @Override
+    protected void onCreateScene(int... params) {
+
+        mLevel = params[0];
         createBackground();
         createHUD();
         loadLevel(mLevel);
+        setupGestureDetector();
     }
 
     @Override
-    public void disposeScene() {
-
-        Engine.EngineLock engineLock = mActivity.getEngine().getEngineLock();
-        engineLock.lock();
+    protected void onDisposeScene() {
 
         mMario.detachSelf();
 
         mCamera.setChaseEntity(null);
         mCamera.setCenter(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2);
-
-        engineLock.unlock();
-
-        this.detachSelf();
-        this.dispose();
     }
 
     @Override
