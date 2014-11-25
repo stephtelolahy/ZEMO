@@ -61,12 +61,12 @@ public class ResourcesManager {
     // game resources
     private ITexture gameWallTexture;
     private ITexture gameTargetTexture;
-    private ITexture gameBoxTexture;
-    private ITexture gamePlayerTexture;
+    private ITexture gameCowTexture;
+    private ITexture gameMarioTexture;
     public ITextureRegion gameWallTextureRegion;
     public ITextureRegion gameTargetTextureRegion;
-    public TiledTextureRegion gameBoxTextureRegion;
-    public TiledTextureRegion gamePlayerTextureRegion;
+    public TiledTextureRegion gameCowTextureRegion;
+    public TiledTextureRegion gameMarioTextureRegion;
     private ITexture gameBackgroundTexture;
     public ITextureRegion gameGrassBackgroundTextureRegion;
 
@@ -197,13 +197,13 @@ public class ResourcesManager {
             gameTargetTextureRegion = TextureRegionFactory.extractFromTexture(gameTargetTexture);
             gameTargetTexture.load();
 
-            gameBoxTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/box.png", TextureOptions.BILINEAR);
-            gameBoxTextureRegion = TextureRegionFactory.extractTiledFromTexture(gameBoxTexture, 2, 1);
-            gameBoxTexture.load();
+            gameCowTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/cow.png", TextureOptions.BILINEAR);
+            gameCowTextureRegion = TextureRegionFactory.extractTiledFromTexture(gameCowTexture, 3, 4);
+            gameCowTexture.load();
 
-            gamePlayerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/player.png", TextureOptions.BILINEAR);
-            gamePlayerTextureRegion = TextureRegionFactory.extractTiledFromTexture(gamePlayerTexture, 4, 4);
-            gamePlayerTexture.load();
+            gameMarioTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/player.png", TextureOptions.BILINEAR);
+            gameMarioTextureRegion = TextureRegionFactory.extractTiledFromTexture(gameMarioTexture, 4, 4);
+            gameMarioTexture.load();
 
             gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/background_grass.png", TextureOptions.REPEATING_NEAREST_PREMULTIPLYALPHA);
             gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
@@ -218,16 +218,16 @@ public class ResourcesManager {
 
     public void unloadGameTextures() {
 
-        gameBoxTexture.unload();
+        gameCowTexture.unload();
         gameWallTexture.unload();
         gameTargetTexture.unload();
-        gamePlayerTexture.unload();
+        gameMarioTexture.unload();
         gameBackgroundTexture.unload();
 
-        gameBoxTextureRegion = null;
+        gameCowTextureRegion = null;
         gameWallTextureRegion = null;
         gameTargetTextureRegion = null;
-        gamePlayerTextureRegion = null;
+        gameMarioTextureRegion = null;
         gameGrassBackgroundTextureRegion = null;
     }
 }

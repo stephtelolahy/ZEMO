@@ -4,10 +4,10 @@ import android.graphics.Point;
 import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
-import com.telolahy.mariosokoban.object.GameCharacter;
 import com.telolahy.mariosokoban.event.LongScrollDetector;
-import com.telolahy.mariosokoban.object.GameMap;
 import com.telolahy.mariosokoban.manager.SceneManager;
+import com.telolahy.mariosokoban.object.GameCharacter;
+import com.telolahy.mariosokoban.object.GameMap;
 
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
@@ -36,9 +36,6 @@ public class GameScene extends BaseScene {
     private static final int LEFT = 1;
     private static final int RIGHT = 2;
     private static final int UP = 3;
-
-    private static final int BOX_STATE_NONE = 0;
-    private static final int BOX_STATE_OK = 1;
 
     // ===========================================================
     // Fields
@@ -188,20 +185,14 @@ public class GameScene extends BaseScene {
                         break;
 
                     case GameMap.BOX:
-                        GameCharacter box = new GameCharacter(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y);
-                        box.state = BOX_STATE_NONE;
+                    case GameMap.BOX_OK:
+                        GameCharacter box = new GameCharacter(posX, posY, mResourcesManager.gameCowTextureRegion, mVertexBufferObjectManager, x, y);
+                        box.setCurrentTileIndex(6);
                         mBoxes.add(box);
                         break;
 
-                    case GameMap.BOX_OK:
-                        GameCharacter boxOk = new GameCharacter(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y);
-                        boxOk.state = BOX_STATE_OK;
-                        boxOk.setCurrentTileIndex(1);
-                        mBoxes.add(boxOk);
-                        break;
-
                     case GameMap.PLAYER:
-                        GameCharacter player = new GameCharacter(posX, posY, mResourcesManager.gamePlayerTextureRegion, mVertexBufferObjectManager, x, y);
+                        GameCharacter player = new GameCharacter(posX, posY, mResourcesManager.gameMarioTextureRegion, mVertexBufferObjectManager, x, y);
                         mMario = player;
                         break;
 
@@ -232,7 +223,7 @@ public class GameScene extends BaseScene {
         }
     }
 
-    private boolean canMoveMario(Point direction) {
+    private boolean canMoveMario(final Point direction) {
 
         Point destination = new Point(mMario.gamePosition.x + direction.x, mMario.gamePosition.y + direction.y);
 
@@ -277,7 +268,7 @@ public class GameScene extends BaseScene {
         animateMario(source, destination);
     }
 
-    private void animateMario(Point source, Point destination) {
+    private void animateMario(final Point source, final Point destination) {
 
         final int direction = getDirection(source, destination);
 
@@ -335,24 +326,23 @@ public class GameScene extends BaseScene {
         }));
     }
 
-    private void animateBox(Point source, Point destination) {
+    private void animateBox(final Point source, final Point destination) {
 
-        GameCharacter box = getBoxAt(source);
+        final GameCharacter box = getBoxAt(source);
 
         if (mGame.getElement(source) == GameMap.BOX_OK) {
             mGame.setElement(source, GameMap.GOAL);
-            box.setCurrentTileIndex(0);
         } else {
             mGame.setElement(source, GameMap.EMPTY);
         }
 
         if (mGame.getElement(destination) == GameMap.GOAL) {
             mGame.setElement(destination, GameMap.BOX_OK);
-            box.setCurrentTileIndex(1);
         } else {
             mGame.setElement(destination, GameMap.BOX);
         }
 
+        final int direction = getDirection(source, destination);
         box.gamePosition = destination;
 
         float x1 = box.getX();
@@ -366,6 +356,9 @@ public class GameScene extends BaseScene {
             @Override
             public void onPathStarted(final PathModifier pPathModifier, final IEntity pEntity) {
 
+                box.moving = true;
+                long tileDuration = STEP_DURATION_MILLIS / 4;
+                box.animate(new long[]{tileDuration, tileDuration, tileDuration}, direction * 3, direction * 3 + 2, true);
             }
 
             @Override
@@ -381,6 +374,10 @@ public class GameScene extends BaseScene {
             @Override
             public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
 
+                // finish animation
+                box.moving = false;
+                box.stopAnimation();
+                box.setCurrentTileIndex(direction * 3);
             }
         }));
 
