@@ -1,6 +1,6 @@
 package com.telolahy.mariosokoban.scene;
 
-import android.util.Log;
+import android.graphics.Point;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
@@ -22,6 +22,8 @@ import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
+
+import java.util.ArrayList;
 
 /**
  * Created by stephanohuguestelolahy on 11/16/14.
@@ -63,6 +65,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private boolean mLevelSelectorIsAnimating;
     private float mLevelSelectorMinX;
     private float mLevelSelectorMaxX;
+    private float mLevelSelectorCurrentX;
     private MenuScene mLevelSelectorMenuScene;
 
     public MainMenuScene(int... params) {
@@ -88,12 +91,13 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         mMaxLevelReached = params[0];
         mMenuType = params[1];
         createBackground();
-        createMenuChildScene();
         startMusic();
         createHUD();
         setupTouchGesture();
 
-        if (mMenuType == MENU_TYPE_LEVEL_SELECTOR) {
+        if (mMenuType == MENU_TYPE_HOME) {
+            displayHomeMenu();
+        } else if (mMenuType == MENU_TYPE_LEVEL_SELECTOR) {
             displayLevelSelector();
         }
     }
@@ -160,7 +164,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         mCamera.setHUD(mHUD);
     }
 
-    private void createMenuChildScene() {
+    private void createHomeMenuChildScene() {
 
         mHomeMenuScene = new MenuScene(mCamera);
 
@@ -193,7 +197,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         setChildScene(mHomeMenuScene);
     }
 
-    private void createLevelSelection() {
+    private void createLevelSelectorChildScene() {
 
         mLevelSelectorMenuScene = new MenuScene(mCamera);
 
@@ -207,6 +211,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
 
         //Current Level Counter
         int iLevel = 1;
+        ArrayList<Point> levelPositions = new ArrayList<Point>();
 
         // Create the level selectors, one page at a time
         for (int page = 0; page < totalPages; page++) {
@@ -225,6 +230,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
                     final boolean isUnlocked = levelToLoad <= mMaxLevelReached;
 
                     int boxX = pageX + LEVEL_MARGIN_LEFT + spaceBetweenColumns * x;
+                    levelPositions.add(new Point(boxX, boxY));
 
                     ITextureRegion textureRegion = isUnlocked ? mResourcesManager.menuLevelUnlockedRegion : mResourcesManager.menuLevelLockedRegion;
 
@@ -232,7 +238,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
                     // has not been unlocked yet, don't allow loading.
                     IMenuItem levelMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(iLevel, textureRegion, mVertexBufferObjectManager), 1.2f, 1);
                     if (isUnlocked) {
-                        levelMenuItem.attachChild(new Text(40, 40, mResourcesManager.menuLevelFont, String.valueOf(iLevel), mVertexBufferObjectManager));
+                        levelMenuItem.attachChild(new Text(42, 42, mResourcesManager.menuLevelFont, String.valueOf(iLevel), mVertexBufferObjectManager));
                     }
                     mLevelSelectorMenuScene.addMenuItem(levelMenuItem);
 
@@ -241,17 +247,15 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
             }
         }
 
-        //Set the max scroll possible, so it does not go over the boundaries.
-        mLevelSelectorMinX = -(totalPages - 1) * LEVEL_PAGE_WIDTH;
-        mLevelSelectorMaxX = 0;
-
         mLevelSelectorMenuScene.buildAnimations();
         mLevelSelectorMenuScene.setBackgroundEnabled(false);
 
         int i = 0;
         for (IMenuItem item : mLevelSelectorMenuScene.getMenuItems()) {
+
+            Point position = levelPositions.get(i);
+            item.setPosition(position.x, position.y);
             i++;
-            item.setPosition(i * 100, 240);
         }
 
         mLevelSelectorMenuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
@@ -259,7 +263,6 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
                 int level = pMenuItem.getID();
-                Log.i("", "onItemClick : " + level);
                 if (level <= mMaxLevelReached) {
                     loadLevel(level);
                 }
@@ -272,80 +275,7 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         //Set the max scroll possible, so it does not go over the boundaries.
         mLevelSelectorMinX = -(totalPages - 1) * LEVEL_PAGE_WIDTH;
         mLevelSelectorMaxX = 0;
-
-//        clearChildScene();
-        ////////////////
-
-        /*
-        // calculate the amount of required columns for the level count
-        int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
-        int totalPages = (LEVELS_COUNT / levelsPerPage) + (LEVELS_COUNT % levelsPerPage == 0 ? 0 : 1);
-
-        // Calculate space between each level square
-        int spaceBetweenRows = (Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - LEVEL_MARGIN_BOTTOM) / (LEVEL_ROWS_PER_SCREEN - 1);
-        int spaceBetweenColumns = (Constants.SCREEN_WIDTH - LEVEL_MARGIN_LEFT - LEVEL_MARGIN_RIGHT) / (LEVEL_COLUMNS_PER_SCREEN - 1);
-
-        //Current Level Counter
-        int iLevel = 1;
-
-        // Create the level selectors, one page at a time
-        for (int page = 0; page < totalPages; page++) {
-
-            int pageX = page * LEVEL_PAGE_WIDTH;
-
-            //Create the Level selectors, one row at a time.
-            for (int y = 0; y < LEVEL_ROWS_PER_SCREEN && iLevel <= LEVELS_COUNT; y++) {
-
-                int boxY = Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - spaceBetweenRows * y;
-
-                for (int x = 0; x < LEVEL_COLUMNS_PER_SCREEN && iLevel <= LEVELS_COUNT; x++) {
-
-                    //On Touch, save the clicked level in case it's a click and not a scroll.
-                    final int levelToLoad = iLevel;
-                    final boolean isUnlocked = levelToLoad <= mMaxLevelReached;
-
-                    int boxX = pageX + LEVEL_MARGIN_LEFT + spaceBetweenColumns * x;
-
-                    ITextureRegion textureRegion = isUnlocked ? mResourcesManager.menuLevelUnlockedRegion : mResourcesManager.menuLevelLockedRegion;
-
-                    // Create the rectangle. If the level selected
-                    // has not been unlocked yet, don't allow loading.
-                    Sprite box = new Sprite(boxX, boxY, textureRegion, mVertexBufferObjectManager) {
-
-                        @Override
-                        public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-
-                            if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
-
-                                if (isUnlocked) {
-                                    loadLevel(levelToLoad);
-                                }
-                                return true;
-                            }
-
-                            return false;
-                        }
-                    };
-
-                    mLevelSelectorLayer.attachChild(box);
-
-                    // display level number
-                    if (isUnlocked) {
-                        mLevelSelectorLayer.attachChild(new Text(boxX, boxY, mResourcesManager.menuLevelFont, String.valueOf(iLevel), mVertexBufferObjectManager));
-                    }
-
-                    this.registerTouchArea(box);
-
-                    iLevel++;
-                }
-            }
-        }
-
-        //Set the max scroll possible, so it does not go over the boundaries.
-        mLevelSelectorMinX = -(totalPages - 1) * LEVEL_PAGE_WIDTH;
-        mLevelSelectorMaxX = 0;
-
-        */
+        mLevelSelectorCurrentX = 0;
     }
 
     //Here is where you call the level load.
@@ -357,14 +287,14 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private void displayLevelSelector() {
 
         clearChildScene();
-        createLevelSelection();
+        createLevelSelectorChildScene();
         mMenuType = MENU_TYPE_LEVEL_SELECTOR;
     }
 
     private void displayHomeMenu() {
 
         clearChildScene();
-        createMenuChildScene();
+        createHomeMenuChildScene();
         mMenuType = MENU_TYPE_HOME;
     }
 
@@ -380,16 +310,17 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
             return;
         }
 
+        float newX = mLevelSelectorCurrentX + pDistanceX;
+
+        if (newX < mLevelSelectorMinX || newX > mLevelSelectorMaxX) {
+            return;
+        }
+
+        mLevelSelectorCurrentX = newX;
+
         for (IMenuItem item : mLevelSelectorMenuScene.getMenuItems()) {
             item.setPosition(item.getX() + pDistanceX, item.getY());
         }
-
-//        float currentX = mLevelSelectorLayer.getX();
-//        float newX = currentX + pDistanceX;
-//
-//        if (newX < mLevelSelectorMinX || newX > mLevelSelectorMaxX) return;
-//
-//        mLevelSelectorLayer.setPosition(newX, 0);
     }
 
     @Override
