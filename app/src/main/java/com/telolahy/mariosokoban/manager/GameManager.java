@@ -13,7 +13,7 @@ public class GameManager {
 
     public int maxLevelReached() {
 
-        return 2;
+        return 20;
     }
 
 }
