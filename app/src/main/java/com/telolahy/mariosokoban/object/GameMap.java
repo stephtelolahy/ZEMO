@@ -64,6 +64,7 @@ public class GameMap {
 
         } catch (IOException e) {
             e.printStackTrace();
+            throw new IllegalStateException("Cannot read level: "+ file);
         }
 
         mSizeX = columnsCount;

@@ -70,6 +70,11 @@ public class ResourcesManager {
     private ITexture gameBackgroundTexture;
     public ITextureRegion gameGrassBackgroundTextureRegion;
 
+    private ITexture levelCompletedBackgroundTexture;
+    public ITextureRegion levelCompletedBackgroundTextureRegion;
+    private ITexture levelCompletedStarsTexture;
+    public TiledTextureRegion levelCompletedStarsTextureRegion;
+
     //---------------------------------------------
     // GETTERS AND SETTERS
     //---------------------------------------------
@@ -210,6 +215,14 @@ public class ResourcesManager {
             gameGrassBackgroundTextureRegion.setTextureWidth(Constants.SCREEN_WIDTH * 4);
             gameGrassBackgroundTextureRegion.setTextureHeight(Constants.SCREEN_HEIGHT * 4);
             gameBackgroundTexture.load();
+
+            levelCompletedBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/level_completed_background.png", TextureOptions.BILINEAR);
+            levelCompletedBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(levelCompletedBackgroundTexture);
+            levelCompletedBackgroundTexture.load();
+
+            levelCompletedStarsTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/star.png", TextureOptions.BILINEAR);
+            levelCompletedStarsTextureRegion = TextureRegionFactory.extractTiledFromTexture(levelCompletedStarsTexture, 2, 1);
+            levelCompletedStarsTexture.load();
 
         } catch (IOException e) {
             Debug.e(e);

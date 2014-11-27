@@ -4,6 +4,7 @@ import android.graphics.Point;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
+import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.HUD;
@@ -44,7 +45,6 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
     private static final int LEVEL_MARGIN_LEFT = 200;
     private static final int LEVEL_MARGIN_RIGHT = 200;
     private static final int LEVEL_PAGE_WIDTH = 600;
-    private static final int LEVELS_COUNT = 30;
 
     private static final int MENU_PLAY = 0;
     private static final int MENU_OPTIONS = 1;
@@ -205,8 +205,9 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
         mLevelSelectorMenuScene = new MenuScene(mCamera);
 
         // calculate the amount of required columns for the level count
-        int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
-        int totalPages = (LEVELS_COUNT / levelsPerPage) + (LEVELS_COUNT % levelsPerPage == 0 ? 0 : 1);
+        final int levelsCount = GameManager.LEVELS_COUNT;
+        final int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
+        final int totalPages = (levelsCount / levelsPerPage) + (levelsCount % levelsPerPage == 0 ? 0 : 1);
 
         // Calculate space between each level square
         int spaceBetweenRows = (Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - LEVEL_MARGIN_BOTTOM) / (LEVEL_ROWS_PER_SCREEN - 1);
@@ -222,11 +223,11 @@ public class MainMenuScene extends BaseScene implements ScrollDetector.IScrollDe
             int pageX = page * LEVEL_PAGE_WIDTH;
 
             //Create the Level selectors, one row at a time.
-            for (int y = 0; y < LEVEL_ROWS_PER_SCREEN && iLevel <= LEVELS_COUNT; y++) {
+            for (int y = 0; y < LEVEL_ROWS_PER_SCREEN && iLevel <= levelsCount; y++) {
 
                 int boxY = Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - spaceBetweenRows * y;
 
-                for (int x = 0; x < LEVEL_COLUMNS_PER_SCREEN && iLevel <= LEVELS_COUNT; x++) {
+                for (int x = 0; x < LEVEL_COLUMNS_PER_SCREEN && iLevel <= levelsCount; x++) {
 
                     //On Touch, save the clicked level in case it's a click and not a scroll.
                     final int levelToLoad = iLevel;

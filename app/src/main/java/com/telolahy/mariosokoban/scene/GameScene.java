@@ -89,7 +89,15 @@ public class GameScene extends BaseScene {
 
         mMario.detachSelf();
 
+        // Hide HUD
+        if (mCamera.getHUD() != null) {
+            mCamera.getHUD().setVisible(false);
+        }
+
+        // Disable camera chase entity
         mCamera.setChaseEntity(null);
+
+        // Reset camera position
         mCamera.setCenter(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2);
     }
 
@@ -142,9 +150,9 @@ public class GameScene extends BaseScene {
 
     private void loadLevel(int level) {
 
-        Log.i("", "loadLevel " + level + " mLevel:" + mLevel);
+        String levelFile = "level/level_bonus.txt";//"level/level" + level + ".txt";
         mGame = new GameMap();
-        mGame.loadLevel("level/level" + level + ".txt", mResourcesManager.activity);
+        mGame.loadLevel(levelFile, mResourcesManager.activity);
 
         int worldWidth = BLOC_SIZE * mGame.getSizeX() + WORLD_MARGIN;
         int worldHeight = BLOC_SIZE * mGame.getSizeY() + WORLD_MARGIN;
@@ -419,7 +427,7 @@ public class GameScene extends BaseScene {
         }
     }
 
-    private void checkGameOver(){
+    private void checkGameOver() {
 
         if (mGame.isLevelCompleted()) {
             showGameCompleted();
