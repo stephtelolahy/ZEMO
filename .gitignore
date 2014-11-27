@@ -4,3 +4,5 @@
 /.idea/libraries
 .DS_Store
 /build
+andEngine/build/
+andEnginePhysicsBox2DExtension/build/
