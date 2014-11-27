@@ -1,5 +1,7 @@
 package com.telolahy.mariosokoban.object;
 
+import android.util.Log;
+
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
 import com.telolahy.mariosokoban.manager.GameManager;
@@ -107,6 +109,13 @@ public class LevelCompletedWindow extends Sprite {
         // Attach our level complete panel in the middle of camera
         setPosition(camera.getCenterX(), camera.getCenterY());
         scene.attachChild(this);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+
+        Log.i("", "finalize "+ this.getClass().getName());
     }
 }
 

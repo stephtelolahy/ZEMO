@@ -1,5 +1,7 @@
 package com.telolahy.mariosokoban.scene;
 
+import android.util.Log;
+
 import com.telolahy.mariosokoban.MainActivity;
 import com.telolahy.mariosokoban.manager.ResourcesManager;
 
@@ -59,6 +61,13 @@ public abstract class BaseScene extends Scene {
 
         this.detachSelf();
         this.dispose();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+
+        Log.i("", "finalize " + this.getClass().getName());
     }
 
 }

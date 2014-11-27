@@ -8,6 +8,7 @@ import com.telolahy.mariosokoban.event.LongScrollDetector;
 import com.telolahy.mariosokoban.manager.SceneManager;
 import com.telolahy.mariosokoban.object.GameCharacter;
 import com.telolahy.mariosokoban.object.GameMap;
+import com.telolahy.mariosokoban.object.LevelCompletedWindow;
 
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
@@ -47,8 +48,10 @@ public class GameScene extends BaseScene {
     private GameCharacter mMario;
     private ArrayList<GameCharacter> mBoxes;
     private LongScrollDetector mDetector;
-    private static int X0;
-    private static int Y0;
+    private static int mX0;
+    private static int mY0;
+
+    private LevelCompletedWindow mLevelCompletedWindow;
 
     public GameScene(int... params) {
         super(params);
@@ -88,6 +91,10 @@ public class GameScene extends BaseScene {
     protected void onDisposeScene() {
 
         mMario.detachSelf();
+
+        if (mLevelCompletedWindow != null) {
+            mLevelCompletedWindow.detachSelf();
+        }
 
         // Hide HUD
         if (mCamera.getHUD() != null) {
@@ -156,19 +163,19 @@ public class GameScene extends BaseScene {
 
         int worldWidth = BLOC_SIZE * mGame.getSizeX() + WORLD_MARGIN;
         int worldHeight = BLOC_SIZE * mGame.getSizeY() + WORLD_MARGIN;
-        X0 = WORLD_MARGIN_LEFT;
-        Y0 = WORLD_MARGIN;
+        mX0 = WORLD_MARGIN_LEFT;
+        mY0 = WORLD_MARGIN;
 
-        if (X0 + worldWidth < Constants.SCREEN_WIDTH) {
-            X0 = ((Constants.SCREEN_WIDTH - X0) - worldWidth) / 2 + X0;
+        if (mX0 + worldWidth < Constants.SCREEN_WIDTH) {
+            mX0 = ((Constants.SCREEN_WIDTH - mX0) - worldWidth) / 2 + mX0;
         }
-        if (Y0 + worldHeight < Constants.SCREEN_HEIGHT) {
-            Y0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
+        if (mY0 + worldHeight < Constants.SCREEN_HEIGHT) {
+            mY0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
         }
         int cameraMinX = 0;
         int cameraMinY = 0;
-        int cameraMaxX = Math.max(X0 + worldWidth, Constants.SCREEN_WIDTH);
-        int cameraMaxY = Math.max(Y0 + worldHeight, Constants.SCREEN_HEIGHT);
+        int cameraMaxX = Math.max(mX0 + worldWidth, Constants.SCREEN_WIDTH);
+        int cameraMaxY = Math.max(mY0 + worldHeight, Constants.SCREEN_HEIGHT);
         mCamera.setBounds(cameraMinX, cameraMinY, cameraMaxX, cameraMaxY);
         mCamera.setBoundsEnabled(true);
 
@@ -177,8 +184,8 @@ public class GameScene extends BaseScene {
         for (int y = 0; y < mGame.getSizeY(); y++) {
             for (int x = 0; x < mGame.getSizeX(); x++) {
 
-                int posX = X0 + x * BLOC_SIZE + BLOC_SIZE / 2;
-                int posY = Y0 + y * BLOC_SIZE + BLOC_SIZE / 2;
+                int posX = mX0 + x * BLOC_SIZE + BLOC_SIZE / 2;
+                int posY = mY0 + y * BLOC_SIZE + BLOC_SIZE / 2;
 
                 switch (mGame.getElement(new Point(x, y))) {
 
@@ -304,8 +311,8 @@ public class GameScene extends BaseScene {
 
         float x1 = mMario.getX();
         float y1 = mMario.getY();
-        float x2 = X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
-        float y2 = Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
+        float x2 = mX0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
+        float y2 = mY0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
         final Path marioPath = new Path(2).to(x1, y1).to(x2, y2);
         float pathAnimationDuration = (float) STEP_DURATION_MILLIS / 1000;
         mMario.registerEntityModifier(new PathModifier(pathAnimationDuration, marioPath, null, new PathModifier.IPathModifierListener() {
@@ -365,8 +372,8 @@ public class GameScene extends BaseScene {
 
         float x1 = box.getX();
         float y1 = box.getY();
-        float x2 = X0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
-        float y2 = Y0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
+        float x2 = mX0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
+        float y2 = mY0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
         final Path boxPath = new Path(2).to(x1, y1).to(x2, y2);
         float pathAnimationDuration = (float) STEP_DURATION_MILLIS / 1000;
         box.registerEntityModifier(new PathModifier(pathAnimationDuration, boxPath, null, new PathModifier.IPathModifierListener() {

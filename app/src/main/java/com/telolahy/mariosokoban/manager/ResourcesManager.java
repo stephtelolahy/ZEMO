@@ -236,11 +236,15 @@ public class ResourcesManager {
         gameTargetTexture.unload();
         gameMarioTexture.unload();
         gameBackgroundTexture.unload();
+        levelCompletedBackgroundTexture.unload();
+        levelCompletedStarsTexture.unload();
 
         gameCowTextureRegion = null;
         gameWallTextureRegion = null;
         gameTargetTextureRegion = null;
         gameMarioTextureRegion = null;
         gameGrassBackgroundTextureRegion = null;
+        levelCompletedBackgroundTextureRegion = null;
+        levelCompletedStarsTextureRegion = null;
     }
 }
