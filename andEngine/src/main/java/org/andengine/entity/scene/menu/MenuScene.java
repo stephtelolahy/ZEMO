@@ -3,6 +3,7 @@ package org.andengine.entity.scene.menu;
 import java.util.ArrayList;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.entity.Entity;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -39,6 +40,8 @@ public class MenuScene extends CameraScene implements IOnAreaTouchListener, IOnS
 
 	private IMenuItem mSelectedMenuItem;
 
+    private Entity mLayer;
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -62,11 +65,18 @@ public class MenuScene extends CameraScene implements IOnAreaTouchListener, IOnS
 		this.mOnMenuItemClickListener = pOnMenuItemClickListener;
 		this.setOnSceneTouchListener(this);
 		this.setOnAreaTouchListener(this);
+
+        mLayer = new Entity(0,0);
+        this.attachChild(mLayer);
 	}
 
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+
+    public Entity getLayer() {
+        return mLayer;
+    }
 
 	public IOnMenuItemClickListener getOnMenuItemClickListener() {
 		return this.mOnMenuItemClickListener;
@@ -90,7 +100,7 @@ public class MenuScene extends CameraScene implements IOnAreaTouchListener, IOnS
 
 	public void addMenuItem(final IMenuItem pMenuItem) {
 		this.mMenuItems.add(pMenuItem);
-		this.attachChild(pMenuItem);
+		mLayer.attachChild(pMenuItem);
 		this.registerTouchArea(pMenuItem);
 	}
 
