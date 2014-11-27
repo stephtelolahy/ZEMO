@@ -331,8 +331,6 @@ public class GameScene extends BaseScene {
                     mMario.moving = false;
                     mMario.stopAnimation();
                     mMario.setCurrentTileIndex(direction * 4);
-
-                    checkGameOver();
                 }
             }
         }));
@@ -390,6 +388,8 @@ public class GameScene extends BaseScene {
                 box.moving = false;
                 box.stopAnimation();
                 box.setCurrentTileIndex(direction * 3);
+
+                checkGameOver();
             }
         }));
 
