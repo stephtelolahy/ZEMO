@@ -321,6 +321,8 @@ public class GameScene extends BaseScene {
                     mMario.moving = false;
                     mMario.stopAnimation();
                     mMario.setCurrentTileIndex(direction * 4);
+
+                    checkGameOver();
                 }
             }
         }));
@@ -405,6 +407,18 @@ public class GameScene extends BaseScene {
         } else {
             return NONE;
         }
+    }
+
+    private void checkGameOver(){
+
+        if (mGame.isLevelCompleted()) {
+            showGameCompleted();
+        }
+    }
+
+    private void showGameCompleted() {
+
+        Log.i("", "Level completed !!");
     }
 
 }
