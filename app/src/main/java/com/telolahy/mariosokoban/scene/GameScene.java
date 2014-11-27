@@ -185,10 +185,16 @@ public class GameScene extends BaseScene {
                         break;
 
                     case GameMap.BOX:
-                    case GameMap.BOX_OK:
                         GameCharacter box = new GameCharacter(posX, posY, mResourcesManager.gameCowTextureRegion, mVertexBufferObjectManager, x, y);
                         box.setCurrentTileIndex(6);
                         mBoxes.add(box);
+                        break;
+                    case GameMap.BOX_OK:
+                        Sprite goalOK = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
+                        attachChild(goalOK);
+                        GameCharacter boxOk = new GameCharacter(posX, posY, mResourcesManager.gameCowTextureRegion, mVertexBufferObjectManager, x, y);
+                        boxOk.setCurrentTileIndex(6);
+                        mBoxes.add(boxOk);
                         break;
 
                     case GameMap.PLAYER:
@@ -197,6 +203,10 @@ public class GameScene extends BaseScene {
                         break;
 
                     case GameMap.PLAYER_ON_GOAL:
+                        Sprite goalPlayer = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
+                        attachChild(goalPlayer);
+                        GameCharacter playerGoal = new GameCharacter(posX, posY, mResourcesManager.gameMarioTextureRegion, mVertexBufferObjectManager, x, y);
+                        mMario = playerGoal;
                         break;
 
                     default:
