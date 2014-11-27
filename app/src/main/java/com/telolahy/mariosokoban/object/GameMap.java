@@ -85,4 +85,17 @@ public class GameMap {
         }
     }
 
+    public boolean isLevelCompleted() {
+        int remainGoals = 0;
+        for (int y = 0; y < mSizeY; y++) {
+            for (int x = 0; x < mSizeX; x++) {
+
+                if (mElement[x][y] == GOAL) {
+                    remainGoals++;
+                }
+            }
+        }
+        return (remainGoals == 0);
+    }
+
 }
