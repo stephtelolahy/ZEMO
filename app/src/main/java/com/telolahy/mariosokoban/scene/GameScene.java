@@ -150,7 +150,7 @@ public class GameScene extends BaseScene {
 
     private void loadLevel(int level) {
 
-        String levelFile = "level/level_bonus.txt";//"level/level" + level + ".txt";
+        String levelFile = "level/level" + level + ".txt";
         mGame = new GameMap();
         mGame.loadLevel(levelFile, mResourcesManager.activity);
 
