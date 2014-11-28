@@ -43,6 +43,7 @@ public class GameScene extends BaseScene {
     // ===========================================================
 
     private int mLevel;
+    private boolean mLevelCompleted;
 
     private GameMap mGame;
     private GameCharacter mMario;
@@ -71,6 +72,10 @@ public class GameScene extends BaseScene {
 
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
+
+        if (mLevelCompleted) {
+            return super.onSceneTouchEvent(pSceneTouchEvent);
+        }
 
         mDetector.onManagedTouchEvent(pSceneTouchEvent);
         return true;
@@ -160,7 +165,7 @@ public class GameScene extends BaseScene {
 
     private void createLevelCompletedWindow() {
 
-        mLevelCompletedWindow = new LevelCompletedWindow(this, new LevelCompletedWindow.LevelCompleteWindowListener() {
+        mLevelCompletedWindow = new LevelCompletedWindow(new LevelCompletedWindow.LevelCompleteWindowListener() {
             @Override
             public void levelCompleteWindowNextButtonClicked() {
                 SceneManager.getInstance().loadMenuScene();
@@ -454,7 +459,8 @@ public class GameScene extends BaseScene {
 
     private void checkGameOver() {
 
-        if (mGame.isLevelCompleted()) {
+        mLevelCompleted = mGame.isLevelCompleted();
+        if (mLevelCompleted) {
             showGameCompleted();
         }
     }
@@ -463,7 +469,6 @@ public class GameScene extends BaseScene {
 
         int starsCount = GameManager.getInstance().retriesForLevel(mLevel) == 0 ? 3 : 2;
         mLevelCompletedWindow.display(starsCount, this, mCamera);
-        mLevelCompletedWindow.setVisible(true);
     }
 
     private void reloadGame() {

@@ -27,7 +27,7 @@ public class LevelCompletedWindow extends Sprite {
     private static final int MENU_RETRY = 1;
     private static final int MENU_NEXT = 2;
 
-    IMenuItem mNextMenuItem;
+    private MenuScene mMenuScene;
 
     public interface LevelCompleteWindowListener {
 
@@ -39,29 +39,28 @@ public class LevelCompletedWindow extends Sprite {
     private TiledSprite mStars[] = new TiledSprite[3];
     private LevelCompleteWindowListener mListener;
 
-    public LevelCompletedWindow(Scene scene, LevelCompleteWindowListener listener) {
+    public LevelCompletedWindow(LevelCompleteWindowListener listener) {
 
         super(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().levelCompletedBackgroundTextureRegion, ResourcesManager.getInstance().vertexBufferObjectManager);
         mListener = listener;
-        attachStars(scene);
-        attachMenu(scene);
+        createStars();
+        createMenu();
     }
 
-    private void attachMenu(Scene scene) {
+    private void createMenu() {
 
-        MenuScene menuScene = new MenuScene(ResourcesManager.getInstance().camera);
+        mMenuScene = new MenuScene(ResourcesManager.getInstance().camera);
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
-        TextMenuItem nextTextMenuItem = new TextMenuItem(MENU_NEXT, resourcesManager.font, resourcesManager.activity.getResources().getString(R.string.suivant), resourcesManager.vertexBufferObjectManager);
-        mNextMenuItem = new ScaleMenuItemDecorator(nextTextMenuItem, 1.2f, 1);
-        menuScene.addMenuItem(mNextMenuItem);
+        TextMenuItem textMenuItem = new TextMenuItem(MENU_NEXT, resourcesManager.font, resourcesManager.activity.getResources().getString(R.string.suivant), resourcesManager.vertexBufferObjectManager);
+        IMenuItem menuItem = new ScaleMenuItemDecorator(textMenuItem, 1.2f, 1);
+        mMenuScene.addMenuItem(menuItem);
 
-        menuScene.buildAnimations();
-        menuScene.setBackgroundEnabled(false);
-        mNextMenuItem.setPosition(Constants.SCREEN_WIDTH / 2, 120);
-        mNextMenuItem.setVisible(false);
+        mMenuScene.buildAnimations();
+        mMenuScene.setBackgroundEnabled(false);
+        menuItem.setPosition(Constants.SCREEN_WIDTH / 2, 120);
 
-        menuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
+        mMenuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
@@ -77,11 +76,9 @@ public class LevelCompletedWindow extends Sprite {
                 }
             }
         });
-
-        scene.setChildScene(menuScene);
     }
 
-    private void attachStars(Scene scene) {
+    private void createStars() {
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
 
@@ -107,8 +104,6 @@ public class LevelCompletedWindow extends Sprite {
             throw new InvalidParameterException("stars count should be in (1-3)");
         }
 
-        mNextMenuItem.setVisible(true);
-
         for (int i = 0; i < 3; i++) {
             if (i < starsCount) {
                 mStars[i].setCurrentTileIndex(0);
@@ -128,6 +123,9 @@ public class LevelCompletedWindow extends Sprite {
         // Attach our level complete panel in the middle of camera
         setPosition(camera.getCenterX(), camera.getCenterY());
         scene.attachChild(this);
+
+        // Attach menu childScene
+        scene.setChildScene(mMenuScene);
     }
 
     @Override
