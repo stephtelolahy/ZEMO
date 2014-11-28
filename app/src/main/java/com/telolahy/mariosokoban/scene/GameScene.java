@@ -97,6 +97,8 @@ public class GameScene extends BaseScene {
             mLevelCompletedWindow.detachSelf();
         }
 
+        clearChildScene();
+
         // Hide HUD
         if (mCamera.getHUD() != null) {
             mCamera.getHUD().setVisible(false);
@@ -158,7 +160,7 @@ public class GameScene extends BaseScene {
 
     private void createLevelCompletedWindow() {
 
-        mLevelCompletedWindow = new LevelCompletedWindow(mVertexBufferObjectManager, this, new LevelCompletedWindow.LevelCompleteWindowListener() {
+        mLevelCompletedWindow = new LevelCompletedWindow(this, new LevelCompletedWindow.LevelCompleteWindowListener() {
             @Override
             public void levelCompleteWindowNextButtonClicked() {
                 SceneManager.getInstance().loadMenuScene();

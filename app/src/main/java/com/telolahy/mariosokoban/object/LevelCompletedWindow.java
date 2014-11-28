@@ -9,6 +9,10 @@ import com.telolahy.mariosokoban.manager.ResourcesManager;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.scene.menu.MenuScene;
+import org.andengine.entity.scene.menu.item.IMenuItem;
+import org.andengine.entity.scene.menu.item.TextMenuItem;
+import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.text.Text;
@@ -21,6 +25,10 @@ import java.security.InvalidParameterException;
  */
 public class LevelCompletedWindow extends Sprite {
 
+    private static final int MENU_RETRY = 1;
+    private static final int MENU_NEXT = 2;
+
+    IMenuItem mNextMenuItem;
 
     public interface LevelCompleteWindowListener {
 
@@ -32,14 +40,49 @@ public class LevelCompletedWindow extends Sprite {
     private TiledSprite mStars[] = new TiledSprite[3];
     private LevelCompleteWindowListener mListener;
 
-    public LevelCompletedWindow(VertexBufferObjectManager pSpriteVertexBufferObject, Scene scene, LevelCompleteWindowListener listener) {
+    public LevelCompletedWindow(Scene scene, LevelCompleteWindowListener listener) {
 
-        super(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().levelCompletedBackgroundTextureRegion, pSpriteVertexBufferObject);
+        super(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().levelCompletedBackgroundTextureRegion, ResourcesManager.getInstance().vertexBufferObjectManager);
         mListener = listener;
-        attachStars(pSpriteVertexBufferObject, scene);
+        attachStars(scene);
+        attachMenu(scene);
     }
 
-    private void attachStars(VertexBufferObjectManager pSpriteVertexBufferObject, Scene scene) {
+    private void attachMenu(Scene scene) {
+
+        MenuScene menuScene = new MenuScene(ResourcesManager.getInstance().camera);
+
+        ResourcesManager resourcesManager = ResourcesManager.getInstance();
+        TextMenuItem nextTextMenuItem = new TextMenuItem(MENU_NEXT, resourcesManager.font, resourcesManager.activity.getResources().getString(R.string.suivant), resourcesManager.vertexBufferObjectManager);
+        mNextMenuItem = new ScaleMenuItemDecorator(nextTextMenuItem, 1.2f, 1);
+        menuScene.addMenuItem(mNextMenuItem);
+
+        menuScene.buildAnimations();
+        menuScene.setBackgroundEnabled(false);
+        mNextMenuItem.setPosition(Constants.SCREEN_WIDTH / 2, 100);
+        mNextMenuItem.setVisible(false);
+
+        menuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
+
+                switch (pMenuItem.getID()) {
+                    case MENU_RETRY:
+                        mListener.levelCompleteWindowReplayButtonClicked();
+                        return true;
+                    case MENU_NEXT:
+                        mListener.levelCompleteWindowNextButtonClicked();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        scene.setChildScene(menuScene);
+    }
+
+    private void attachStars(Scene scene) {
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
 
@@ -51,39 +94,12 @@ public class LevelCompletedWindow extends Sprite {
 
         attachChild(new Text(Constants.SCREEN_WIDTH / 2, 380, resourcesManager.font, text, resourcesManager.vertexBufferObjectManager));
 
-        mStars[0] = new TiledSprite(275, 260, resourcesManager.levelCompletedStarsTextureRegion, pSpriteVertexBufferObject);
-        mStars[1] = new TiledSprite(400, 260, resourcesManager.levelCompletedStarsTextureRegion, pSpriteVertexBufferObject);
-        mStars[2] = new TiledSprite(525, 260, resourcesManager.levelCompletedStarsTextureRegion, pSpriteVertexBufferObject);
+        mStars[0] = new TiledSprite(275, 260, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
+        mStars[1] = new TiledSprite(400, 260, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
+        mStars[2] = new TiledSprite(525, 260, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
         attachChild(mStars[0]);
         attachChild(mStars[1]);
         attachChild(mStars[2]);
-
-//        Sprite retryButton = new Sprite(260, 120, resourcesManager.gameCompleteRetryRegion, pSpriteVertexBufferObject) {
-//            @Override
-//            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-//                mListener.levelCompleteWindowReplayButtonClicked();
-//                return true;
-//            }
-//        };
-//        attachChild(retryButton);
-//        scene.registerTouchArea(retryButton);
-//
-//
-//        if (isOnLastLevel) {
-//
-//            retryButton.setPosition(400, retryButton.getY());
-//            return;
-//        }
-//
-//        Sprite nextButton = new Sprite(540, 120, resourcesManager.gameCompleteNextRegion, pSpriteVertexBufferObject) {
-//            @Override
-//            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-//                mListener.levelCompleteWindowNextButtonClicked();
-//                return true;
-//            }
-//        };
-//        attachChild(nextButton);
-//        scene.registerTouchArea(nextButton);
     }
 
     public void display(int starsCount, Scene scene, Camera camera) {
@@ -92,6 +108,8 @@ public class LevelCompletedWindow extends Sprite {
             throw new InvalidParameterException("stars count should be in (1-3)");
         }
         Log.i("", "starsCount " + starsCount);
+
+        mNextMenuItem.setVisible(true);
 
         for (int i = 0; i < 3; i++) {
             if (i < starsCount) {
