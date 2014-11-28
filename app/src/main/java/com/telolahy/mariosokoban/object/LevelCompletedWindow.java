@@ -16,7 +16,6 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.text.Text;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import java.security.InvalidParameterException;
 
@@ -59,7 +58,7 @@ public class LevelCompletedWindow extends Sprite {
 
         menuScene.buildAnimations();
         menuScene.setBackgroundEnabled(false);
-        mNextMenuItem.setPosition(Constants.SCREEN_WIDTH / 2, 100);
+        mNextMenuItem.setPosition(Constants.SCREEN_WIDTH / 2, 120);
         mNextMenuItem.setVisible(false);
 
         menuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
@@ -107,7 +106,6 @@ public class LevelCompletedWindow extends Sprite {
         if (starsCount < 1 || starsCount > 3) {
             throw new InvalidParameterException("stars count should be in (1-3)");
         }
-        Log.i("", "starsCount " + starsCount);
 
         mNextMenuItem.setVisible(true);
 
