@@ -49,7 +49,7 @@ public class LevelCompletedWindow extends Sprite {
             text = resourcesManager.activity.getResources().getString(R.string.last_level_completed);
         }
 
-        attachChild(new Text(400, 380, resourcesManager.font, text, resourcesManager.vertexBufferObjectManager));
+        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 380, resourcesManager.font, text, resourcesManager.vertexBufferObjectManager));
 
         mStars[0] = new TiledSprite(275, 260, resourcesManager.levelCompletedStarsTextureRegion, pSpriteVertexBufferObject);
         mStars[1] = new TiledSprite(400, 260, resourcesManager.levelCompletedStarsTextureRegion, pSpriteVertexBufferObject);
@@ -91,9 +91,10 @@ public class LevelCompletedWindow extends Sprite {
         if (starsCount < 1 || starsCount > 3) {
             throw new InvalidParameterException("stars count should be in (1-3)");
         }
+        Log.i("", "starsCount " + starsCount);
 
         for (int i = 0; i < 3; i++) {
-            if (starsCount <= i + 1) {
+            if (i < starsCount) {
                 mStars[i].setCurrentTileIndex(0);
             } else {
                 mStars[i].setCurrentTileIndex(1);
@@ -101,7 +102,9 @@ public class LevelCompletedWindow extends Sprite {
         }
 
         // Hide HUD
-        camera.getHUD().setVisible(false);
+        if (camera.getHUD() != null) {
+            camera.getHUD().setVisible(false);
+        }
 
         // Disable camera chase entity
         camera.setChaseEntity(null);
@@ -115,7 +118,7 @@ public class LevelCompletedWindow extends Sprite {
     protected void finalize() throws Throwable {
         super.finalize();
 
-        Log.i("", "finalize "+ this.getClass().getName());
+        Log.i("", "finalize " + this.getClass().getName());
     }
 }
 

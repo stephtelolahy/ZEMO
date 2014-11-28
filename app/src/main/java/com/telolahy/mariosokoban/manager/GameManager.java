@@ -20,4 +20,8 @@ public class GameManager {
     public boolean isOnLastLevel() {
         return maxLevelReached() >= LEVELS_COUNT;
     }
+
+    public int retriesForLevel(int level) {
+        return 0;
+    }
 }

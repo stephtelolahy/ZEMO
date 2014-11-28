@@ -1,10 +1,10 @@
 package com.telolahy.mariosokoban.scene;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.event.LongScrollDetector;
+import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
 import com.telolahy.mariosokoban.object.GameCharacter;
 import com.telolahy.mariosokoban.object.GameMap;
@@ -443,7 +443,23 @@ public class GameScene extends BaseScene {
 
     private void showGameCompleted() {
 
-        Log.i("", "Level completed !!");
+        mLevelCompletedWindow = new LevelCompletedWindow(mVertexBufferObjectManager, this, new LevelCompletedWindow.LevelCompleteWindowListener() {
+            @Override
+            public void levelCompleteWindowNextButtonClicked() {
+                SceneManager.getInstance().loadMenuScene();
+            }
+
+            @Override
+            public void levelCompleteWindowReplayButtonClicked() {
+                reloadGame();
+            }
+        });
+        int starsCount = GameManager.getInstance().retriesForLevel(mLevel) == 0 ? 3 : 2;
+        mLevelCompletedWindow.display(starsCount, this, mCamera);
+    }
+
+    private void reloadGame() {
+        // TODO implement
     }
 
 }
