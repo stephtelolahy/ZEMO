@@ -18,22 +18,21 @@ public class SplashScene extends BaseScene {
     protected void onCreateScene(int... params) {
 
         mBackground = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.splashTextureRegion, mVertexBufferObjectManager);
-        mBackground.setAlpha(0);
         attachChild(mBackground);
 
-        mResourcesManager.engine.registerUpdateHandler(new TimerHandler(0.4f, new ITimerCallback() {
-            public void onTimePassed(final TimerHandler pTimerHandler) {
-                FadeInModifier fadeInModifier = new FadeInModifier(1f);
-                mBackground.registerEntityModifier(fadeInModifier);
-            }
-        }));
+//        mBackground.setAlpha(0);
+//        mResourcesManager.engine.registerUpdateHandler(new TimerHandler(0.4f, new ITimerCallback() {
+//            public void onTimePassed(final TimerHandler pTimerHandler) {
+//                FadeInModifier fadeInModifier = new FadeInModifier(1f);
+//                mBackground.registerEntityModifier(fadeInModifier);
+//            }
+//        }));
     }
 
     @Override
     protected void onDisposeScene() {
 
         mBackground.detachSelf();
-        mBackground.dispose();
     }
 
     @Override
