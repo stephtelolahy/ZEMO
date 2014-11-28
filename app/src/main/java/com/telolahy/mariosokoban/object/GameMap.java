@@ -42,7 +42,7 @@ public class GameMap {
         mElement[position.x][position.y] = element;
     }
 
-    public void loadLevel(String file, Context context) {
+    public boolean loadLevel(String file, Context context) {
 
         ArrayList<String> lines = new ArrayList<String>();
         int linesCount = 0;
@@ -64,7 +64,7 @@ public class GameMap {
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new IllegalStateException("Cannot read level: "+ file);
+            return false;
         }
 
         mSizeX = columnsCount;
@@ -84,6 +84,7 @@ public class GameMap {
                 }
             }
         }
+        return true;
     }
 
     public boolean isLevelCompleted() {

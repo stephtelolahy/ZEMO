@@ -8,4 +8,7 @@
     <string name="last_level_completed">Jeu terminé. Félicitations!</string>
     <string name="retry">Réessayer</string>
     <string name="suivant">Suivant</string>
+    <string name="ok">OK</string>
+    <string name="cannot_load_level">Fichier corrompu</string>
+    <string name="error_loading_level">Erreur</string>
 </resources>

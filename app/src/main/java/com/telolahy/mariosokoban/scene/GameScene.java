@@ -1,8 +1,11 @@
 package com.telolahy.mariosokoban.scene;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Point;
 
 import com.telolahy.mariosokoban.Constants;
+import com.telolahy.mariosokoban.R;
 import com.telolahy.mariosokoban.event.LongScrollDetector;
 import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
@@ -96,7 +99,9 @@ public class GameScene extends BaseScene {
     @Override
     protected void onDisposeScene() {
 
-        mMario.detachSelf();
+        if (mMario != null) {
+            mMario.detachSelf();
+        }
 
         if (mLevelCompletedWindow != null) {
             mLevelCompletedWindow.detachSelf();
@@ -182,7 +187,12 @@ public class GameScene extends BaseScene {
 
         String levelFile = "level/level" + level + ".txt";
         mGame = new GameMap();
-        mGame.loadLevel(levelFile, mResourcesManager.activity);
+        boolean levelSuccessfullyLoaded = mGame.loadLevel(levelFile, mResourcesManager.activity);
+
+        if (!levelSuccessfullyLoaded) {
+            displayErrorLoadingLevel(levelFile);
+            return;
+        }
 
         int worldWidth = BLOC_SIZE * mGame.getSizeX() + WORLD_MARGIN;
         int worldHeight = BLOC_SIZE * mGame.getSizeY() + WORLD_MARGIN;
@@ -474,5 +484,29 @@ public class GameScene extends BaseScene {
     private void reloadGame() {
         // TODO implement
     }
+
+    private void displayErrorLoadingLevel(final String levelFile) {
+
+        mActivity.runOnUiThread(new Runnable() {
+            public void run() {
+
+                String title = mActivity.getResources().getString(R.string.error_loading_level);
+                String message = mActivity.getResources().getString(R.string.cannot_load_level) + ": " + levelFile;
+                String positiveText = mActivity.getResources().getString(R.string.ok);
+                AlertDialog.Builder ad = new AlertDialog.Builder(mActivity);
+                ad.setTitle(title);
+                ad.setMessage(message);
+                ad.setIcon(android.R.drawable.ic_dialog_alert);
+                ad.setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SceneManager.getInstance().loadMenuScene();
+                    }
+                });
+                ad.show();
+            }
+        });
+    }
+
 
 }
