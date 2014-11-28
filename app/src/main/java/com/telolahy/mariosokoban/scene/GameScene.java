@@ -85,6 +85,7 @@ public class GameScene extends BaseScene {
         createHUD();
         loadLevel(mLevel);
         setupGestureDetector();
+        createLevelCompletedWindow();
     }
 
     @Override
@@ -153,6 +154,21 @@ public class GameScene extends BaseScene {
 
     private void createHUD() {
 
+    }
+
+    private void createLevelCompletedWindow() {
+
+        mLevelCompletedWindow = new LevelCompletedWindow(mVertexBufferObjectManager, this, new LevelCompletedWindow.LevelCompleteWindowListener() {
+            @Override
+            public void levelCompleteWindowNextButtonClicked() {
+                SceneManager.getInstance().loadMenuScene();
+            }
+
+            @Override
+            public void levelCompleteWindowReplayButtonClicked() {
+                reloadGame();
+            }
+        });
     }
 
     private void loadLevel(int level) {
@@ -443,19 +459,9 @@ public class GameScene extends BaseScene {
 
     private void showGameCompleted() {
 
-        mLevelCompletedWindow = new LevelCompletedWindow(mVertexBufferObjectManager, this, new LevelCompletedWindow.LevelCompleteWindowListener() {
-            @Override
-            public void levelCompleteWindowNextButtonClicked() {
-                SceneManager.getInstance().loadMenuScene();
-            }
-
-            @Override
-            public void levelCompleteWindowReplayButtonClicked() {
-                reloadGame();
-            }
-        });
         int starsCount = GameManager.getInstance().retriesForLevel(mLevel) == 0 ? 3 : 2;
         mLevelCompletedWindow.display(starsCount, this, mCamera);
+        mLevelCompletedWindow.setVisible(true);
     }
 
     private void reloadGame() {

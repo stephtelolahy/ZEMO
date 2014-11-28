@@ -22,6 +22,6 @@ public class GameManager {
     }
 
     public int retriesForLevel(int level) {
-        return 0;
+        return 1;
     }
 }
