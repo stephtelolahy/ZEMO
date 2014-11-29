@@ -38,16 +38,21 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     private static final int LEVEL_MARGIN_RIGHT = 200;
     private static final int LEVEL_PAGE_WIDTH = 600;
 
+    private static final float DECELERATION_ANIMATION_DURATION = .4f;
+
     // ===========================================================
     // Fields
     // ===========================================================
 
     private final int mMaxLevelReached;
     private final int mLevelsCount;
+    private final int mPagesCount;
+
     private boolean mIsDecelerating;
     private boolean mIsDragging;
     private float mMinX;
     private float mMaxX;
+    private float mLastScrollDistanceX;
 
     private PagedLevelSelectorListener mListener;
 
@@ -68,8 +73,8 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
         this.setOnSceneTouchListener(new SurfaceScrollDetector(this));
 
         // calculate the amount of required columns for the level count
-        final int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
-        final int totalPages = (levelsCount / levelsPerPage) + (levelsCount % levelsPerPage == 0 ? 0 : 1);
+        int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
+        mPagesCount = (levelsCount / levelsPerPage) + (levelsCount % levelsPerPage == 0 ? 0 : 1);
 
         // Calculate space between each level square
         int spaceBetweenRows = (Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - LEVEL_MARGIN_BOTTOM) / (LEVEL_ROWS_PER_SCREEN - 1);
@@ -80,7 +85,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
         ArrayList<Point> levelPositions = new ArrayList<Point>();
 
         // Create the level selectors, one page at a time
-        for (int page = 0; page < totalPages; page++) {
+        for (int page = 0; page < mPagesCount; page++) {
 
             int pageX = page * LEVEL_PAGE_WIDTH;
 
@@ -141,7 +146,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
         });
 
         //Set the max scroll possible, so it does not go over the boundaries.
-        mMinX = -(totalPages - 1) * LEVEL_PAGE_WIDTH;
+        mMinX = -(mPagesCount - 1) * LEVEL_PAGE_WIDTH;
         mMaxX = 0;
     }
 
@@ -172,6 +177,8 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
             return;
         }
 
+        mLastScrollDistanceX = pDistanceX;
+
         menuLayer.setPosition(newX, 0);
     }
 
@@ -192,22 +199,35 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
             return;
         }
 
+        float eventDX = mLastScrollDistanceX;
+        mLastScrollDistanceX = 0;
         mIsDragging = false;
 
         Entity menuLayer = getLayer();
-
-        // move to nearest offset
         float sourceX = menuLayer.getX();
-        float targetX = Math.round(sourceX / LEVEL_PAGE_WIDTH) * LEVEL_PAGE_WIDTH;
+        int currentPage = -Math.round(sourceX / LEVEL_PAGE_WIDTH);
+        int nextPage = currentPage;
+
+        float FOLLOW_SCROLL_THRESHOLD = 5.f;
+        if (Math.abs(eventDX) > FOLLOW_SCROLL_THRESHOLD) {
+            // move to last scroll direction
+            nextPage = eventDX > 0 ? (currentPage - 1) : (currentPage + 1);
+            nextPage = Math.max(0, Math.min(nextPage, mPagesCount - 1));
+        }
+        float targetX = -nextPage * LEVEL_PAGE_WIDTH;
+
+        if (Math.abs(targetX - sourceX) > LEVEL_PAGE_WIDTH) {
+            // shorten long scroll deceleration
+            targetX = -currentPage * LEVEL_PAGE_WIDTH;
+        }
 
         if (targetX == sourceX) {
+            // invalid move
             return;
         }
 
-        float dx = targetX - sourceX;
         final PathModifier.Path path = new PathModifier.Path(2).to(sourceX, 0).to(targetX, 0);
-        float pathAnimationDuration = .4f;
-        menuLayer.registerEntityModifier(new PathModifier(pathAnimationDuration, path, null, new PathModifier.IPathModifierListener() {
+        menuLayer.registerEntityModifier(new PathModifier(DECELERATION_ANIMATION_DURATION, path, null, new PathModifier.IPathModifierListener() {
 
             @Override
             public void onPathStarted(PathModifier pPathModifier, IEntity pEntity) {
