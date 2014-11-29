@@ -44,7 +44,7 @@ public class MainMenuScene extends BaseScene {
     private HUD mHUD;
 
     private MenuScene mHomeMenuScene;
-    private MenuScene mLevelSelectorMenuScene;
+    private PagedLevelSelector mLevelSelectorMenuScene;
     private MenuScene mOptionsMenuScene;
 
     private int mCurrentMenuType;
@@ -180,7 +180,7 @@ public class MainMenuScene extends BaseScene {
     private void createLevelSelectorChildScene(int maxLevelReached) {
 
         int displayedLevelsCount = GameManager.getInstance().displayedLevelsCount();
-        mLevelSelectorMenuScene = new PagedLevelSelector(mCamera, maxLevelReached, displayedLevelsCount, new PagedLevelSelector.PagedLevelSelectorListener() {
+        mLevelSelectorMenuScene = new PagedLevelSelector(mCamera, maxLevelReached, displayedLevelsCount, this, new PagedLevelSelector.PagedLevelSelectorListener() {
             @Override
             public void levelSelectorItemClicked(int level) {
 
@@ -193,6 +193,7 @@ public class MainMenuScene extends BaseScene {
 
         clearChildScene();
         setChildScene(mLevelSelectorMenuScene);
+        mLevelSelectorMenuScene.setEnabled(true);
         mCurrentMenuType = MENU_TYPE_LEVEL_SELECTOR;
     }
 
@@ -200,6 +201,7 @@ public class MainMenuScene extends BaseScene {
 
         clearChildScene();
         setChildScene(mHomeMenuScene);
+        mLevelSelectorMenuScene.setEnabled(false);
         mCurrentMenuType = MENU_TYPE_HOME;
     }
 

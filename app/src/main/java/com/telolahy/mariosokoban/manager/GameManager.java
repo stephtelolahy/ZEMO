@@ -13,7 +13,7 @@ public class GameManager {
 
     public int maxLevelReached() {
 
-        return 100;
+        return 20;
     }
 
     public int displayedLevelsCount() {

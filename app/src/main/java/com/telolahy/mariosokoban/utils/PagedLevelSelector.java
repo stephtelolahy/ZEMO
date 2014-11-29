@@ -9,6 +9,7 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
+import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
@@ -47,6 +48,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     private final int mMaxLevelReached;
     private final int mLevelsCount;
     private final int mPagesCount;
+    private boolean mEnabled;
 
     private boolean mIsDecelerating;
     private boolean mIsDragging;
@@ -60,7 +62,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     // Constructors
     // ===========================================================
 
-    public PagedLevelSelector(Camera pCamera, int maxLevelReached, int levelsCount, PagedLevelSelectorListener listener) {
+    public PagedLevelSelector(Camera pCamera, int maxLevelReached, int levelsCount, Scene parentScene, PagedLevelSelectorListener listener) {
 
         super(pCamera);
 
@@ -70,7 +72,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
         VertexBufferObjectManager vertexBufferManager = resourcesManager.vertexBufferObjectManager;
 
-        this.setOnSceneTouchListener(new SurfaceScrollDetector(this));
+        parentScene.setOnSceneTouchListener(new SurfaceScrollDetector(this));
 
         // calculate the amount of required columns for the level count
         int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
@@ -148,11 +150,17 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
         //Set the max scroll possible, so it does not go over the boundaries.
         mMinX = -(mPagesCount - 1) * LEVEL_PAGE_WIDTH;
         mMaxX = 0;
+
+        setFocusedLevel(maxLevelReached);
     }
 
     // ===========================================================
     // Getter & Setter
     // ===========================================================
+
+    public void setEnabled(boolean enabled) {
+        mEnabled = enabled;
+    }
 
     // ===========================================================
     // Methods from SuperClass
@@ -166,7 +174,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
 
-        if (mIsDecelerating) {
+        if (!mEnabled || mIsDecelerating) {
             return;
         }
 
@@ -185,7 +193,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     @Override
     public void onScrollStarted(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
-        if (mIsDecelerating) {
+        if (!mEnabled || mIsDecelerating) {
             return;
         }
 
@@ -195,7 +203,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     @Override
     public void onScrollFinished(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
-        if (mIsDecelerating) {
+        if (!mEnabled || mIsDecelerating) {
             return;
         }
 
@@ -253,7 +261,6 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
         }));
 
     }
-
     // ===========================================================
     // Public Methods
     // ===========================================================
@@ -261,6 +268,14 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     // ===========================================================
     // Private Methods
     // ===========================================================
+
+    public void setFocusedLevel(int level) {
+
+        int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
+        int page = (level - 1) / levelsPerPage;
+        float xPos = -page * LEVEL_PAGE_WIDTH;
+        getLayer().setPosition(xPos, 0);
+    }
 
     // ===========================================================
     // Inner Classes/Interfaces
