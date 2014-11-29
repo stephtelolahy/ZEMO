@@ -44,7 +44,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
 
     private final int mMaxLevelReached;
     private final int mLevelsCount;
-    private boolean mIsDescelerating;
+    private boolean mIsDecelerating;
     private boolean mIsDragging;
     private float mMinX;
     private float mMaxX;
@@ -128,7 +128,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
-                if (mIsDescelerating || mIsDragging) {
+                if (mIsDecelerating || mIsDragging) {
                     return false;
                 }
 
@@ -161,7 +161,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
 
-        if (mIsDescelerating) {
+        if (mIsDecelerating) {
             return;
         }
 
@@ -178,7 +178,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     @Override
     public void onScrollStarted(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
-        if (mIsDescelerating) {
+        if (mIsDecelerating) {
             return;
         }
 
@@ -188,7 +188,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     @Override
     public void onScrollFinished(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
-        if (mIsDescelerating) {
+        if (mIsDecelerating) {
             return;
         }
 
@@ -212,7 +212,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
             @Override
             public void onPathStarted(PathModifier pPathModifier, IEntity pEntity) {
 
-                mIsDescelerating = true;
+                mIsDecelerating = true;
             }
 
             @Override
@@ -228,7 +228,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
             @Override
             public void onPathFinished(PathModifier pPathModifier, IEntity pEntity) {
 
-                mIsDescelerating = false;
+                mIsDecelerating = false;
             }
         }));
 

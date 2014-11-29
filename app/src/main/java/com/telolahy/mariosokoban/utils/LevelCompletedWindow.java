@@ -28,8 +28,8 @@ public class LevelCompletedWindow extends Sprite {
     // Constants
     // ===========================================================
 
-    private static final int MENU_RETRY = 1;
-    private static final int MENU_NEXT = 2;
+    private static final int MENU_ITEM_REPLAY = 1;
+    private static final int MENU_ITEM_NEXT = 2;
 
     // ===========================================================
     // Fields
@@ -113,7 +113,7 @@ public class LevelCompletedWindow extends Sprite {
         mMenuScene = new MenuScene(ResourcesManager.getInstance().camera);
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
-        TextMenuItem textMenuItem = new TextMenuItem(MENU_NEXT, resourcesManager.font, resourcesManager.activity.getResources().getString(R.string.suivant), resourcesManager.vertexBufferObjectManager);
+        TextMenuItem textMenuItem = new TextMenuItem(MENU_ITEM_NEXT, resourcesManager.font, resourcesManager.activity.getResources().getString(R.string.suivant), resourcesManager.vertexBufferObjectManager);
         IMenuItem menuItem = new ScaleMenuItemDecorator(textMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(menuItem);
 
@@ -126,10 +126,10 @@ public class LevelCompletedWindow extends Sprite {
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
                 switch (pMenuItem.getID()) {
-                    case MENU_RETRY:
+                    case MENU_ITEM_REPLAY:
                         mListener.levelCompleteWindowReplayButtonClicked();
                         return true;
-                    case MENU_NEXT:
+                    case MENU_ITEM_NEXT:
                         mListener.levelCompleteWindowNextButtonClicked();
                         return true;
                     default:
