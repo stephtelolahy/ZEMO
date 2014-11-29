@@ -2,9 +2,6 @@ package com.telolahy.mariosokoban.scene;
 
 import com.telolahy.mariosokoban.Constants;
 
-import org.andengine.engine.handler.timer.ITimerCallback;
-import org.andengine.engine.handler.timer.TimerHandler;
-import org.andengine.entity.modifier.FadeInModifier;
 import org.andengine.entity.sprite.Sprite;
 
 /**
@@ -12,7 +9,27 @@ import org.andengine.entity.sprite.Sprite;
  */
 public class SplashScene extends BaseScene {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
+    // ===========================================================
+    // Fields
+    // ===========================================================
+
     private Sprite mBackground;
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods for/from SuperClass/Interfaces
+    // ===========================================================
 
     @Override
     protected void onCreateScene(int... params) {

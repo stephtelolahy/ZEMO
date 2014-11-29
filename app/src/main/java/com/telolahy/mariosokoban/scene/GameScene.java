@@ -6,12 +6,12 @@ import android.graphics.Point;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
-import com.telolahy.mariosokoban.event.LongScrollDetector;
+import com.telolahy.mariosokoban.utils.LongScrollDetector;
 import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
 import com.telolahy.mariosokoban.object.GameCharacter;
 import com.telolahy.mariosokoban.object.GameMap;
-import com.telolahy.mariosokoban.object.LevelCompletedWindow;
+import com.telolahy.mariosokoban.utils.LevelCompletedWindow;
 
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
@@ -51,7 +51,7 @@ public class GameScene extends BaseScene {
     private GameMap mGame;
     private GameCharacter mMario;
     private ArrayList<GameCharacter> mBoxes;
-    private LongScrollDetector mDetector;
+    private LongScrollDetector mLongScrollDetector;
     private static int mX0;
     private static int mY0;
 
@@ -80,7 +80,7 @@ public class GameScene extends BaseScene {
             return super.onSceneTouchEvent(pSceneTouchEvent);
         }
 
-        mDetector.onManagedTouchEvent(pSceneTouchEvent);
+        mLongScrollDetector.onManagedTouchEvent(pSceneTouchEvent);
         return true;
     }
 
@@ -101,6 +101,10 @@ public class GameScene extends BaseScene {
 
         if (mMario != null) {
             mMario.detachSelf();
+        }
+
+        for (Sprite sprite: mBoxes){
+            sprite.detachSelf();
         }
 
         if (mLevelCompletedWindow != null) {
@@ -137,7 +141,7 @@ public class GameScene extends BaseScene {
             @Override
             public void run() {
 
-                mDetector = new LongScrollDetector(new LongScrollDetector.IScrollDetectorListener() {
+                mLongScrollDetector = new LongScrollDetector(new LongScrollDetector.IScrollDetectorListener() {
 
                     @Override
                     public void onScrollVector(LongScrollDetector pScollDetector, int pPointerID, Point vector) {
@@ -371,7 +375,7 @@ public class GameScene extends BaseScene {
             @Override
             public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
 
-                Point vector = mDetector.getVector();
+                Point vector = mLongScrollDetector.getVector();
                 if (vector != null && canMoveMario(vector)) {
                     moveMario(vector);
                 } else {

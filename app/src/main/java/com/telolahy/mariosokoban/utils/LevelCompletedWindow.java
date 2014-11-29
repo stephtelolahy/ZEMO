@@ -1,4 +1,4 @@
-package com.telolahy.mariosokoban.object;
+package com.telolahy.mariosokoban.utils;
 
 import android.util.Log;
 

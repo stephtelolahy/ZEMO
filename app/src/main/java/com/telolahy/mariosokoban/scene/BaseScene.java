@@ -15,14 +15,22 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  */
 public abstract class BaseScene extends Scene {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
+    // ===========================================================
+    // Fields
+    // ===========================================================
+
     protected ResourcesManager mResourcesManager;
     protected VertexBufferObjectManager mVertexBufferObjectManager;
     protected BoundCamera mCamera;
     protected MainActivity mActivity;
 
-    //---------------------------------------------
-    // CONSTRUCTOR
-    //---------------------------------------------
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     public BaseScene(int... params) {
 
@@ -34,10 +42,18 @@ public abstract class BaseScene extends Scene {
         onCreateScene(params);
     }
 
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
 
-    //---------------------------------------------
-    // ABSTRACTION
-    //---------------------------------------------
+    // ===========================================================
+    // Methods for/from SuperClass/Interfaces
+    // ===========================================================
+
+
+    // ===========================================================
+    // Abstraction
+    // ===========================================================
 
     protected abstract void onCreateScene(int... params);
 

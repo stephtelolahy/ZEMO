@@ -1,4 +1,4 @@
-package com.telolahy.mariosokoban.event;
+package com.telolahy.mariosokoban.utils;
 
 import android.graphics.Point;
 
