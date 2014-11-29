@@ -11,4 +11,5 @@
     <string name="ok">OK</string>
     <string name="cannot_load_level">Fichier corrompu</string>
     <string name="error_loading_level">Erreur</string>
+    <string name="close">Fermer</string>
 </resources>

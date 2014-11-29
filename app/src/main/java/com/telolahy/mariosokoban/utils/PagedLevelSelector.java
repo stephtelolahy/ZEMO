@@ -9,7 +9,6 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
-import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
@@ -162,7 +161,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
 
-        if (mParentScene == null || mIsDescelerating) {
+        if (mIsDescelerating) {
             return;
         }
 
@@ -179,7 +178,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     @Override
     public void onScrollStarted(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
-        if (mParentScene == null || mIsDescelerating) {
+        if (mIsDescelerating) {
             return;
         }
 
@@ -189,7 +188,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     @Override
     public void onScrollFinished(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
 
-        if (mParentScene == null || mIsDescelerating) {
+        if (mIsDescelerating) {
             return;
         }
 
