@@ -32,7 +32,7 @@ public class GameScene extends BaseScene {
 
     private static final int WORLD_MARGIN_LEFT = 100;
     private static final int WORLD_MARGIN = 40;
-    private static final int BLOC_SIZE = 58;
+    private static final int BLOC_SIZE = 64;
     private static final int STEP_DURATION_MILLIS = 600; // time to move one block
 
     private static final int NONE = -1;

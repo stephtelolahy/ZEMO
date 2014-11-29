@@ -225,7 +225,7 @@ public class ResourcesManager {
             gameMarioTextureRegion = TextureRegionFactory.extractTiledFromTexture(gameMarioTexture, 4, 4);
             gameMarioTexture.load();
 
-            gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/background_grass.png", TextureOptions.REPEATING_NEAREST_PREMULTIPLYALPHA);
+            gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/grass.png", TextureOptions.REPEATING_NEAREST_PREMULTIPLYALPHA);
             gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
             gameGrassBackgroundTextureRegion.setTextureWidth(Constants.SCREEN_WIDTH * 4);
             gameGrassBackgroundTextureRegion.setTextureHeight(Constants.SCREEN_HEIGHT * 4);
