@@ -24,20 +24,24 @@ import java.security.InvalidParameterException;
  */
 public class LevelCompletedWindow extends Sprite {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
     private static final int MENU_RETRY = 1;
     private static final int MENU_NEXT = 2;
 
+    // ===========================================================
+    // Fields
+    // ===========================================================
+
     private MenuScene mMenuScene;
-
-    public interface LevelCompleteWindowListener {
-
-        void levelCompleteWindowNextButtonClicked();
-
-        void levelCompleteWindowReplayButtonClicked();
-    }
-
     private TiledSprite mStars[] = new TiledSprite[3];
     private LevelCompleteWindowListener mListener;
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     public LevelCompletedWindow(LevelCompleteWindowListener listener) {
 
@@ -46,6 +50,63 @@ public class LevelCompletedWindow extends Sprite {
         createStars();
         createMenu();
     }
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+
+        Log.i("", "finalize " + this.getClass().getName());
+    }
+
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
+    public void display(int starsCount, Scene scene, Camera camera) {
+
+        if (starsCount < 1 || starsCount > 3) {
+            throw new InvalidParameterException("stars count should be in (1-3)");
+        }
+
+        for (int i = 0; i < 3; i++) {
+            if (i < starsCount) {
+                mStars[i].setCurrentTileIndex(0);
+            } else {
+                mStars[i].setCurrentTileIndex(1);
+            }
+        }
+
+        // Hide HUD
+        if (camera.getHUD() != null) {
+            camera.getHUD().setVisible(false);
+        }
+
+        // Disable camera chase entity
+        camera.setChaseEntity(null);
+
+        // Attach our level complete panel in the middle of camera
+        setPosition(camera.getCenterX(), camera.getCenterY());
+        scene.attachChild(this);
+
+        // Attach menu childScene
+        scene.setChildScene(mMenuScene);
+    }
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
 
     private void createMenu() {
 
@@ -98,41 +159,16 @@ public class LevelCompletedWindow extends Sprite {
         attachChild(mStars[2]);
     }
 
-    public void display(int starsCount, Scene scene, Camera camera) {
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
 
-        if (starsCount < 1 || starsCount > 3) {
-            throw new InvalidParameterException("stars count should be in (1-3)");
-        }
+    public interface LevelCompleteWindowListener {
 
-        for (int i = 0; i < 3; i++) {
-            if (i < starsCount) {
-                mStars[i].setCurrentTileIndex(0);
-            } else {
-                mStars[i].setCurrentTileIndex(1);
-            }
-        }
+        void levelCompleteWindowNextButtonClicked();
 
-        // Hide HUD
-        if (camera.getHUD() != null) {
-            camera.getHUD().setVisible(false);
-        }
-
-        // Disable camera chase entity
-        camera.setChaseEntity(null);
-
-        // Attach our level complete panel in the middle of camera
-        setPosition(camera.getCenterX(), camera.getCenterY());
-        scene.attachChild(this);
-
-        // Attach menu childScene
-        scene.setChildScene(mMenuScene);
+        void levelCompleteWindowReplayButtonClicked();
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-
-        Log.i("", "finalize " + this.getClass().getName());
-    }
 }
 

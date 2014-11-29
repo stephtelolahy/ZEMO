@@ -6,12 +6,12 @@ import android.graphics.Point;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
-import com.telolahy.mariosokoban.utils.LongScrollDetector;
 import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
 import com.telolahy.mariosokoban.object.GameCharacter;
 import com.telolahy.mariosokoban.object.GameMap;
 import com.telolahy.mariosokoban.utils.LevelCompletedWindow;
+import com.telolahy.mariosokoban.utils.LongScrollDetector;
 
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
@@ -103,7 +103,7 @@ public class GameScene extends BaseScene {
             mMario.detachSelf();
         }
 
-        for (Sprite sprite: mBoxes){
+        for (Sprite sprite : mBoxes) {
             sprite.detachSelf();
         }
 
