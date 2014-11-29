@@ -37,7 +37,7 @@ public class LoadingScene extends BaseScene {
 
         setBackground(new Background(Color.BLACK));
         String text = mActivity.getResources().getString(R.string.loading);
-        attachChild(new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.font, text, mVertexBufferObjectManager));
+        attachChild(new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.menuFont, text, mVertexBufferObjectManager));
     }
 
     @Override

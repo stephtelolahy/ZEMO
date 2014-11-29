@@ -141,7 +141,7 @@ public class MainMenuScene extends BaseScene {
         mHUD = new HUD();
 
         String gameTitle = mResourcesManager.activity.getResources().getString(R.string.app_name);
-        mHUD.attachChild(new Text(Constants.SCREEN_WIDTH / 2, 400, mResourcesManager.font, gameTitle, new TextOptions(HorizontalAlign.LEFT), mVertexBufferObjectManager));
+        mHUD.attachChild(new Text(Constants.SCREEN_WIDTH / 2, 400, mResourcesManager.menuFont, gameTitle, new TextOptions(HorizontalAlign.LEFT), mVertexBufferObjectManager));
 
         mCamera.setHUD(mHUD);
     }
@@ -150,9 +150,9 @@ public class MainMenuScene extends BaseScene {
 
         mHomeMenuScene = new MenuScene(mCamera);
 
-        TextMenuItem playTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.font, mActivity.getResources().getString(R.string.play), mVertexBufferObjectManager);
+        TextMenuItem playTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.menuFont, mActivity.getResources().getString(R.string.play), mVertexBufferObjectManager);
         IMenuItem playMenuItem = new ScaleMenuItemDecorator(playTextMenuItem, 1.2f, 1);
-        TextMenuItem optionsTextMenuItem = new TextMenuItem(MENU_ITEM_OPTIONS, mResourcesManager.font, mActivity.getResources().getString(R.string.options), mVertexBufferObjectManager);
+        TextMenuItem optionsTextMenuItem = new TextMenuItem(MENU_ITEM_OPTIONS, mResourcesManager.menuFont, mActivity.getResources().getString(R.string.options), mVertexBufferObjectManager);
         IMenuItem helpMenuItem = new ScaleMenuItemDecorator(optionsTextMenuItem, 1.2f, 1);
         mHomeMenuScene.addMenuItem(playMenuItem);
         mHomeMenuScene.addMenuItem(helpMenuItem);

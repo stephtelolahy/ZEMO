@@ -94,6 +94,9 @@ public class GameScene extends BaseScene {
         loadLevel(mLevel);
         setupGestureDetector();
         createLevelCompletedWindow();
+        if (mLevel == 1) {
+            createCoachMarker();
+        }
     }
 
     @Override
@@ -186,6 +189,38 @@ public class GameScene extends BaseScene {
                 reloadGame();
             }
         });
+    }
+
+    private void createCoachMarker() {
+
+        final Sprite scrollCoachMarker = new Sprite(300, 140, mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
+        attachChild(scrollCoachMarker);
+
+        float x1 = scrollCoachMarker.getX();
+        float x2 = x1 + 300;
+        float y = scrollCoachMarker.getY();
+        final Path path = new Path(2).to(x1, y).to(x2, y);
+        scrollCoachMarker.registerEntityModifier(new PathModifier(2.f, path, null, new PathModifier.IPathModifierListener() {
+            @Override
+            public void onPathStarted(PathModifier pPathModifier, IEntity pEntity) {
+
+            }
+
+            @Override
+            public void onPathWaypointStarted(PathModifier pPathModifier, IEntity pEntity, int pWaypointIndex) {
+
+            }
+
+            @Override
+            public void onPathWaypointFinished(PathModifier pPathModifier, IEntity pEntity, int pWaypointIndex) {
+
+            }
+
+            @Override
+            public void onPathFinished(PathModifier pPathModifier, IEntity pEntity) {
+
+            }
+        }));
     }
 
     private void loadLevel(int level) {

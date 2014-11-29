@@ -113,7 +113,7 @@ public class LevelCompletedWindow extends Sprite {
         mMenuScene = new MenuScene(ResourcesManager.getInstance().camera);
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
-        TextMenuItem textMenuItem = new TextMenuItem(MENU_ITEM_NEXT, resourcesManager.font, resourcesManager.activity.getResources().getString(R.string.suivant), resourcesManager.vertexBufferObjectManager);
+        TextMenuItem textMenuItem = new TextMenuItem(MENU_ITEM_NEXT, resourcesManager.menuFont, resourcesManager.activity.getResources().getString(R.string.suivant), resourcesManager.vertexBufferObjectManager);
         IMenuItem menuItem = new ScaleMenuItemDecorator(textMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(menuItem);
 
@@ -149,7 +149,7 @@ public class LevelCompletedWindow extends Sprite {
             text = resourcesManager.activity.getResources().getString(R.string.last_level_completed);
         }
 
-        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 380, resourcesManager.font, text, resourcesManager.vertexBufferObjectManager));
+        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 380, resourcesManager.menuFont, text, resourcesManager.vertexBufferObjectManager));
 
         mStars[0] = new TiledSprite(275, 260, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
         mStars[1] = new TiledSprite(400, 260, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);

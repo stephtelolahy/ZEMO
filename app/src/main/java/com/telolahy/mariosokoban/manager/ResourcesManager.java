@@ -50,14 +50,15 @@ public class ResourcesManager {
     public ITextureRegion menuParallaxLayerMidRegion;
     public ITextureRegion menuParallaxLayerFrontRegion;
     public TiledTextureRegion menuPlayerTextureRegion;
-    public Font menuLevelFont;
     public ITextureRegion menuLevelLockedRegion;
     public ITextureRegion menuLevelUnlockedRegion;
     private ITexture menuCurrentLevelUnlockedTexture;
     public ITextureRegion menuCurrentLevelUnlockedRegion;
 
+    public Font menuFont;
+    public Font menuLevelFont;
+    public Font menuTitleFont;
 
-    public Font font;
     public Music menuMusic;
 
     // game resources
@@ -71,6 +72,8 @@ public class ResourcesManager {
     public TiledTextureRegion gameMarioTextureRegion;
     private ITexture gameBackgroundTexture;
     public ITextureRegion gameGrassBackgroundTextureRegion;
+    private ITexture gameScrollCoachMarkerTexture;
+    public ITextureRegion gameScrollCoachMarkerRegion;
 
     private ITexture levelCompletedBackgroundTexture;
     public ITextureRegion levelCompletedBackgroundTextureRegion;
@@ -156,8 +159,8 @@ public class ResourcesManager {
     private void loadMenuFonts() {
 
         final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font/font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
-        font.load();
+        menuFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font/font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
+        menuFont.load();
 
         final ITexture menuFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         menuLevelFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuFontTexture, activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 2, Color.TRANSPARENT);
@@ -236,6 +239,10 @@ public class ResourcesManager {
             levelCompletedStarsTextureRegion = TextureRegionFactory.extractTiledFromTexture(levelCompletedStarsTexture, 2, 1);
             levelCompletedStarsTexture.load();
 
+            gameScrollCoachMarkerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/game_scroll_coach_marker.png", TextureOptions.BILINEAR);
+            gameScrollCoachMarkerRegion = TextureRegionFactory.extractFromTexture(gameScrollCoachMarkerTexture);
+            gameScrollCoachMarkerTexture.load();
+
         } catch (IOException e) {
             Debug.e(e);
         }
@@ -250,6 +257,7 @@ public class ResourcesManager {
         gameBackgroundTexture.unload();
         levelCompletedBackgroundTexture.unload();
         levelCompletedStarsTexture.unload();
+        gameScrollCoachMarkerTexture.unload();
 
         gameCowTextureRegion = null;
         gameWallTextureRegion = null;
@@ -258,5 +266,6 @@ public class ResourcesManager {
         gameGrassBackgroundTextureRegion = null;
         levelCompletedBackgroundTextureRegion = null;
         levelCompletedStarsTextureRegion = null;
+        gameScrollCoachMarkerRegion = null;
     }
 }
