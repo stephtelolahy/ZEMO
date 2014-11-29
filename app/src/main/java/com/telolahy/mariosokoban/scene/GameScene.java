@@ -103,8 +103,9 @@ public class GameScene extends BaseScene {
             mMario.detachSelf();
         }
 
-        for (Sprite sprite : mBoxes) {
-            sprite.detachSelf();
+        if (mBoxes != null) {
+            for (Sprite sprite : mBoxes)
+                sprite.detachSelf();
         }
 
         if (mLevelCompletedWindow != null) {

@@ -5,7 +5,6 @@ package com.telolahy.mariosokoban.manager;
  */
 public class GameManager {
 
-    public static final int LEVELS_COUNT = 100;
     private static final GameManager INSTANCE = new GameManager();
 
     public static GameManager getInstance() {
@@ -14,11 +13,19 @@ public class GameManager {
 
     public int maxLevelReached() {
 
-        return 20;
+        return 100;
+    }
+
+    public int displayedLevelsCount() {
+        return 100;
+    }
+
+    public int totalLevelsCount() {
+        return 100;
     }
 
     public boolean isOnLastLevel() {
-        return maxLevelReached() >= LEVELS_COUNT;
+        return maxLevelReached() >= totalLevelsCount();
     }
 
     public int retriesForLevel(int level) {

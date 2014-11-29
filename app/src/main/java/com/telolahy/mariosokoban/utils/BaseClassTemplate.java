@@ -3,7 +3,7 @@ package com.telolahy.mariosokoban.utils;
 /**
  * Created by stephanohuguestelolahy on 11/29/14.
  */
-public class BaseClass {
+public class BaseClassTemplate {
 
     // ===========================================================
     // Constants
