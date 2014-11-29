@@ -53,6 +53,8 @@ public class ResourcesManager {
     public Font menuLevelFont;
     public ITextureRegion menuLevelLockedRegion;
     public ITextureRegion menuLevelUnlockedRegion;
+    private ITexture menuCurrentLevelUnlockedTexture;
+    public ITextureRegion menuCurrentLevelUnlockedRegion;
 
 
     public Font font;
@@ -142,6 +144,10 @@ public class ResourcesManager {
             menuLevelUnlockedRegion = TextureRegionFactory.extractFromTexture(menuLevelUnlockedTexture);
             menuLevelUnlockedTexture.load();
 
+            menuCurrentLevelUnlockedTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/current_level_unlocked.png", TextureOptions.BILINEAR);
+            menuCurrentLevelUnlockedRegion = TextureRegionFactory.extractFromTexture(menuCurrentLevelUnlockedTexture);
+            menuCurrentLevelUnlockedTexture.load();
+
         } catch (IOException e) {
             Debug.e(e);
         }
@@ -173,11 +179,17 @@ public class ResourcesManager {
         menuParallaxLayerMidTexture.unload();
         menuParallaxLayerFrontTexture.unload();
         menuPlayerTexture.unload();
+        menuLevelLockedTexture.unload();
+        menuLevelUnlockedTexture.unload();
+        menuCurrentLevelUnlockedTexture.unload();
 
         menuParallaxLayerBackRegion = null;
         menuParallaxLayerMidRegion = null;
         menuParallaxLayerFrontRegion = null;
         menuPlayerTextureRegion = null;
+        menuLevelLockedRegion = null;
+        menuLevelUnlockedRegion = null;
+        menuCurrentLevelUnlockedRegion = null;
     }
 
     public void loadMenuTextures() {

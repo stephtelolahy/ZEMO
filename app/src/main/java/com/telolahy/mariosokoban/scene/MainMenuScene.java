@@ -4,7 +4,7 @@ import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
 import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
-import com.telolahy.mariosokoban.utils.PagedLevelSelector;
+import com.telolahy.mariosokoban.utils.LevelSelectorMenuScene;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
@@ -44,7 +44,7 @@ public class MainMenuScene extends BaseScene {
     private HUD mHUD;
 
     private MenuScene mHomeMenuScene;
-    private PagedLevelSelector mLevelSelectorMenuScene;
+    private LevelSelectorMenuScene mLevelSelectorMenuScene;
     private MenuScene mOptionsMenuScene;
 
     private int mCurrentMenuType;
@@ -180,7 +180,7 @@ public class MainMenuScene extends BaseScene {
     private void createLevelSelectorChildScene(int maxLevelReached) {
 
         int displayedLevelsCount = GameManager.getInstance().displayedLevelsCount();
-        mLevelSelectorMenuScene = new PagedLevelSelector(mCamera, maxLevelReached, displayedLevelsCount, this, new PagedLevelSelector.PagedLevelSelectorListener() {
+        mLevelSelectorMenuScene = new LevelSelectorMenuScene(mCamera, maxLevelReached, displayedLevelsCount, this, new LevelSelectorMenuScene.LevelSelectorMenuSceneListener() {
             @Override
             public void levelSelectorItemClicked(int level) {
 

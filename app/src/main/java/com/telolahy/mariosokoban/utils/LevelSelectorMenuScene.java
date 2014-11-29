@@ -8,7 +8,10 @@ import com.telolahy.mariosokoban.manager.ResourcesManager;
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.LoopEntityModifier;
 import org.andengine.entity.modifier.PathModifier;
+import org.andengine.entity.modifier.ScaleModifier;
+import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
@@ -25,7 +28,7 @@ import java.util.ArrayList;
 /**
  * Created by stephanohuguestelolahy on 11/29/14.
  */
-public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScrollDetectorListener {
+public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.IScrollDetectorListener {
 
     // ===========================================================
     // Constants
@@ -56,13 +59,13 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     private float mMaxX;
     private float mLastScrollDistanceX;
 
-    private PagedLevelSelectorListener mListener;
+    private LevelSelectorMenuSceneListener mListener;
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    public PagedLevelSelector(Camera pCamera, int maxLevelReached, int levelsCount, Scene parentScene, PagedLevelSelectorListener listener) {
+    public LevelSelectorMenuScene(Camera pCamera, int maxLevelReached, int levelsCount, Scene parentScene, LevelSelectorMenuSceneListener listener) {
 
         super(pCamera);
 
@@ -99,13 +102,21 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
                 for (int x = 0; x < LEVEL_COLUMNS_PER_SCREEN && iLevel <= levelsCount; x++) {
 
                     //On Touch, save the clicked level in case it's a click and not a scroll.
-                    final int levelToLoad = iLevel;
-                    final boolean isUnlocked = levelToLoad <= mMaxLevelReached;
+                    final boolean isUnlocked = iLevel <= mMaxLevelReached;
 
                     int boxX = pageX + LEVEL_MARGIN_LEFT + spaceBetweenColumns * x;
                     levelPositions.add(new Point(boxX, boxY));
 
-                    ITextureRegion textureRegion = isUnlocked ? resourcesManager.menuLevelUnlockedRegion : resourcesManager.menuLevelLockedRegion;
+                    ITextureRegion textureRegion = null;
+                    if (isUnlocked) {
+                        if (iLevel == maxLevelReached) {
+                            textureRegion = resourcesManager.menuCurrentLevelUnlockedRegion;
+                        } else {
+                            textureRegion = resourcesManager.menuLevelUnlockedRegion;
+                        }
+                    } else {
+                        textureRegion = resourcesManager.menuLevelLockedRegion;
+                    }
 
                     // Create the rectangle. If the level selected
                     // has not been unlocked yet, don't allow loading.
@@ -114,6 +125,13 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
                         levelMenuItem.attachChild(new Text(42, 42, resourcesManager.menuLevelFont, String.valueOf(iLevel), vertexBufferManager));
                     }
                     addMenuItem(levelMenuItem);
+
+                    if (iLevel == mMaxLevelReached) {
+                        ScaleModifier scaleInModifier = new ScaleModifier(.5f, 1.f, 1.2f);
+                        ScaleModifier scaleOutModifier = new ScaleModifier(.5f, 1.2f, 1.f);
+                        levelMenuItem.registerEntityModifier(new LoopEntityModifier(new SequenceEntityModifier(scaleOutModifier, scaleInModifier)));
+                    }
+
 
                     iLevel++;
                 }
@@ -281,7 +299,7 @@ public class PagedLevelSelector extends MenuScene implements ScrollDetector.IScr
     // Inner Classes/Interfaces
     // ===========================================================
 
-    public interface PagedLevelSelectorListener {
+    public interface LevelSelectorMenuSceneListener {
 
         public void levelSelectorItemClicked(int level);
     }
