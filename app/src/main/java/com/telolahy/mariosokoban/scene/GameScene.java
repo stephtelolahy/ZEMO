@@ -58,20 +58,20 @@ public class GameScene extends BaseScene {
 
     private LevelCompletedWindow mLevelCompletedWindow;
 
-    public GameScene(int... params) {
-        super(params);
-    }
-
     // ===========================================================
     // Constructors
     // ===========================================================
+
+    public GameScene(int... params) {
+        super(params);
+    }
 
     // ===========================================================
     // Getter & Setter
     // ===========================================================
 
     // ===========================================================
-    // Methods for/from SuperClass/Interfaces
+    // Methods from SuperClass
     // ===========================================================
 
     @Override
@@ -96,7 +96,7 @@ public class GameScene extends BaseScene {
         setupGestureDetector();
         createLevelCompletedWindow();
         if (mLevel == 1) {
-            createCoachMarker();
+            createLevel1CoachMarker();
         }
     }
 
@@ -135,6 +135,26 @@ public class GameScene extends BaseScene {
 
         SceneManager.getInstance().loadMenuScene();
     }
+
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
 
     // ===========================================================
     // Methods
@@ -192,7 +212,7 @@ public class GameScene extends BaseScene {
         });
     }
 
-    private void createCoachMarker() {
+    private void createLevel1CoachMarker() {
 
         final Sprite scrollCoachMarker = new Sprite(300, 140, mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
         attachChild(scrollCoachMarker);
@@ -314,7 +334,6 @@ public class GameScene extends BaseScene {
 
         mCamera.setChaseEntity(mMario);
     }
-
 
     private ITextureRegion wallTextureForWallAtPosition(int x, int y) {
 
