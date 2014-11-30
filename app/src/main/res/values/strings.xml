@@ -12,4 +12,5 @@
     <string name="cannot_load_level">Fichier introuvable: </string>
     <string name="error_loading_level">Erreur</string>
     <string name="close">Fermer</string>
+    <string name="level">Niveau</string>
 </resources>

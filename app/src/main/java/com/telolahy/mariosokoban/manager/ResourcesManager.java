@@ -79,6 +79,9 @@ public class ResourcesManager {
     private ITexture gameScrollCoachMarkerTexture;
     public ITextureRegion gameScrollCoachMarkerRegion;
 
+    private ITexture gameReplayTexture;
+    public ITextureRegion gameReplayTextureRegion;
+
     private ITexture levelCompletedBackgroundTexture;
     public ITextureRegion levelCompletedBackgroundTextureRegion;
     private ITexture levelCompletedStarsTexture;
@@ -250,6 +253,10 @@ public class ResourcesManager {
             gameScrollCoachMarkerRegion = TextureRegionFactory.extractFromTexture(gameScrollCoachMarkerTexture);
             gameScrollCoachMarkerTexture.load();
 
+            gameReplayTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/retry.png", TextureOptions.BILINEAR);
+            gameReplayTextureRegion = TextureRegionFactory.extractFromTexture(gameReplayTexture);
+            gameReplayTexture.load();
+
         } catch (IOException e) {
             Debug.e(e);
         }
@@ -268,6 +275,7 @@ public class ResourcesManager {
         levelCompletedBackgroundTexture.unload();
         levelCompletedStarsTexture.unload();
         gameScrollCoachMarkerTexture.unload();
+        gameReplayTexture.unload();
 
         gameCowTextureRegion = null;
         gameTargetTextureRegion = null;
@@ -276,5 +284,6 @@ public class ResourcesManager {
         levelCompletedBackgroundTextureRegion = null;
         levelCompletedStarsTextureRegion = null;
         gameScrollCoachMarkerRegion = null;
+        gameReplayTextureRegion = null;
     }
 }

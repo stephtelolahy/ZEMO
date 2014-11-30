@@ -17,11 +17,11 @@ public class GameManager {
     }
 
     public int displayedLevelsCount() {
-        return 100;
+        return 34;
     }
 
     public int totalLevelsCount() {
-        return 100;
+        return 34;
     }
 
     public boolean isOnLastLevel() {

@@ -3,22 +3,32 @@ package com.telolahy.mariosokoban.scene;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
 import com.telolahy.mariosokoban.manager.GameManager;
+import com.telolahy.mariosokoban.manager.ResourcesManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
 import com.telolahy.mariosokoban.object.GameCharacter;
 import com.telolahy.mariosokoban.object.GameMap;
 import com.telolahy.mariosokoban.utils.LevelCompletedWindow;
 import com.telolahy.mariosokoban.utils.LongScrollDetector;
 
+import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
+import org.andengine.entity.scene.menu.MenuScene;
+import org.andengine.entity.scene.menu.item.IMenuItem;
+import org.andengine.entity.scene.menu.item.SpriteMenuItem;
+import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.util.adt.align.HorizontalAlign;
 
 import java.util.ArrayList;
 
@@ -47,7 +57,6 @@ public class GameScene extends BaseScene {
     // ===========================================================
 
     private int mLevel;
-    private boolean mLevelCompleted;
 
     private GameMap mGame;
     private GameCharacter mMario;
@@ -77,12 +86,8 @@ public class GameScene extends BaseScene {
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
 
-        if (mLevelCompleted) {
-            return super.onSceneTouchEvent(pSceneTouchEvent);
-        }
-
         mLongScrollDetector.onManagedTouchEvent(pSceneTouchEvent);
-        return true;
+        return super.onSceneTouchEvent(pSceneTouchEvent);
     }
 
 
@@ -195,6 +200,28 @@ public class GameScene extends BaseScene {
 
     private void createHUD() {
 
+        HUD gameHUD = new HUD();
+        Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 64, mResourcesManager.menuFont, "Level 0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        levelText.setText(mActivity.getResources().getString(R.string.level) + " " + mLevel);
+        gameHUD.attachChild(levelText);
+        mCamera.setHUD(gameHUD);
+
+        MenuScene menuScene = new MenuScene(ResourcesManager.getInstance().camera);
+        IMenuItem retryMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(0, mResourcesManager.gameReplayTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
+        menuScene.addMenuItem(retryMenuItem);
+
+        menuScene.buildAnimations();
+        menuScene.setBackgroundEnabled(false);
+        retryMenuItem.setPosition(Constants.SCREEN_WIDTH - 64, Constants.SCREEN_HEIGHT - 64);
+        menuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
+
+                reloadGame();
+                return true;
+            }
+        });
+        setChildScene(menuScene);
     }
 
     private void createLevelCompletedWindow() {
@@ -542,8 +569,7 @@ public class GameScene extends BaseScene {
 
     private void checkGameOver() {
 
-        mLevelCompleted = mGame.isLevelCompleted();
-        if (mLevelCompleted) {
+        if (mGame.isLevelCompleted()) {
             showGameCompleted();
         }
     }
@@ -555,7 +581,8 @@ public class GameScene extends BaseScene {
     }
 
     private void reloadGame() {
-        // TODO implement
+
+        Log.i("", "reload game");
     }
 
     private void displayErrorLoadingLevel(final String levelFile) {
