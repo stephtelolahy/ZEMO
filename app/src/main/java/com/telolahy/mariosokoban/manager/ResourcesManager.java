@@ -62,11 +62,13 @@ public class ResourcesManager {
     public Music menuMusic;
 
     // game resources
+
     private ITexture gameWallTexture;
+    public ITextureRegion gameWallTextureRegion;
+
     private ITexture gameTargetTexture;
     private ITexture gameCowTexture;
     private ITexture gameMarioTexture;
-    public ITextureRegion gameWallTextureRegion;
     public ITextureRegion gameTargetTextureRegion;
     public TiledTextureRegion gameCowTextureRegion;
     public TiledTextureRegion gameMarioTextureRegion;
@@ -209,7 +211,7 @@ public class ResourcesManager {
     private void loadGameGraphics() {
 
         try {
-            gameWallTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/wall.png", TextureOptions.BILINEAR);
+            gameWallTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/wall4.png", TextureOptions.BILINEAR);
             gameWallTextureRegion = TextureRegionFactory.extractFromTexture(gameWallTexture);
             gameWallTexture.load();
 
@@ -231,11 +233,11 @@ public class ResourcesManager {
             gameGrassBackgroundTextureRegion.setTextureHeight(Constants.SCREEN_HEIGHT * 4);
             gameBackgroundTexture.load();
 
-            levelCompletedBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/level_completed_background.png", TextureOptions.BILINEAR);
+            levelCompletedBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/level_completed/background.png", TextureOptions.BILINEAR);
             levelCompletedBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(levelCompletedBackgroundTexture);
             levelCompletedBackgroundTexture.load();
 
-            levelCompletedStarsTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/star.png", TextureOptions.BILINEAR);
+            levelCompletedStarsTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/level_completed/star.png", TextureOptions.BILINEAR);
             levelCompletedStarsTextureRegion = TextureRegionFactory.extractTiledFromTexture(levelCompletedStarsTexture, 2, 1);
             levelCompletedStarsTexture.load();
 
