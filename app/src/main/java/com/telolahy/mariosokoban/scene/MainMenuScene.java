@@ -74,7 +74,7 @@ public class MainMenuScene extends BaseScene {
         createBackground();
         createHomeMenuChildScene();
         createLevelSelectorChildScene(maxLevelReached);
-        startMusic();
+//        startMusic();
         createHUD();
         setupTouchGesture();
 

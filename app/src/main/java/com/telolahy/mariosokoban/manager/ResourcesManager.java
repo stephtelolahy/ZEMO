@@ -30,6 +30,8 @@ public class ResourcesManager {
 
     private static final ResourcesManager INSTANCE = new ResourcesManager();
 
+    private static final int GAME_WALL_TEXTURES_COUNT = 7;
+
     public Engine engine;
     public MainActivity activity;
     public BoundCamera camera;
@@ -63,8 +65,8 @@ public class ResourcesManager {
 
     // game resources
 
-    private ITexture gameWallTexture;
-    public ITextureRegion gameWallTextureRegion;
+    private ITexture gameWallTexture[] = new ITexture[GAME_WALL_TEXTURES_COUNT];
+    public ITextureRegion gameWallTextureRegion[] = new ITextureRegion[GAME_WALL_TEXTURES_COUNT];
 
     private ITexture gameTargetTexture;
     private ITexture gameCowTexture;
@@ -211,9 +213,12 @@ public class ResourcesManager {
     private void loadGameGraphics() {
 
         try {
-            gameWallTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/wall4.png", TextureOptions.BILINEAR);
-            gameWallTextureRegion = TextureRegionFactory.extractFromTexture(gameWallTexture);
-            gameWallTexture.load();
+
+            for (int i = 0; i < GAME_WALL_TEXTURES_COUNT; i++) {
+                gameWallTexture[i] = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/wall" + i + ".png", TextureOptions.BILINEAR);
+                gameWallTextureRegion[i] = TextureRegionFactory.extractFromTexture(gameWallTexture[i]);
+                gameWallTexture[i].load();
+            }
 
             gameTargetTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/target.png", TextureOptions.BILINEAR);
             gameTargetTextureRegion = TextureRegionFactory.extractFromTexture(gameTargetTexture);
@@ -252,8 +257,11 @@ public class ResourcesManager {
 
     public void unloadGameTextures() {
 
+        for (int i = 0; i < GAME_WALL_TEXTURES_COUNT; i++) {
+            gameWallTexture[i].unload();
+            gameWallTextureRegion[i] = null;
+        }
         gameCowTexture.unload();
-        gameWallTexture.unload();
         gameTargetTexture.unload();
         gameMarioTexture.unload();
         gameBackgroundTexture.unload();
@@ -262,7 +270,6 @@ public class ResourcesManager {
         gameScrollCoachMarkerTexture.unload();
 
         gameCowTextureRegion = null;
-        gameWallTextureRegion = null;
         gameTargetTextureRegion = null;
         gameMarioTextureRegion = null;
         gameGrassBackgroundTextureRegion = null;

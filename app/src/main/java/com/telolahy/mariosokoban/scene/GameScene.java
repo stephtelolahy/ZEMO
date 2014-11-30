@@ -18,6 +18,7 @@ import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.opengl.texture.region.ITextureRegion;
 
 import java.util.ArrayList;
 
@@ -263,7 +264,8 @@ public class GameScene extends BaseScene {
                 switch (mGame.getElement(new Point(x, y))) {
 
                     case GameMap.WALL:
-                        Sprite wall = new Sprite(posX, posY, mResourcesManager.gameWallTextureRegion, mVertexBufferObjectManager);
+                        ITextureRegion textureRegion = wallTextureForWallAtPosition(x, y);
+                        Sprite wall = new Sprite(posX, posY, textureRegion, mVertexBufferObjectManager);
                         attachChild(wall);
                         break;
 
@@ -277,24 +279,25 @@ public class GameScene extends BaseScene {
                         box.setCurrentTileIndex(6);
                         mBoxes.add(box);
                         break;
-                    case GameMap.BOX_OK:
-                        Sprite goalOK = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
-                        attachChild(goalOK);
-                        GameCharacter boxOk = new GameCharacter(posX, posY, mResourcesManager.gameCowTextureRegion, mVertexBufferObjectManager, x, y);
-                        boxOk.setCurrentTileIndex(6);
-                        mBoxes.add(boxOk);
-                        break;
 
                     case GameMap.PLAYER:
                         GameCharacter player = new GameCharacter(posX, posY, mResourcesManager.gameMarioTextureRegion, mVertexBufferObjectManager, x, y);
                         mMario = player;
                         break;
 
+                    case GameMap.BOX_ON_GOAL:
+                        Sprite goal2 = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
+                        attachChild(goal2);
+                        GameCharacter box2 = new GameCharacter(posX, posY, mResourcesManager.gameCowTextureRegion, mVertexBufferObjectManager, x, y);
+                        box2.setCurrentTileIndex(6);
+                        mBoxes.add(box2);
+                        break;
+
                     case GameMap.PLAYER_ON_GOAL:
-                        Sprite goalPlayer = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
-                        attachChild(goalPlayer);
-                        GameCharacter playerGoal = new GameCharacter(posX, posY, mResourcesManager.gameMarioTextureRegion, mVertexBufferObjectManager, x, y);
-                        mMario = playerGoal;
+                        Sprite goal3 = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
+                        attachChild(goal3);
+                        GameCharacter player3 = new GameCharacter(posX, posY, mResourcesManager.gameMarioTextureRegion, mVertexBufferObjectManager, x, y);
+                        mMario = player3;
                         break;
 
                     default:
@@ -312,12 +315,23 @@ public class GameScene extends BaseScene {
         mCamera.setChaseEntity(mMario);
     }
 
-    private boolean isValidCoordinate(Point point) {
 
-        if (point.x < 0 || point.x > mGame.getSizeX() - 1 || point.y < 0 || point.y > mGame.getSizeY() - 1) {
-            return false; // reached limit of he world
+    private ITextureRegion wallTextureForWallAtPosition(int x, int y) {
+
+        if (mGame.getElement(new Point(x - 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y + 1)) != GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[0];
+        } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y + 1)) != GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) != GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[1];
+        } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y + 1)) != GameMap.WALL && mGame.getElement(new Point(x + 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[2];
+        } else if (mGame.getElement(new Point(x - 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[3];
+        } else if (mGame.getElement(new Point(x - 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) != GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[5];
+        } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y - 1)) != GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[6];
         } else {
-            return true;
+            return mResourcesManager.gameWallTextureRegion[4];
         }
     }
 
@@ -325,7 +339,7 @@ public class GameScene extends BaseScene {
 
         Point destination = new Point(mMario.gamePosition.x + direction.x, mMario.gamePosition.y + direction.y);
 
-        if (!isValidCoordinate(destination)) {
+        if (!mGame.isValidCoordinate(destination)) {
             return false; // reached limit of he world
         }
 
@@ -334,17 +348,17 @@ public class GameScene extends BaseScene {
         }
 
         if (mGame.getElement(destination) == GameMap.BOX
-                || mGame.getElement(destination) == GameMap.BOX_OK) {
+                || mGame.getElement(destination) == GameMap.BOX_ON_GOAL) {
 
             Point behindDestination = new Point(destination.x + direction.x, destination.y + direction.y);
 
-            if (!isValidCoordinate(behindDestination)) {
+            if (!mGame.isValidCoordinate(behindDestination)) {
                 return false; // reached limit of he world
             }
 
             if (mGame.getElement(behindDestination) == GameMap.WALL
                     || mGame.getElement(behindDestination) == GameMap.BOX
-                    || mGame.getElement(behindDestination) == GameMap.BOX_OK) {
+                    || mGame.getElement(behindDestination) == GameMap.BOX_ON_GOAL) {
                 return false; // blocked by a wall, box
             }
         }
@@ -357,7 +371,7 @@ public class GameScene extends BaseScene {
         Point source = mMario.gamePosition;
         Point destination = new Point(mMario.gamePosition.x + vector.x, mMario.gamePosition.y + vector.y);
 
-        if (mGame.getElement(destination) == GameMap.BOX || mGame.getElement(destination) == GameMap.BOX_OK) {
+        if (mGame.getElement(destination) == GameMap.BOX || mGame.getElement(destination) == GameMap.BOX_ON_GOAL) {
 
             Point behindDestination = new Point(destination.x + vector.x, destination.y + vector.y);
             animateBox(destination, behindDestination);
@@ -428,14 +442,14 @@ public class GameScene extends BaseScene {
 
         final GameCharacter box = getBoxAt(source);
 
-        if (mGame.getElement(source) == GameMap.BOX_OK) {
+        if (mGame.getElement(source) == GameMap.BOX_ON_GOAL) {
             mGame.setElement(source, GameMap.GOAL);
         } else {
             mGame.setElement(source, GameMap.EMPTY);
         }
 
         if (mGame.getElement(destination) == GameMap.GOAL) {
-            mGame.setElement(destination, GameMap.BOX_OK);
+            mGame.setElement(destination, GameMap.BOX_ON_GOAL);
         } else {
             mGame.setElement(destination, GameMap.BOX);
         }

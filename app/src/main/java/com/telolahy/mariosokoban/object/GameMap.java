@@ -17,7 +17,7 @@ public class GameMap {
     public static final char EMPTY = ' ';
     public static final char WALL = '#';
     public static final char BOX = '$';
-    public static final char BOX_OK = '*';
+    public static final char BOX_ON_GOAL = '*';
     public static final char GOAL = '.';
     public static final char PLAYER = '@';
     public static final char PLAYER_ON_GOAL = '+';
@@ -35,11 +35,25 @@ public class GameMap {
     }
 
     public int getElement(Point position) {
-        return mElement[position.x][position.y];
+
+        if (isValidCoordinate(position)) {
+            return mElement[position.x][position.y];
+        } else {
+            return EMPTY;
+        }
     }
 
     public void setElement(Point position, char element) {
         mElement[position.x][position.y] = element;
+    }
+
+    public boolean isValidCoordinate(Point point) {
+
+        if (point.x < 0 || point.x > mSizeX - 1 || point.y < 0 || point.y > mSizeY - 1) {
+            return false; // reached limit of he world
+        } else {
+            return true;
+        }
     }
 
     public boolean loadLevel(String file, Context context) {
