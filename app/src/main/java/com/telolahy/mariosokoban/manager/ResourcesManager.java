@@ -57,9 +57,10 @@ public class ResourcesManager {
     private ITexture menuCurrentLevelUnlockedTexture;
     public ITextureRegion menuCurrentLevelUnlockedRegion;
 
-    public Font menuFont;
+    public Font menuItemFont;
     public Font menuLevelFont;
     public Font menuTitleFont;
+    public Font gameTitleFont;
 
     public Music menuMusic;
 
@@ -78,6 +79,8 @@ public class ResourcesManager {
     public ITextureRegion gameGrassBackgroundTextureRegion;
     private ITexture gameScrollCoachMarkerTexture;
     public ITextureRegion gameScrollCoachMarkerRegion;
+    private ITexture gameBackTexture;
+    public ITextureRegion gameBackTextureRegion;
 
     private ITexture gameReplayTexture;
     public ITextureRegion gameReplayTextureRegion;
@@ -165,13 +168,21 @@ public class ResourcesManager {
 
     private void loadMenuFonts() {
 
-        final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        menuFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font/font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
-        menuFont.load();
+        final ITexture menuItemFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        menuItemFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuItemFontTexture, activity.getAssets(), "font/font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
+        menuItemFont.load();
 
-        final ITexture menuFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        menuLevelFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuFontTexture, activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 2, Color.TRANSPARENT);
+        final ITexture menuLevelFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        menuLevelFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuLevelFontTexture, activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 2, Color.TRANSPARENT);
         menuLevelFont.load();
+
+        final ITexture menuTitleFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        menuTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuTitleFontTexture, activity.getAssets(), "font/font.ttf", 64, true, Color.WHITE, 2, Color.BLACK);
+        menuTitleFont.load();
+
+        final ITexture gameTitleFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        gameTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), gameTitleFontTexture, activity.getAssets(), "font/font.ttf", 34, true, Color.WHITE, 2, Color.TRANSPARENT);
+        gameTitleFont.load();
     }
 
     private void loadMenuMusics() {
@@ -256,6 +267,10 @@ public class ResourcesManager {
             gameReplayTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/retry.png", TextureOptions.BILINEAR);
             gameReplayTextureRegion = TextureRegionFactory.extractFromTexture(gameReplayTexture);
             gameReplayTexture.load();
+
+            gameBackTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/back.png", TextureOptions.BILINEAR);
+            gameBackTextureRegion = TextureRegionFactory.extractFromTexture(gameBackTexture);
+            gameBackTexture.load();
 
         } catch (IOException e) {
             Debug.e(e);

@@ -40,6 +40,9 @@ public class GameScene extends BaseScene {
     // Constants
     // ===========================================================
 
+    private static final int REPLAY_MENU_ITEM = 1;
+    private static final int BACK_MENU_ITEM = 2;
+
     private static final int WORLD_MARGIN_LEFT = 100;
     private static final int WORLD_MARGIN = 40;
     private static final int BLOC_SIZE = 64;
@@ -137,7 +140,7 @@ public class GameScene extends BaseScene {
     @Override
     public void onBackKeyPressed() {
 
-        SceneManager.getInstance().loadMenuScene();
+        exitGame();
     }
 
     // ===========================================================
@@ -199,24 +202,37 @@ public class GameScene extends BaseScene {
 
     private void createHUD() {
 
+        final int TOP_MARGIN = 48;
+
         HUD gameHUD = new HUD();
-        Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 64, mResourcesManager.menuFont, "Level 0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - TOP_MARGIN, mResourcesManager.gameTitleFont, "Level 0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         levelText.setText(mActivity.getResources().getString(R.string.level) + " " + mLevel);
         gameHUD.attachChild(levelText);
         mCamera.setHUD(gameHUD);
 
         MenuScene menuScene = new MenuScene(ResourcesManager.getInstance().camera);
-        IMenuItem retryMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(0, mResourcesManager.gameReplayTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
+        IMenuItem backMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(BACK_MENU_ITEM, mResourcesManager.gameBackTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
+        IMenuItem retryMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(REPLAY_MENU_ITEM, mResourcesManager.gameReplayTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
         menuScene.addMenuItem(retryMenuItem);
+        menuScene.addMenuItem(backMenuItem);
 
         menuScene.buildAnimations();
         menuScene.setBackgroundEnabled(false);
-        retryMenuItem.setPosition(Constants.SCREEN_WIDTH - 64, Constants.SCREEN_HEIGHT - 64);
+        retryMenuItem.setPosition(Constants.SCREEN_WIDTH - 64, Constants.SCREEN_HEIGHT - TOP_MARGIN);
+        backMenuItem.setPosition(64, Constants.SCREEN_HEIGHT - TOP_MARGIN);
         menuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
-                reloadGame();
+                switch (pMenuItem.getID()) {
+                    case BACK_MENU_ITEM:
+                        exitGame();
+                        break;
+                    case REPLAY_MENU_ITEM:
+                        reloadGame();
+                        break;
+                }
+
                 return true;
             }
         });
@@ -228,7 +244,7 @@ public class GameScene extends BaseScene {
         mLevelCompletedWindow = new LevelCompletedWindow(new LevelCompletedWindow.LevelCompleteWindowListener() {
             @Override
             public void levelCompleteWindowNextButtonClicked() {
-                SceneManager.getInstance().loadMenuScene();
+                exitGame();
             }
 
             @Override
@@ -596,6 +612,10 @@ public class GameScene extends BaseScene {
         GameManager.getInstance().incrementRetriesForLevel(mLevel);
     }
 
+    private void exitGame() {
+        SceneManager.getInstance().loadMenuScene();
+    }
+
     private void displayErrorLoadingLevel(final String levelFile) {
 
         mActivity.runOnUiThread(new Runnable() {
@@ -611,7 +631,7 @@ public class GameScene extends BaseScene {
                 ad.setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        SceneManager.getInstance().loadMenuScene();
+                        exitGame();
                     }
                 });
                 ad.show();
