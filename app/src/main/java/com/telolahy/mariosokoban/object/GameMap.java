@@ -106,12 +106,12 @@ public class GameMap {
         for (int y = 0; y < mSizeY; y++) {
             for (int x = 0; x < mSizeX; x++) {
 
-                if (mElement[x][y] == GOAL) {
-                    remainGoals++;
+                if (mElement[x][y] == GOAL || mElement[x][y] == BOX) {
+                    return false;
                 }
             }
         }
-        return (remainGoals == 0);
+        return true;
     }
 
 }
