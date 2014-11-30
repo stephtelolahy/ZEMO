@@ -320,16 +320,16 @@ public class GameScene extends BaseScene {
 
         if (mGame.getElement(new Point(x - 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y + 1)) != GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
             return mResourcesManager.gameWallTextureRegion[0];
-        } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y + 1)) != GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) != GameMap.WALL) {
-            return mResourcesManager.gameWallTextureRegion[1];
         } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y + 1)) != GameMap.WALL && mGame.getElement(new Point(x + 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
             return mResourcesManager.gameWallTextureRegion[2];
-        } else if (mGame.getElement(new Point(x - 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
-            return mResourcesManager.gameWallTextureRegion[3];
         } else if (mGame.getElement(new Point(x - 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) != GameMap.WALL) {
             return mResourcesManager.gameWallTextureRegion[5];
         } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y - 1)) != GameMap.WALL) {
             return mResourcesManager.gameWallTextureRegion[6];
+        } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[1];
+        } else if (mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[3];
         } else {
             return mResourcesManager.gameWallTextureRegion[4];
         }
