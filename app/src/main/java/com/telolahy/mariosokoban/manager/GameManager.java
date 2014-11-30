@@ -31,4 +31,8 @@ public class GameManager {
     public int retriesForLevel(int level) {
         return 1;
     }
+
+    public void incrementRetriesForLevel(int level) {
+
+    }
 }

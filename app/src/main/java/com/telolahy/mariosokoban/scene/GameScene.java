@@ -3,7 +3,6 @@ package com.telolahy.mariosokoban.scene;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Point;
-import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
@@ -245,7 +244,7 @@ public class GameScene extends BaseScene {
         attachChild(scrollCoachMarker);
 
         float x1 = scrollCoachMarker.getX();
-        float x2 = x1 + 300;
+        float x2 = x1 + 400;
         float y = scrollCoachMarker.getY();
         final Path path = new Path(2).to(x1, y).to(x2, y);
         scrollCoachMarker.registerEntityModifier(new PathModifier(2.f, path, null, new PathModifier.IPathModifierListener() {
@@ -267,6 +266,7 @@ public class GameScene extends BaseScene {
             @Override
             public void onPathFinished(PathModifier pPathModifier, IEntity pEntity) {
 
+                scrollCoachMarker.detachSelf();
             }
         }));
     }
@@ -582,7 +582,18 @@ public class GameScene extends BaseScene {
 
     private void reloadGame() {
 
-        Log.i("", "reload game");
+        if (mMario != null) {
+            mMario.detachSelf();
+        }
+
+        if (mBoxes != null) {
+            for (Sprite sprite : mBoxes)
+                sprite.detachSelf();
+        }
+
+        loadLevel(mLevel);
+
+        GameManager.getInstance().incrementRetriesForLevel(mLevel);
     }
 
     private void displayErrorLoadingLevel(final String levelFile) {
