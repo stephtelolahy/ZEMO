@@ -225,7 +225,7 @@ public class ResourcesManager {
             gameTargetTexture.load();
 
             gameCowTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/cow.png", TextureOptions.BILINEAR);
-            gameCowTextureRegion = TextureRegionFactory.extractTiledFromTexture(gameCowTexture, 3, 4);
+            gameCowTextureRegion = TextureRegionFactory.extractTiledFromTexture(gameCowTexture, 16, 1);
             gameCowTexture.load();
 
             gameMarioTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/player.png", TextureOptions.BILINEAR);

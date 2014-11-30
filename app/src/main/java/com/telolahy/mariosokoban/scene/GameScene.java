@@ -470,7 +470,7 @@ public class GameScene extends BaseScene {
 
                 box.moving = true;
                 long tileDuration = STEP_DURATION_MILLIS / 4;
-                box.animate(new long[]{tileDuration, tileDuration, tileDuration}, direction * 3, direction * 3 + 2, true);
+                box.animate(new long[]{tileDuration, tileDuration, tileDuration, tileDuration}, direction * 4, direction * 4 + 3, true);
             }
 
             @Override
@@ -489,7 +489,7 @@ public class GameScene extends BaseScene {
                 // finish animation
                 box.moving = false;
                 box.stopAnimation();
-                box.setCurrentTileIndex(direction * 3);
+                box.setCurrentTileIndex(direction * 4);
 
                 checkGameOver();
             }
