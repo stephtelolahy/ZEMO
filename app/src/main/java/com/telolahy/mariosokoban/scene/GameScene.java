@@ -29,6 +29,8 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
+import org.andengine.util.modifier.ease.EaseStrongIn;
+import org.andengine.util.modifier.ease.IEaseFunction;
 
 import java.util.ArrayList;
 
@@ -531,14 +533,13 @@ public class GameScene extends BaseScene {
         float y2 = mY0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
         final Path boxPath = new Path(2).to(x1, y1).to(x2, y2);
         float pathAnimationDuration = (float) STEP_DURATION_MILLIS / 1000;
+        final IEaseFunction easeFunction = EaseStrongIn.getInstance();
         box.registerEntityModifier(new PathModifier(pathAnimationDuration, boxPath, null, new PathModifier.IPathModifierListener() {
 
             @Override
             public void onPathStarted(final PathModifier pPathModifier, final IEntity pEntity) {
 
                 box.moving = true;
-//                long tileDuration = STEP_DURATION_MILLIS / 4;
-//                box.animate(new long[]{tileDuration, tileDuration, tileDuration, tileDuration}, direction * 4, direction * 4 + 3, true);
             }
 
             @Override
@@ -554,14 +555,10 @@ public class GameScene extends BaseScene {
             @Override
             public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
 
-                // finish animation
                 box.moving = false;
-//                box.stopAnimation();
-//                box.setCurrentTileIndex(direction * 4);
-
                 checkGameOver();
             }
-        }));
+        }, easeFunction));
 
     }
 

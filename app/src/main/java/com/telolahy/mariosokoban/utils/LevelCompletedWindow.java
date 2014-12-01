@@ -8,6 +8,9 @@ import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.ResourcesManager;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.FadeInModifier;
+import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
@@ -16,6 +19,7 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.text.Text;
+import org.andengine.util.modifier.IModifier;
 
 import java.security.InvalidParameterException;
 
@@ -74,7 +78,7 @@ public class LevelCompletedWindow extends Sprite {
     // Public Methods
     // ===========================================================
 
-    public void display(int starsCount, Scene scene, Camera camera) {
+    public void display(int starsCount, final Scene scene, Camera camera) {
 
         if (starsCount < 1 || starsCount > 3) {
             throw new InvalidParameterException("stars count should be in (1-3)");
@@ -98,10 +102,23 @@ public class LevelCompletedWindow extends Sprite {
 
         // Attach our level complete panel in the middle of camera
         setPosition(camera.getCenterX(), camera.getCenterY());
+
+        this.setAlpha(0);
         scene.attachChild(this);
 
-        // Attach menu childScene
-        scene.setChildScene(mMenuScene);
+        this.registerEntityModifier(new FadeInModifier(1.f, new IEntityModifier.IEntityModifierListener() {
+            @Override
+            public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem) {
+
+            }
+
+            @Override
+            public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem) {
+
+                // Attach menu childScene
+                scene.setChildScene(mMenuScene);
+            }
+        }));
     }
 
     // ===========================================================
@@ -119,7 +136,7 @@ public class LevelCompletedWindow extends Sprite {
 
         mMenuScene.buildAnimations();
         mMenuScene.setBackgroundEnabled(false);
-        menuItem.setPosition(Constants.SCREEN_WIDTH / 2, 120);
+        menuItem.setPosition(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 4);
 
         mMenuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
             @Override
@@ -149,11 +166,12 @@ public class LevelCompletedWindow extends Sprite {
             text = resourcesManager.activity.getResources().getString(R.string.last_level_completed);
         }
 
-        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 380, resourcesManager.menuItemFont, text, resourcesManager.vertexBufferObjectManager));
+        attachChild(new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, resourcesManager.menuItemFont, text, resourcesManager.vertexBufferObjectManager));
 
-        mStars[0] = new TiledSprite(275, 260, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
-        mStars[1] = new TiledSprite(400, 260, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
-        mStars[2] = new TiledSprite(525, 260, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
+        int padding = (int) resourcesManager.levelCompletedStarsTextureRegion.getWidth() * 3 / 2;
+        mStars[0] = new TiledSprite(Constants.SCREEN_WIDTH / 2 - padding, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
+        mStars[1] = new TiledSprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
+        mStars[2] = new TiledSprite(Constants.SCREEN_WIDTH / 2 + padding, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
         attachChild(mStars[0]);
         attachChild(mStars[1]);
         attachChild(mStars[2]);
