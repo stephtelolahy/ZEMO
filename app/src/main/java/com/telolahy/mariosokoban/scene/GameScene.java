@@ -14,6 +14,7 @@ import com.telolahy.mariosokoban.object.GameMap;
 import com.telolahy.mariosokoban.utils.LevelCompletedWindow;
 import com.telolahy.mariosokoban.utils.LongScrollDetector;
 
+import org.andengine.engine.Engine;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
@@ -66,6 +67,8 @@ public class GameScene extends BaseScene {
     private LongScrollDetector mLongScrollDetector;
     private static int mX0;
     private static int mY0;
+
+    private int mRetries;
 
     private LevelCompletedWindow mLevelCompletedWindow;
 
@@ -593,11 +596,14 @@ public class GameScene extends BaseScene {
 
     private void showGameCompleted() {
 
-        int starsCount = GameManager.getInstance().retriesForLevel(mLevel) == 0 ? 3 : 2;
+        int starsCount = mRetries == 0 ? 3 : 2;
         mLevelCompletedWindow.display(starsCount, this, mCamera);
     }
 
     private void reloadGame() {
+
+        Engine.EngineLock engineLock = mActivity.getEngine().getEngineLock();
+        engineLock.lock();
 
         if (mMario != null) {
             mMario.detachSelf();
@@ -608,9 +614,11 @@ public class GameScene extends BaseScene {
                 sprite.detachSelf();
         }
 
+        engineLock.unlock();
+
         loadLevel(mLevel);
 
-        GameManager.getInstance().incrementRetriesForLevel(mLevel);
+        mRetries++;
     }
 
     private void exitGame() {

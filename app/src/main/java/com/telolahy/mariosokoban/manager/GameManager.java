@@ -14,7 +14,6 @@ public class GameManager {
 
     private static final String PREFS_NAME = "preferences";
     private static final String LEVEL_PREFS_KEY = "level";
-    private static final String RETRIES_PREFS_KEY = "level";
 
     public static GameManager getInstance() {
         return INSTANCE;
@@ -22,39 +21,30 @@ public class GameManager {
 
     public int maxLevelReached() {
 
-        SharedPreferences prefs = preferences();
-        int level = prefs.getInt(LEVEL_PREFS_KEY, 1);
-        return level;
+        return preferences().getInt(LEVEL_PREFS_KEY, 1);
     }
 
     public void completedLevel(int level) {
 
         int nextLevel = Math.min(level + 1, Constants.TOTAL_LEVELS_COUNT);
-        int maxLevelReached = maxLevelReached();
-        if (nextLevel > maxLevelReached) {
-
-            SharedPreferences prefs = preferences();
-            SharedPreferences.Editor edit = prefs.edit();
-            edit.putInt(LEVEL_PREFS_KEY, level);
+        if (nextLevel > maxLevelReached()) {
+            SharedPreferences.Editor edit = preferences().edit();
+            edit.putInt(LEVEL_PREFS_KEY, nextLevel);
             edit.commit();
         }
     }
 
     public int displayedLevelsCount() {
 
-        return Constants.TOTAL_LEVELS_COUNT;
+        int maxLevelReached = maxLevelReached();
+        int levelsPerPage = Constants.LEVEL_ROWS_PER_SCREEN * Constants.LEVEL_COLUMNS_PER_SCREEN;
+        int page = (maxLevelReached - 1) / levelsPerPage + 1;
+        int displayedLevels = Math.min(page * levelsPerPage, Constants.TOTAL_LEVELS_COUNT);
+        return displayedLevels;
     }
 
     public boolean isOnLastLevel() {
         return maxLevelReached() >= Constants.TOTAL_LEVELS_COUNT;
-    }
-
-    public int retriesForLevel(int level) {
-        return 1;
-    }
-
-    public void incrementRetriesForLevel(int level) {
-
     }
 
     private SharedPreferences preferences() {
