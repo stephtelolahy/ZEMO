@@ -244,6 +244,7 @@ public class GameScene extends BaseScene {
         mLevelCompletedWindow = new LevelCompletedWindow(new LevelCompletedWindow.LevelCompleteWindowListener() {
             @Override
             public void levelCompleteWindowNextButtonClicked() {
+                GameManager.getInstance().completedLevel(mLevel);
                 exitGame();
             }
 

@@ -180,13 +180,20 @@ public class MainMenuScene extends BaseScene {
     private void createLevelSelectorChildScene(int maxLevelReached) {
 
         int displayedLevelsCount = GameManager.getInstance().displayedLevelsCount();
-        mLevelSelectorMenuScene = new LevelSelectorMenuScene(mCamera, maxLevelReached, displayedLevelsCount, this, new LevelSelectorMenuScene.LevelSelectorMenuSceneListener() {
-            @Override
-            public void levelSelectorItemClicked(int level) {
+        mLevelSelectorMenuScene = new LevelSelectorMenuScene(
+                mCamera,
+                maxLevelReached,
+                displayedLevelsCount,
+                Constants.LEVEL_ROWS_PER_SCREEN,
+                Constants.LEVEL_COLUMNS_PER_SCREEN,
+                this,
+                new LevelSelectorMenuScene.LevelSelectorMenuSceneListener() {
+                    @Override
+                    public void levelSelectorItemClicked(int level) {
 
-                SceneManager.getInstance().createGameScene(level);
-            }
-        });
+                        SceneManager.getInstance().createGameScene(level);
+                    }
+                });
     }
 
     private void displayLevelSelector() {

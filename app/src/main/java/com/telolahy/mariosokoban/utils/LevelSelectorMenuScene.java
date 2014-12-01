@@ -34,8 +34,6 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
     // Constants
     // ===========================================================
 
-    private static final int LEVEL_COLUMNS_PER_SCREEN = 4;
-    private static final int LEVEL_ROWS_PER_SCREEN = 2;
     private static final int LEVEL_MARGIN_TOP = 200;
     private static final int LEVEL_MARGIN_BOTTOM = 170;
     private static final int LEVEL_MARGIN_LEFT = 200;
@@ -49,8 +47,8 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
     // ===========================================================
 
     private final int mMaxLevelReached;
-    private final int mLevelsCount;
     private final int mPagesCount;
+    private final int mLevelsPerPage;
     private boolean mEnabled;
 
     private boolean mIsDecelerating;
@@ -65,12 +63,11 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
     // Constructors
     // ===========================================================
 
-    public LevelSelectorMenuScene(Camera pCamera, int maxLevelReached, int levelsCount, Scene parentScene, LevelSelectorMenuSceneListener listener) {
+    public LevelSelectorMenuScene(Camera pCamera, int maxLevelReached, int levelsCount, int levelRowsPerScreen, int levelColumnsPerScreen, Scene parentScene, LevelSelectorMenuSceneListener listener) {
 
         super(pCamera);
 
         mMaxLevelReached = maxLevelReached;
-        mLevelsCount = levelsCount;
         mListener = listener;
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
         VertexBufferObjectManager vertexBufferManager = resourcesManager.vertexBufferObjectManager;
@@ -78,12 +75,12 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
         parentScene.setOnSceneTouchListener(new SurfaceScrollDetector(this));
 
         // calculate the amount of required columns for the level count
-        int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
-        mPagesCount = (levelsCount / levelsPerPage) + (levelsCount % levelsPerPage == 0 ? 0 : 1);
+        mLevelsPerPage = levelRowsPerScreen * levelColumnsPerScreen;
+        mPagesCount = (levelsCount / mLevelsPerPage) + (levelsCount % mLevelsPerPage == 0 ? 0 : 1);
 
         // Calculate space between each level square
-        int spaceBetweenRows = (Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - LEVEL_MARGIN_BOTTOM) / (LEVEL_ROWS_PER_SCREEN - 1);
-        int spaceBetweenColumns = (Constants.SCREEN_WIDTH - LEVEL_MARGIN_LEFT - LEVEL_MARGIN_RIGHT) / (LEVEL_COLUMNS_PER_SCREEN - 1);
+        int spaceBetweenRows = (Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - LEVEL_MARGIN_BOTTOM) / (levelRowsPerScreen - 1);
+        int spaceBetweenColumns = (Constants.SCREEN_WIDTH - LEVEL_MARGIN_LEFT - LEVEL_MARGIN_RIGHT) / (levelColumnsPerScreen - 1);
 
         //Current Level Counter
         int iLevel = 1;
@@ -95,11 +92,11 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
             int pageX = page * LEVEL_PAGE_WIDTH;
 
             //Create the Level selectors, one row at a time.
-            for (int y = 0; y < LEVEL_ROWS_PER_SCREEN && iLevel <= levelsCount; y++) {
+            for (int y = 0; y < levelRowsPerScreen && iLevel <= levelsCount; y++) {
 
                 int boxY = Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - spaceBetweenRows * y;
 
-                for (int x = 0; x < LEVEL_COLUMNS_PER_SCREEN && iLevel <= levelsCount; x++) {
+                for (int x = 0; x < levelColumnsPerScreen && iLevel <= levelsCount; x++) {
 
                     //On Touch, save the clicked level in case it's a click and not a scroll.
                     final boolean isUnlocked = iLevel <= mMaxLevelReached;
@@ -289,8 +286,7 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
 
     public void setFocusedLevel(int level) {
 
-        int levelsPerPage = LEVEL_ROWS_PER_SCREEN * LEVEL_COLUMNS_PER_SCREEN;
-        int page = (level - 1) / levelsPerPage;
+        int page = (level - 1) / mLevelsPerPage;
         float xPos = -page * LEVEL_PAGE_WIDTH;
         getLayer().setPosition(xPos, 0);
     }
