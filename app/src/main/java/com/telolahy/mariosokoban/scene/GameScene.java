@@ -342,8 +342,8 @@ public class GameScene extends BaseScene {
                         break;
 
                     case GameMap.BOX:
-                        GameCharacter box = new GameCharacter(posX, posY, mResourcesManager.gameCowTextureRegion, mVertexBufferObjectManager, x, y);
-                        box.setCurrentTileIndex(6);
+                        GameCharacter box = new GameCharacter(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y);
+                        box.setCurrentTileIndex(0);
                         mBoxes.add(box);
                         break;
 
@@ -355,8 +355,8 @@ public class GameScene extends BaseScene {
                     case GameMap.BOX_ON_GOAL:
                         Sprite goal2 = new Sprite(posX, posY, mResourcesManager.gameTargetTextureRegion, mVertexBufferObjectManager);
                         attachChild(goal2);
-                        GameCharacter box2 = new GameCharacter(posX, posY, mResourcesManager.gameCowTextureRegion, mVertexBufferObjectManager, x, y);
-                        box2.setCurrentTileIndex(6);
+                        GameCharacter box2 = new GameCharacter(posX, posY, mResourcesManager.gameBoxTextureRegion, mVertexBufferObjectManager, x, y);
+                        box2.setCurrentTileIndex(1);
                         mBoxes.add(box2);
                         break;
 
@@ -516,8 +516,10 @@ public class GameScene extends BaseScene {
 
         if (mGame.getElement(destination) == GameMap.GOAL) {
             mGame.setElement(destination, GameMap.BOX_ON_GOAL);
+            box.setCurrentTileIndex(1);
         } else {
             mGame.setElement(destination, GameMap.BOX);
+            box.setCurrentTileIndex(0);
         }
 
         final int direction = getDirection(source, destination);
@@ -535,8 +537,8 @@ public class GameScene extends BaseScene {
             public void onPathStarted(final PathModifier pPathModifier, final IEntity pEntity) {
 
                 box.moving = true;
-                long tileDuration = STEP_DURATION_MILLIS / 4;
-                box.animate(new long[]{tileDuration, tileDuration, tileDuration, tileDuration}, direction * 4, direction * 4 + 3, true);
+//                long tileDuration = STEP_DURATION_MILLIS / 4;
+//                box.animate(new long[]{tileDuration, tileDuration, tileDuration, tileDuration}, direction * 4, direction * 4 + 3, true);
             }
 
             @Override
@@ -554,8 +556,8 @@ public class GameScene extends BaseScene {
 
                 // finish animation
                 box.moving = false;
-                box.stopAnimation();
-                box.setCurrentTileIndex(direction * 4);
+//                box.stopAnimation();
+//                box.setCurrentTileIndex(direction * 4);
 
                 checkGameOver();
             }
