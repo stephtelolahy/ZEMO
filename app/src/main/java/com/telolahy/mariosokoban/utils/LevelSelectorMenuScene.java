@@ -40,6 +40,7 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
     private static final int LEVEL_MARGIN_RIGHT = 200;
     private static final int LEVEL_PAGE_WIDTH = 600;
 
+    private static final int ITEM_SPACING = 100;
     private static final float DECELERATION_ANIMATION_DURATION = .4f;
 
     // ===========================================================
