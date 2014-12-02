@@ -14,6 +14,7 @@ public class GameManager {
 
     private static final String PREFS_NAME = "preferences";
     private static final String LEVEL_PREFS_KEY = "level";
+    private static final String MUSIC_PREFS_KEY = "music";
 
     public static GameManager getInstance() {
         return INSTANCE;
@@ -22,16 +23,6 @@ public class GameManager {
     public int maxLevelReached() {
 
         return preferences().getInt(LEVEL_PREFS_KEY, 1);
-    }
-
-    public void completedLevel(int level) {
-
-        int nextLevel = Math.min(level + 1, Constants.TOTAL_LEVELS_COUNT);
-        if (nextLevel > maxLevelReached()) {
-            SharedPreferences.Editor edit = preferences().edit();
-            edit.putInt(LEVEL_PREFS_KEY, nextLevel);
-            edit.commit();
-        }
     }
 
     public int displayedLevelsCount() {
@@ -43,8 +34,28 @@ public class GameManager {
         return displayedLevels;
     }
 
+    public void setLevelCompleted(int level) {
+
+        int nextLevel = Math.min(level + 1, Constants.TOTAL_LEVELS_COUNT);
+        if (nextLevel > maxLevelReached()) {
+            SharedPreferences.Editor edit = preferences().edit();
+            edit.putInt(LEVEL_PREFS_KEY, nextLevel);
+            edit.commit();
+        }
+    }
+
     public boolean isOnLastLevel() {
         return maxLevelReached() >= Constants.TOTAL_LEVELS_COUNT;
+    }
+
+    public boolean isMusicEnabled() {
+        return preferences().getBoolean(MUSIC_PREFS_KEY, true);
+    }
+
+    public void setMusicEnabled(boolean value) {
+        SharedPreferences.Editor edit = preferences().edit();
+        edit.putBoolean(MUSIC_PREFS_KEY, value);
+        edit.commit();
     }
 
     private SharedPreferences preferences() {

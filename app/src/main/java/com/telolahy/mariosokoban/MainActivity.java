@@ -2,6 +2,7 @@ package com.telolahy.mariosokoban;
 
 import android.view.KeyEvent;
 
+import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.ResourcesManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
@@ -84,7 +85,7 @@ public class MainActivity extends BaseGameActivity {
     protected synchronized void onResume() {
         super.onResume();
         System.gc();
-        if (ResourcesManager.getInstance().menuMusic != null) {
+        if (ResourcesManager.getInstance().menuMusic != null && GameManager.getInstance().isMusicEnabled()) {
             ResourcesManager.getInstance().menuMusic.play();
         }
     }

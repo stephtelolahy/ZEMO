@@ -15,4 +15,5 @@
     <string name="level">Niveau</string>
     <string name="music_on">Musique ON</string>
     <string name="credits">Crédits</string>
+    <string name="music_off">Musique OFF</string>
 </resources>

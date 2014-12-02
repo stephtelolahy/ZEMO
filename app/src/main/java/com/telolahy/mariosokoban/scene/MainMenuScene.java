@@ -43,6 +43,7 @@ public class MainMenuScene extends BaseScene {
 
     private HUD mHUD;
     private Text mTitle;
+    private TextMenuItem mMusicTextMenuItem;
     private MenuScene mHomeMenuScene;
     private LevelSelectorMenuScene mLevelSelectorMenuScene;
     private MenuScene mOptionsMenuScene;
@@ -75,7 +76,6 @@ public class MainMenuScene extends BaseScene {
         createHomeMenuChildScene();
         createOptionsMenuChildScene();
         createLevelSelectorChildScene(maxLevelReached);
-        startMusic();
         createHUD();
         setupTouchGesture();
 
@@ -83,6 +83,10 @@ public class MainMenuScene extends BaseScene {
             displayHomeMenu();
         } else if (menuType == MENU_TYPE_LEVEL_SELECTOR) {
             displayLevelSelector();
+        }
+
+        if (GameManager.getInstance().isMusicEnabled()){
+            playMusic();
         }
     }
 
@@ -114,12 +118,19 @@ public class MainMenuScene extends BaseScene {
         this.setOnSceneTouchListenerBindingOnActionDownEnabled(true);
     }
 
-    private void startMusic() {
+    private void playMusic() {
 
-        if (!mResourcesManager.menuMusic.isPlaying()) {
+        if (mResourcesManager.menuMusic != null && !mResourcesManager.menuMusic.isPlaying()) {
             mResourcesManager.menuMusic.setLooping(true);
             mResourcesManager.menuMusic.setVolume(0.4f);
             mResourcesManager.menuMusic.play();
+        }
+    }
+
+    private void pauseMusic() {
+
+        if (mResourcesManager.menuMusic != null && mResourcesManager.menuMusic.isPlaying()) {
+            mResourcesManager.menuMusic.pause();
         }
     }
 
@@ -185,8 +196,10 @@ public class MainMenuScene extends BaseScene {
 
         mOptionsMenuScene = new MenuScene(mCamera);
 
-        TextMenuItem musicTextMenuItem = new TextMenuItem(MENU_ITEM_MUSIC, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.music_on), mVertexBufferObjectManager);
-        IMenuItem musicMenuItem = new ScaleMenuItemDecorator(musicTextMenuItem, 1.2f, 1);
+        boolean musicEnabled = GameManager.getInstance().isMusicEnabled();
+        String musicText = musicEnabled ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
+        mMusicTextMenuItem = new TextMenuItem(MENU_ITEM_MUSIC, mResourcesManager.menuItemFont, musicText, mVertexBufferObjectManager);
+        IMenuItem musicMenuItem = new ScaleMenuItemDecorator(mMusicTextMenuItem, 1.2f, 1);
         TextMenuItem creditsTextMenuItem = new TextMenuItem(MENU_ITEM_CREDITS, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.credits), mVertexBufferObjectManager);
         IMenuItem creditsMenuItem = new ScaleMenuItemDecorator(creditsTextMenuItem, 1.2f, 1);
         mOptionsMenuScene.addMenuItem(musicMenuItem);
@@ -201,6 +214,16 @@ public class MainMenuScene extends BaseScene {
 
                 switch (pMenuItem.getID()) {
                     case MENU_ITEM_MUSIC:
+                        boolean musicEnabled = GameManager.getInstance().isMusicEnabled();
+                        musicEnabled = !musicEnabled;
+                        String musicText = musicEnabled ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
+                        mMusicTextMenuItem.setText(musicText);
+                        GameManager.getInstance().setMusicEnabled(musicEnabled);
+                        if (musicEnabled){
+                            playMusic();
+                        } else {
+                            pauseMusic();
+                        }
                         return true;
                     case MENU_ITEM_CREDITS:
                         return true;
