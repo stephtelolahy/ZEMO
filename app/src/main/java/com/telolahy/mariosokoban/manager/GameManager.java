@@ -22,7 +22,8 @@ public class GameManager {
 
     public int maxLevelReached() {
 
-        return preferences().getInt(LEVEL_PREFS_KEY, 1);
+//        return preferences().getInt(LEVEL_PREFS_KEY, 1);
+        return Constants.TOTAL_LEVELS_COUNT;
     }
 
     public int displayedLevelsCount() {
