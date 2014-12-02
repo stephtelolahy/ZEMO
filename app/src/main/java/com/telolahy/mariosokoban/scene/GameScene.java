@@ -46,16 +46,13 @@ public class GameScene extends BaseScene {
     private static final int REPLAY_MENU_ITEM = 1;
     private static final int BACK_MENU_ITEM = 2;
 
-    private static final int WORLD_MARGIN_LEFT = 100;
-    private static final int WORLD_MARGIN = 40;
-    private static final int BLOC_SIZE = 64;
     private static final int STEP_DURATION_MILLIS = 600; // time to move one block
 
-    private static final int NONE = -1;
-    private static final int DOWN = 0;
-    private static final int LEFT = 1;
-    private static final int RIGHT = 2;
-    private static final int UP = 3;
+    private static final int DIRECTION_NONE = -1;
+    private static final int DIRECTION_DOWN = 0;
+    private static final int DIRECTION_LEFT = 1;
+    private static final int DIRECTION_RIGHT = 2;
+    private static final int DIRECTION_UP = 3;
 
     // ===========================================================
     // Fields
@@ -67,8 +64,10 @@ public class GameScene extends BaseScene {
     private GameCharacter mMario;
     private ArrayList<GameCharacter> mBoxes;
     private LongScrollDetector mLongScrollDetector;
+
     private static int mX0;
     private static int mY0;
+    private static int mBlocSize;
 
     private int mRetries;
 
@@ -208,6 +207,7 @@ public class GameScene extends BaseScene {
     private void createHUD() {
 
         final int TOP_MARGIN = 48;
+        final int LEFT_MARGIN = 64;
 
         HUD gameHUD = new HUD();
         Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - TOP_MARGIN, mResourcesManager.gameTitleFont, "Level 0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
@@ -223,8 +223,8 @@ public class GameScene extends BaseScene {
 
         menuScene.buildAnimations();
         menuScene.setBackgroundEnabled(false);
-        retryMenuItem.setPosition(Constants.SCREEN_WIDTH - 64, Constants.SCREEN_HEIGHT - TOP_MARGIN);
-        backMenuItem.setPosition(64, Constants.SCREEN_HEIGHT - TOP_MARGIN);
+        retryMenuItem.setPosition(Constants.SCREEN_WIDTH - LEFT_MARGIN, Constants.SCREEN_HEIGHT - TOP_MARGIN);
+        backMenuItem.setPosition(LEFT_MARGIN, Constants.SCREEN_HEIGHT - TOP_MARGIN);
         menuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
@@ -262,11 +262,11 @@ public class GameScene extends BaseScene {
 
     private void createLevel1CoachMarker() {
 
-        final Sprite scrollCoachMarker = new Sprite(300, 140, mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
+        final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH/5, Constants.SCREEN_HEIGHT/4, mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
         attachChild(scrollCoachMarker);
 
         float x1 = scrollCoachMarker.getX();
-        float x2 = x1 + 400;
+        float x2 = x1 + Constants.SCREEN_WIDTH * 3/5;
         float y = scrollCoachMarker.getY();
         final Path path = new Path(2).to(x1, y).to(x2, y);
         scrollCoachMarker.registerEntityModifier(new PathModifier(2.f, path, null, new PathModifier.IPathModifierListener() {
@@ -304,17 +304,23 @@ public class GameScene extends BaseScene {
             return;
         }
 
-        int worldWidth = BLOC_SIZE * mGame.getSizeX() + WORLD_MARGIN;
-        int worldHeight = BLOC_SIZE * mGame.getSizeY() + WORLD_MARGIN;
-        mX0 = WORLD_MARGIN_LEFT;
-        mY0 = WORLD_MARGIN;
+        mBlocSize = (int)mResourcesManager.gameTargetTextureRegion.getWidth();
+        int worldWidth = mBlocSize * mGame.getSizeX();
+        int worldHeight = mBlocSize * mGame.getSizeY();
 
-        if (mX0 + worldWidth < Constants.SCREEN_WIDTH) {
-            mX0 = ((Constants.SCREEN_WIDTH - mX0) - worldWidth) / 2 + mX0;
+        if (worldWidth < Constants.SCREEN_WIDTH) {
+            mX0 = (Constants.SCREEN_WIDTH - worldWidth) / 2;
+        } else {
+            worldWidth+=  mBlocSize;
+            mX0 = mBlocSize / 2;
         }
-        if (mY0 + worldHeight < Constants.SCREEN_HEIGHT) {
+        if (worldHeight < Constants.SCREEN_HEIGHT) {
             mY0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
+        } else {
+            worldHeight+= mBlocSize;
+            mY0 = mBlocSize / 2;
         }
+
         int cameraMinX = 0;
         int cameraMinY = 0;
         int cameraMaxX = Math.max(mX0 + worldWidth, Constants.SCREEN_WIDTH);
@@ -327,8 +333,8 @@ public class GameScene extends BaseScene {
         for (int y = 0; y < mGame.getSizeY(); y++) {
             for (int x = 0; x < mGame.getSizeX(); x++) {
 
-                int posX = mX0 + x * BLOC_SIZE + BLOC_SIZE / 2;
-                int posY = mY0 + y * BLOC_SIZE + BLOC_SIZE / 2;
+                int posX = mX0 + x * mBlocSize + mBlocSize / 2;
+                int posY = mY0 + y * mBlocSize + mBlocSize / 2;
 
                 switch (mGame.getElement(new Point(x, y))) {
 
@@ -466,8 +472,8 @@ public class GameScene extends BaseScene {
 
         float x1 = mMario.getX();
         float y1 = mMario.getY();
-        float x2 = mX0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
-        float y2 = mY0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
+        float x2 = mX0 + destination.x * mBlocSize + mBlocSize / 2;
+        float y2 = mY0 + destination.y * mBlocSize + mBlocSize / 2;
         final Path marioPath = new Path(2).to(x1, y1).to(x2, y2);
         float pathAnimationDuration = (float) STEP_DURATION_MILLIS / 1000;
         mMario.registerEntityModifier(new PathModifier(pathAnimationDuration, marioPath, null, new PathModifier.IPathModifierListener() {
@@ -529,8 +535,8 @@ public class GameScene extends BaseScene {
 
         float x1 = box.getX();
         float y1 = box.getY();
-        float x2 = mX0 + destination.x * BLOC_SIZE + BLOC_SIZE / 2;
-        float y2 = mY0 + destination.y * BLOC_SIZE + BLOC_SIZE / 2;
+        float x2 = mX0 + destination.x * mBlocSize + mBlocSize / 2;
+        float y2 = mY0 + destination.y * mBlocSize + mBlocSize / 2;
         final Path boxPath = new Path(2).to(x1, y1).to(x2, y2);
         float pathAnimationDuration = (float) STEP_DURATION_MILLIS / 1000;
         final IEaseFunction easeFunction = EaseStrongIn.getInstance();
@@ -574,15 +580,15 @@ public class GameScene extends BaseScene {
     private static int getDirection(Point source, Point destination) {
 
         if (destination.x - source.x > 0) {
-            return RIGHT;
+            return DIRECTION_RIGHT;
         } else if (destination.x - source.x < 0) {
-            return LEFT;
+            return DIRECTION_LEFT;
         } else if (destination.y - source.y > 0) {
-            return UP;
+            return DIRECTION_UP;
         } else if (destination.y - source.y < 0) {
-            return DOWN;
+            return DIRECTION_DOWN;
         } else {
-            return NONE;
+            return DIRECTION_NONE;
         }
     }
 
