@@ -77,8 +77,8 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
         // Calculate space between each level square
         int spaceBetweenRows = ITEM_SPACING;
         int spaceBetweenColumns = ITEM_SPACING;
-        int x0 = (Constants.SCREEN_WIDTH - ((levelColumnsPerScreen - 1) * spaceBetweenColumns)) / 2;
-        int y0 = (Constants.SCREEN_HEIGHT - (levelRowsPerScreen - 1) * spaceBetweenRows) / 2;
+        int x0 = (Constants.SCREEN_WIDTH - (levelColumnsPerScreen - 1) * spaceBetweenColumns) / 2;
+        int y0 = Constants.SCREEN_HEIGHT - (Constants.SCREEN_HEIGHT - (levelRowsPerScreen - 1) * spaceBetweenRows) / 2;
 
         //Current Level Counter
         int iLevel = 1;

@@ -49,7 +49,7 @@ public class LevelCompletedWindow extends Sprite {
 
     public LevelCompletedWindow(LevelCompleteWindowListener listener) {
 
-        super(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().levelCompletedBackgroundTextureRegion, ResourcesManager.getInstance().vertexBufferObjectManager);
+        super(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, ResourcesManager.getInstance().levelCompletedBackgroundTextureRegion, ResourcesManager.getInstance().vertexBufferObjectManager);
         mListener = listener;
         createStars();
         createMenu();

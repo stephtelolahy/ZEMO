@@ -59,6 +59,7 @@ public class GameScene extends BaseScene {
     // ===========================================================
 
     private int mLevel;
+    private int mRetries;
 
     private GameMap mGame;
     private GameCharacter mMario;
@@ -68,8 +69,6 @@ public class GameScene extends BaseScene {
     private static int mX0;
     private static int mY0;
     private static int mBlocSize;
-
-    private int mRetries;
 
     private LevelCompletedWindow mLevelCompletedWindow;
 
@@ -262,11 +261,11 @@ public class GameScene extends BaseScene {
 
     private void createLevel1CoachMarker() {
 
-        final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH/5, Constants.SCREEN_HEIGHT/4, mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
+        final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH / 5, Constants.SCREEN_HEIGHT / 4, mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
         attachChild(scrollCoachMarker);
 
         float x1 = scrollCoachMarker.getX();
-        float x2 = x1 + Constants.SCREEN_WIDTH * 3/5;
+        float x2 = x1 + Constants.SCREEN_WIDTH * 3 / 5;
         float y = scrollCoachMarker.getY();
         final Path path = new Path(2).to(x1, y).to(x2, y);
         scrollCoachMarker.registerEntityModifier(new PathModifier(2.f, path, null, new PathModifier.IPathModifierListener() {
@@ -304,20 +303,20 @@ public class GameScene extends BaseScene {
             return;
         }
 
-        mBlocSize = (int)mResourcesManager.gameTargetTextureRegion.getWidth();
+        mBlocSize = (int) mResourcesManager.gameTargetTextureRegion.getWidth();
         int worldWidth = mBlocSize * mGame.getSizeX();
         int worldHeight = mBlocSize * mGame.getSizeY();
 
         if (worldWidth < Constants.SCREEN_WIDTH) {
             mX0 = (Constants.SCREEN_WIDTH - worldWidth) / 2;
         } else {
-            worldWidth+=  mBlocSize;
+            worldWidth += mBlocSize;
             mX0 = mBlocSize / 2;
         }
         if (worldHeight < Constants.SCREEN_HEIGHT) {
             mY0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
         } else {
-            worldHeight+= mBlocSize;
+            worldHeight += mBlocSize;
             mY0 = mBlocSize / 2;
         }
 
@@ -524,13 +523,10 @@ public class GameScene extends BaseScene {
 
         if (mGame.getElement(destination) == GameMap.GOAL) {
             mGame.setElement(destination, GameMap.BOX_ON_GOAL);
-            box.setCurrentTileIndex(1);
         } else {
             mGame.setElement(destination, GameMap.BOX);
-            box.setCurrentTileIndex(0);
         }
 
-        final int direction = getDirection(source, destination);
         box.gamePosition = destination;
 
         float x1 = box.getX();
@@ -562,6 +558,11 @@ public class GameScene extends BaseScene {
             public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
 
                 box.moving = false;
+                if (mGame.getElement(destination) == GameMap.BOX_ON_GOAL) {
+                    box.setCurrentTileIndex(1);
+                } else {
+                    box.setCurrentTileIndex(0);
+                }
                 checkGameOver();
             }
         }, easeFunction));
