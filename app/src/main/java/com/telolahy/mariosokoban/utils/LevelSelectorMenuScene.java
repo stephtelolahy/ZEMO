@@ -34,13 +34,8 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
     // Constants
     // ===========================================================
 
-    private static final int LEVEL_MARGIN_TOP = 200;
-    private static final int LEVEL_MARGIN_BOTTOM = 170;
-    private static final int LEVEL_MARGIN_LEFT = 200;
-    private static final int LEVEL_MARGIN_RIGHT = 200;
-    private static final int LEVEL_PAGE_WIDTH = 600;
-
     private static final int ITEM_SPACING = 100;
+    private static final int LEVEL_PAGE_WIDTH = Constants.SCREEN_WIDTH * 3 / 4;
     private static final float DECELERATION_ANIMATION_DURATION = .4f;
 
     // ===========================================================
@@ -80,8 +75,10 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
         mPagesCount = (levelsCount / mLevelsPerPage) + (levelsCount % mLevelsPerPage == 0 ? 0 : 1);
 
         // Calculate space between each level square
-        int spaceBetweenRows = (Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - LEVEL_MARGIN_BOTTOM) / (levelRowsPerScreen - 1);
-        int spaceBetweenColumns = (Constants.SCREEN_WIDTH - LEVEL_MARGIN_LEFT - LEVEL_MARGIN_RIGHT) / (levelColumnsPerScreen - 1);
+        int spaceBetweenRows = ITEM_SPACING;
+        int spaceBetweenColumns = ITEM_SPACING;
+        int x0 = (Constants.SCREEN_WIDTH - ((levelColumnsPerScreen - 1) * spaceBetweenColumns)) / 2;
+        int y0 = (Constants.SCREEN_HEIGHT - (levelRowsPerScreen - 1) * spaceBetweenRows) / 2;
 
         //Current Level Counter
         int iLevel = 1;
@@ -95,14 +92,14 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
             //Create the Level selectors, one row at a time.
             for (int y = 0; y < levelRowsPerScreen && iLevel <= levelsCount; y++) {
 
-                int boxY = Constants.SCREEN_HEIGHT - LEVEL_MARGIN_TOP - spaceBetweenRows * y;
+                int boxY = y0 - spaceBetweenRows * y;
 
                 for (int x = 0; x < levelColumnsPerScreen && iLevel <= levelsCount; x++) {
 
                     //On Touch, save the clicked level in case it's a click and not a scroll.
                     final boolean isUnlocked = iLevel <= mMaxLevelReached;
 
-                    int boxX = pageX + LEVEL_MARGIN_LEFT + spaceBetweenColumns * x;
+                    int boxX = pageX + x0 + spaceBetweenColumns * x;
                     levelPositions.add(new Point(boxX, boxY));
 
                     ITextureRegion textureRegion = null;
@@ -129,7 +126,6 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
                         ScaleModifier scaleOutModifier = new ScaleModifier(.5f, 1.2f, 1.f);
                         levelMenuItem.registerEntityModifier(new LoopEntityModifier(new SequenceEntityModifier(scaleOutModifier, scaleInModifier)));
                     }
-
 
                     iLevel++;
                 }
