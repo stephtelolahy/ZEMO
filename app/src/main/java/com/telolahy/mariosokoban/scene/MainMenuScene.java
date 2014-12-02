@@ -1,5 +1,8 @@
 package com.telolahy.mariosokoban.scene;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
 import com.telolahy.mariosokoban.manager.GameManager;
@@ -85,7 +88,7 @@ public class MainMenuScene extends BaseScene {
             displayLevelSelector();
         }
 
-        if (GameManager.getInstance().isMusicEnabled()){
+        if (GameManager.getInstance().isMusicEnabled()) {
             playMusic();
         }
     }
@@ -101,7 +104,7 @@ public class MainMenuScene extends BaseScene {
     public void onBackKeyPressed() {
 
         if (mCurrentMenuType == MENU_TYPE_HOME) {
-            System.exit(0);
+            displayExitDialog();
         } else {
             displayHomeMenu();
         }
@@ -219,7 +222,7 @@ public class MainMenuScene extends BaseScene {
                         String musicText = musicEnabled ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
                         mMusicTextMenuItem.setText(musicText);
                         GameManager.getInstance().setMusicEnabled(musicEnabled);
-                        if (musicEnabled){
+                        if (musicEnabled) {
                             playMusic();
                         } else {
                             pauseMusic();
@@ -280,6 +283,27 @@ public class MainMenuScene extends BaseScene {
         setChildScene(mOptionsMenuScene);
         mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.options));
         mCurrentMenuType = MENU_TYPE_OPTIONS;
+    }
+
+    private void displayExitDialog() {
+
+        mActivity.runOnUiThread(new Runnable() {
+            public void run() {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                builder.setTitle(mResourcesManager.activity.getResources().getString(R.string.exit));
+                builder.setMessage(mResourcesManager.activity.getResources().getString(R.string.exit_message));
+                builder.setPositiveButton((mResourcesManager.activity.getResources().getString(R.string.yes)), new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        System.exit(0);
+                    }
+                });
+                builder.setNegativeButton(mResourcesManager.activity.getResources().getString(R.string.no), null);
+                builder.show();
+            }
+        });
     }
 
     // ===========================================================
