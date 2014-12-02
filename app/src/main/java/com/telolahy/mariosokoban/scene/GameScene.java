@@ -16,6 +16,8 @@ import com.telolahy.mariosokoban.utils.LongScrollDetector;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
@@ -91,7 +93,7 @@ public class GameScene extends BaseScene {
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
 
-        mLongScrollDetector.onManagedTouchEvent(pSceneTouchEvent);
+        mLongScrollDetector.onTouchEvent(pSceneTouchEvent);
         return super.onSceneTouchEvent(pSceneTouchEvent);
     }
 
@@ -106,7 +108,11 @@ public class GameScene extends BaseScene {
         setupGestureDetector();
         createLevelCompletedWindow();
         if (mLevel == 1) {
-            createLevel1CoachMarker();
+            mResourcesManager.engine.registerUpdateHandler(new TimerHandler(1.f, new ITimerCallback() {
+                public void onTimePassed(final TimerHandler pTimerHandler) {
+                    createLevel1CoachMarker();
+                }
+            }));
         }
     }
 
@@ -261,11 +267,11 @@ public class GameScene extends BaseScene {
 
     private void createLevel1CoachMarker() {
 
-        final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH / 5, Constants.SCREEN_HEIGHT / 4, mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
+        final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH / 5, Constants.SCREEN_HEIGHT / 2 - mResourcesManager.gameScrollCoachMarkerRegion.getHeight() / 2, mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
         attachChild(scrollCoachMarker);
 
         float x1 = scrollCoachMarker.getX();
-        float x2 = x1 + Constants.SCREEN_WIDTH * 3 / 5;
+        float x2 = Constants.SCREEN_WIDTH * 4 / 5;
         float y = scrollCoachMarker.getY();
         final Path path = new Path(2).to(x1, y).to(x2, y);
         scrollCoachMarker.registerEntityModifier(new PathModifier(2.f, path, null, new PathModifier.IPathModifierListener() {
@@ -527,6 +533,8 @@ public class GameScene extends BaseScene {
             mGame.setElement(destination, GameMap.BOX);
         }
 
+        checkGameOver();
+
         box.gamePosition = destination;
 
         float x1 = box.getX();
@@ -563,7 +571,6 @@ public class GameScene extends BaseScene {
                 } else {
                     box.setCurrentTileIndex(0);
                 }
-                checkGameOver();
             }
         }, easeFunction));
 
@@ -596,7 +603,12 @@ public class GameScene extends BaseScene {
     private void checkGameOver() {
 
         if (mGame.isLevelCompleted()) {
-            showGameCompleted();
+            mLongScrollDetector.setEnabled(false);
+            mResourcesManager.engine.registerUpdateHandler(new TimerHandler(1.f, new ITimerCallback() {
+                public void onTimePassed(final TimerHandler pTimerHandler) {
+                    showGameCompleted();
+                }
+            }));
         }
     }
 
