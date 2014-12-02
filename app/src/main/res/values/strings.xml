@@ -2,7 +2,7 @@
     <string name="app_name">Mario Sokoban</string>
     <string name="loading">Chargement ...</string>
     <string name="help">Aide</string>
-    <string name="play">Jouer</string>
+    <string name="play">Aventure</string>
     <string name="options">Options</string>
     <string name="level_completed">Mission accomplie !</string>
     <string name="last_level_completed">Jeu terminé. Félicitations!</string>
@@ -13,4 +13,6 @@
     <string name="error_loading_level">Erreur</string>
     <string name="close">Fermer</string>
     <string name="level">Niveau</string>
+    <string name="music_on">Musique ON</string>
+    <string name="credits">Crédits</string>
 </resources>

@@ -42,7 +42,7 @@ public class MainMenuScene extends BaseScene {
     // ===========================================================
 
     private HUD mHUD;
-
+    private Text mTitle;
     private MenuScene mHomeMenuScene;
     private LevelSelectorMenuScene mLevelSelectorMenuScene;
     private MenuScene mOptionsMenuScene;
@@ -73,6 +73,7 @@ public class MainMenuScene extends BaseScene {
         int menuType = params[1];
         createBackground();
         createHomeMenuChildScene();
+        createOptionsMenuChildScene();
         createLevelSelectorChildScene(maxLevelReached);
         startMusic();
         createHUD();
@@ -141,7 +142,8 @@ public class MainMenuScene extends BaseScene {
         mHUD = new HUD();
 
         String gameTitle = mResourcesManager.activity.getResources().getString(R.string.app_name);
-        mHUD.attachChild(new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, mResourcesManager.menuTitleFont, gameTitle, new TextOptions(HorizontalAlign.LEFT), mVertexBufferObjectManager));
+        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, mResourcesManager.menuTitleFont, gameTitle, new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mHUD.attachChild(mTitle);
 
         mCamera.setHUD(mHUD);
     }
@@ -169,6 +171,37 @@ public class MainMenuScene extends BaseScene {
                         displayLevelSelector();
                         return true;
                     case MENU_ITEM_OPTIONS:
+                        displayOptionsMenu();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+    }
+
+    private void createOptionsMenuChildScene() {
+
+        mOptionsMenuScene = new MenuScene(mCamera);
+
+        TextMenuItem musicTextMenuItem = new TextMenuItem(MENU_ITEM_MUSIC, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.music_on), mVertexBufferObjectManager);
+        IMenuItem musicMenuItem = new ScaleMenuItemDecorator(musicTextMenuItem, 1.2f, 1);
+        TextMenuItem creditsTextMenuItem = new TextMenuItem(MENU_ITEM_CREDITS, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.credits), mVertexBufferObjectManager);
+        IMenuItem creditsMenuItem = new ScaleMenuItemDecorator(creditsTextMenuItem, 1.2f, 1);
+        mOptionsMenuScene.addMenuItem(musicMenuItem);
+        mOptionsMenuScene.addMenuItem(creditsMenuItem);
+
+        mOptionsMenuScene.buildAnimations();
+        mOptionsMenuScene.setBackgroundEnabled(false);
+
+        mOptionsMenuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
+
+                switch (pMenuItem.getID()) {
+                    case MENU_ITEM_MUSIC:
+                        return true;
+                    case MENU_ITEM_CREDITS:
                         return true;
                     default:
                         return false;
@@ -200,16 +233,29 @@ public class MainMenuScene extends BaseScene {
 
         clearChildScene();
         setChildScene(mLevelSelectorMenuScene);
+        mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.play));
         mLevelSelectorMenuScene.setEnabled(true);
         mCurrentMenuType = MENU_TYPE_LEVEL_SELECTOR;
     }
 
     private void displayHomeMenu() {
 
+        if (mCurrentMenuType == MENU_TYPE_LEVEL_SELECTOR) {
+            mLevelSelectorMenuScene.setEnabled(false);
+        }
+
         clearChildScene();
         setChildScene(mHomeMenuScene);
-        mLevelSelectorMenuScene.setEnabled(false);
+        mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.app_name));
         mCurrentMenuType = MENU_TYPE_HOME;
+    }
+
+    private void displayOptionsMenu() {
+
+        clearChildScene();
+        setChildScene(mOptionsMenuScene);
+        mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.options));
+        mCurrentMenuType = MENU_TYPE_OPTIONS;
     }
 
     // ===========================================================
