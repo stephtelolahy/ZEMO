@@ -92,14 +92,20 @@ public class ParallaxBackground extends Background {
 		// ===========================================================
 
 		final float mParallaxFactor;
+        final float mCameraFactor;
 		final IEntity mEntity;
 
 		// ===========================================================
 		// Constructors
 		// ===========================================================
 
-		public ParallaxEntity(final float pParallaxFactor, final IEntity pEntity) {
+        public ParallaxEntity(final float pParallaxFactor, final IEntity pEntity) {
+            this(pParallaxFactor, 1.f, pEntity);
+        }
+
+		public ParallaxEntity(final float pParallaxFactor, final float pCameraFactor, final IEntity pEntity) {
 			this.mParallaxFactor = pParallaxFactor;
+            this.mCameraFactor = pCameraFactor;
 			this.mEntity = pEntity;
 
 			// TODO Adjust onDraw calculations, so that these assumptions aren't necessary.
@@ -127,7 +133,7 @@ public class ParallaxBackground extends Background {
 		public void onDraw(final GLState pGLState, final Camera pCamera, final float pParallaxValue) {
 			pGLState.pushModelViewGLMatrix();
 			{
-				final float cameraWidth = pCamera.getWidth();
+				final float cameraWidth = mCameraFactor * pCamera.getWidth();
 				final float entityWidthScaled = this.mEntity.getWidth() * this.mEntity.getScaleX();
 				float baseOffset = (pParallaxValue * this.mParallaxFactor) % entityWidthScaled;
 
