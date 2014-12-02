@@ -34,7 +34,7 @@ public class MainActivity extends BaseGameActivity {
     @Override
     public EngineOptions onCreateEngineOptions() {
         mCamera = new BoundCamera(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-        EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED, new RatioResolutionPolicy(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), mCamera);
+        EngineOptions engineOptions = new EngineOptions(true, Constants.SCREEN_ORIENTATION, new RatioResolutionPolicy(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), mCamera);
         engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
         engineOptions.getRenderOptions().getConfigChooserOptions().setRequestedMultiSampling(true);
         engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);

@@ -267,7 +267,7 @@ public class GameScene extends BaseScene {
 
     private void createLevel1CoachMarker() {
 
-        final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH / 5, Constants.SCREEN_HEIGHT / 2 - mResourcesManager.gameScrollCoachMarkerRegion.getHeight() / 2, mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
+        final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH / 5, Constants.SCREEN_HEIGHT / 2 - mResourcesManager.gameScrollCoachMarkerRegion.getHeight(), mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
         attachChild(scrollCoachMarker);
 
         float x1 = scrollCoachMarker.getX();

@@ -41,6 +41,7 @@ public class LevelCompletedWindow extends Sprite {
 
     private MenuScene mMenuScene;
     private TiledSprite mStars[] = new TiledSprite[3];
+    private Text mTitleText;
     private LevelCompleteWindowListener mListener;
 
     // ===========================================================
@@ -115,6 +116,13 @@ public class LevelCompletedWindow extends Sprite {
             @Override
             public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem) {
 
+                attachChild(mTitleText);
+
+                // Attach stars
+                attachChild(mStars[0]);
+                attachChild(mStars[1]);
+                attachChild(mStars[2]);
+
                 // Attach menu childScene
                 scene.setChildScene(mMenuScene);
             }
@@ -166,15 +174,12 @@ public class LevelCompletedWindow extends Sprite {
             text = resourcesManager.activity.getResources().getString(R.string.last_level_completed);
         }
 
-        attachChild(new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, resourcesManager.menuItemFont, text, resourcesManager.vertexBufferObjectManager));
+        mTitleText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, resourcesManager.menuItemFont, text, resourcesManager.vertexBufferObjectManager);
 
         int padding = (int) resourcesManager.levelCompletedStarsTextureRegion.getWidth() * 3 / 2;
         mStars[0] = new TiledSprite(Constants.SCREEN_WIDTH / 2 - padding, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
         mStars[1] = new TiledSprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
         mStars[2] = new TiledSprite(Constants.SCREEN_WIDTH / 2 + padding, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
-        attachChild(mStars[0]);
-        attachChild(mStars[1]);
-        attachChild(mStars[2]);
     }
 
     // ===========================================================
