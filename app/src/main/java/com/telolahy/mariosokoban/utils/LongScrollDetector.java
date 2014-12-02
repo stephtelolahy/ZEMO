@@ -65,6 +65,12 @@ public class LongScrollDetector extends BaseDetector {
         return this.mLastVector;
     }
 
+    @Override
+    public void setEnabled(boolean pEnabled) {
+        super.setEnabled(pEnabled);
+        reset();
+    }
+
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
