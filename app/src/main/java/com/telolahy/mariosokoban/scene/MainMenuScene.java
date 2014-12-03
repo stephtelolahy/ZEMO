@@ -101,6 +101,11 @@ public class MainMenuScene extends BaseScene {
 
         mCamera.setHUD(null);
         mHUD.detachSelf();
+
+        mCreditsScene.onDisposeScene();
+        mLevelSelectorMenuScene.dispose();
+        mHomeMenuScene.dispose();
+        mOptionsMenuScene.dispose();
     }
 
     @Override
