@@ -308,14 +308,14 @@ public class MainMenuScene extends BaseScene {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setTitle(mResourcesManager.activity.getResources().getString(R.string.exit));
                 builder.setMessage(mResourcesManager.activity.getResources().getString(R.string.exit_message));
-                builder.setNegativeButton((mResourcesManager.activity.getResources().getString(R.string.yes)), new DialogInterface.OnClickListener() {
+                builder.setPositiveButton((mResourcesManager.activity.getResources().getString(R.string.yes)), new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         System.exit(0);
                     }
                 });
-                builder.setPositiveButton(mResourcesManager.activity.getResources().getString(R.string.no), null);
+                builder.setNegativeButton(mResourcesManager.activity.getResources().getString(R.string.no), null);
                 builder.show();
             }
         });
