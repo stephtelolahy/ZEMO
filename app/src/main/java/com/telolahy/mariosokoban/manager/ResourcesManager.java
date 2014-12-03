@@ -192,7 +192,7 @@ public class ResourcesManager {
         gameTitleFont.load();
 
         final ITexture menuCreditsFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        menuCreditsFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuCreditsFontTexture, activity.getAssets(), "font/font.ttf", 28, true, Color.GRAY, 2, Color.TRANSPARENT);
+        menuCreditsFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuCreditsFontTexture, activity.getAssets(), "font/font.ttf", 24, true, Color.GRAY, 2, Color.TRANSPARENT);
         menuCreditsFont.load();
     }
 

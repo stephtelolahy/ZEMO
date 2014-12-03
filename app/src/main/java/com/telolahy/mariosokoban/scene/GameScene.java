@@ -649,7 +649,7 @@ public class GameScene extends BaseScene {
             public void run() {
 
                 String title = mActivity.getResources().getString(R.string.error_loading_level);
-                String message = mActivity.getResources().getString(R.string.cannot_load_level) + levelFile;
+                String message = mActivity.getResources().getString(R.string.cannot_load_level) + ": " + levelFile;
                 String positiveText = mActivity.getResources().getString(R.string.close);
                 AlertDialog.Builder ad = new AlertDialog.Builder(mActivity);
                 ad.setTitle(title);

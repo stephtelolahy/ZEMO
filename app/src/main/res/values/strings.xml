@@ -7,7 +7,7 @@
     <string name="last_level_completed">Jeu terminé !</string>
     <string name="retry">Réessayer</string>
     <string name="suivant">Suivant</string>
-    <string name="cannot_load_level">Fichier introuvable: </string>
+    <string name="cannot_load_level">Fichier introuvable </string>
     <string name="error_loading_level">Erreur</string>
     <string name="close">Fermer</string>
     <string name="level">Niveau</string>
@@ -20,4 +20,9 @@
     <string name="no">Non</string>
     <string name="game_designer">Game designer</string>
     <string name="game_designer_value">Malalatiana Randriamasy</string>
+    <string name="game_developer">Game developer</string>
+    <string name="game_developer_value">Stéphano Telolahy</string>
+    <string name="game_engine">Game engine </string>
+    <string name="game_engine_value">AndEngine</string>
+    <string name="game_studio">Creative Games Studio (c) 2006-</string>
 </resources>
