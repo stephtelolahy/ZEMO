@@ -1,9 +1,6 @@
 package com.telolahy.mariosokoban;
 
-import android.graphics.Point;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 
 import com.telolahy.mariosokoban.manager.GameManager;
@@ -16,7 +13,6 @@ import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.WakeLockOptions;
 import org.andengine.engine.options.resolutionpolicy.FillResolutionPolicy;
-import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.ui.activity.BaseGameActivity;
 

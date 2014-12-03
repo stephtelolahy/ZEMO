@@ -60,7 +60,7 @@ public class SceneManager {
         ResourcesManager.getInstance().loadCommonResources();
         ResourcesManager.getInstance().loadMenuResources();
         int maxLevelReached = GameManager.getInstance().maxLevelReached();
-        mMenuScene = new MainMenuScene(maxLevelReached, MainMenuScene.MENU_TYPE_HOME);
+        mMenuScene = new MainMenuScene(maxLevelReached, maxLevelReached, MainMenuScene.MENU_TYPE_HOME);
         mLoadingScene = new LoadingScene();
         setScene(mMenuScene);
         disposeSplashScene();
@@ -94,7 +94,7 @@ public class SceneManager {
         ResourcesManager.getInstance().unloadGameTextures();
     }
 
-    public void loadMenuScene() {
+    public void loadMenuScene(final int currentLevel) {
 
         setScene(mLoadingScene);
         disposeGameScene();
@@ -103,7 +103,7 @@ public class SceneManager {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 ResourcesManager.getInstance().loadMenuTextures();
                 int maxLevelReached = GameManager.getInstance().maxLevelReached();
-                mMenuScene = new MainMenuScene(maxLevelReached, MainMenuScene.MENU_TYPE_LEVEL_SELECTOR);
+                mMenuScene = new MainMenuScene(currentLevel, maxLevelReached, MainMenuScene.MENU_TYPE_LEVEL_SELECTOR);
                 mLoadingScene = new LoadingScene();
                 setScene(mMenuScene);
             }

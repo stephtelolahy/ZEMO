@@ -75,12 +75,13 @@ public class MainMenuScene extends BaseScene {
     @Override
     protected void onCreateScene(int... params) {
 
-        int maxLevelReached = params[0];
-        int menuType = params[1];
+        int currentLevel = params[0];
+        int maxLevelReached = params[1];
+        int menuType = params[2];
         createBackground();
         createHomeMenuChildScene();
         createOptionsMenuChildScene();
-        createLevelSelectorChildScene(maxLevelReached);
+        createLevelSelectorChildScene(maxLevelReached, currentLevel);
         createCreditsChildScene();
         createHUD();
         setupTouchGesture();
@@ -239,11 +240,12 @@ public class MainMenuScene extends BaseScene {
         });
     }
 
-    private void createLevelSelectorChildScene(int maxLevelReached) {
+    private void createLevelSelectorChildScene(int maxLevelReached, int currentLevel) {
 
         int displayedLevelsCount = GameManager.getInstance().displayedLevelsCount();
         mLevelSelectorMenuScene = new LevelSelectorMenuScene(
                 mCamera,
+                currentLevel,
                 maxLevelReached,
                 displayedLevelsCount,
                 Constants.LEVEL_ROWS_PER_SCREEN,

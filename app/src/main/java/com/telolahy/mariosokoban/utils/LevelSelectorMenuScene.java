@@ -59,7 +59,7 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
     // Constructors
     // ===========================================================
 
-    public LevelSelectorMenuScene(Camera pCamera, int maxLevelReached, int levelsCount, int levelRowsPerScreen, int levelColumnsPerScreen, Scene parentScene, LevelSelectorMenuSceneListener listener) {
+    public LevelSelectorMenuScene(Camera pCamera, final int currentLevel, final int maxLevelReached, final int levelsCount, final int levelRowsPerScreen, final int levelColumnsPerScreen, Scene parentScene, LevelSelectorMenuSceneListener listener) {
 
         super(pCamera);
 
@@ -163,7 +163,7 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
         mMinX = -(mPagesCount - 1) * LEVEL_PAGE_WIDTH;
         mMaxX = 0;
 
-        setFocusedLevel(maxLevelReached);
+        setFocusedLevel(Math.min(currentLevel, levelsCount));
     }
 
     // ===========================================================

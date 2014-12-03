@@ -149,7 +149,7 @@ public class GameScene extends BaseScene {
     @Override
     public void onBackKeyPressed() {
 
-        exitGame();
+        exitGame(false);
     }
 
     // ===========================================================
@@ -236,7 +236,7 @@ public class GameScene extends BaseScene {
 
                 switch (pMenuItem.getID()) {
                     case BACK_MENU_ITEM:
-                        exitGame();
+                        exitGame(false);
                         break;
                     case REPLAY_MENU_ITEM:
                         reloadGame();
@@ -255,7 +255,7 @@ public class GameScene extends BaseScene {
             @Override
             public void levelCompleteWindowNextButtonClicked() {
                 GameManager.getInstance().setLevelCompleted(mLevel);
-                exitGame();
+                exitGame(true);
             }
 
             @Override
@@ -639,8 +639,8 @@ public class GameScene extends BaseScene {
         mRetries++;
     }
 
-    private void exitGame() {
-        SceneManager.getInstance().loadMenuScene();
+    private void exitGame(boolean completed) {
+        SceneManager.getInstance().loadMenuScene(completed ? (mLevel + 1) : mLevel);
     }
 
     private void displayErrorLoadingLevel(final String levelFile) {
@@ -658,7 +658,7 @@ public class GameScene extends BaseScene {
                 ad.setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        exitGame();
+                        exitGame(false);
                     }
                 });
                 ad.show();
