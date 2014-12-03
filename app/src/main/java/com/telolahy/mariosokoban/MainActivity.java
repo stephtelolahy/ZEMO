@@ -1,5 +1,9 @@
 package com.telolahy.mariosokoban;
 
+import android.graphics.Point;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 
 import com.telolahy.mariosokoban.manager.GameManager;
@@ -11,6 +15,7 @@ import org.andengine.engine.LimitedFPSEngine;
 import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.WakeLockOptions;
+import org.andengine.engine.options.resolutionpolicy.FillResolutionPolicy;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.ui.activity.BaseGameActivity;
@@ -31,8 +36,15 @@ public class MainActivity extends BaseGameActivity {
 
     @Override
     public EngineOptions onCreateEngineOptions() {
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.heightPixels;
+        int height = metrics.widthPixels;
+        Constants.initWithScreenSize(width, height);
+
         mCamera = new BoundCamera(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-        EngineOptions engineOptions = new EngineOptions(true, Constants.SCREEN_ORIENTATION, new RatioResolutionPolicy(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), mCamera);
+        EngineOptions engineOptions = new EngineOptions(true, Constants.SCREEN_ORIENTATION, new FillResolutionPolicy(), mCamera);
         engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
         engineOptions.getRenderOptions().getConfigChooserOptions().setRequestedMultiSampling(true);
         engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
