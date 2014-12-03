@@ -57,6 +57,7 @@ public class SceneManager {
 
     public void createMenuScene() {
 
+        ResourcesManager.getInstance().loadCommonResources();
         ResourcesManager.getInstance().loadMenuResources();
         int maxLevelReached = GameManager.getInstance().maxLevelReached();
         mMenuScene = new MainMenuScene(maxLevelReached, MainMenuScene.MENU_TYPE_HOME);

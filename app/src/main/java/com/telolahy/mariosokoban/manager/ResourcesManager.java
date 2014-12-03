@@ -41,6 +41,10 @@ public class ResourcesManager {
     private ITexture splashTexture;
     public ITextureRegion splashTextureRegion;
 
+    // common resources
+    private ITexture commonBackButtonTexture;
+    public ITextureRegion commonBackButtonTextureRegion;
+
     // menu resources
     private ITexture menuParallaxLayerBackTexture;
     private ITexture menuParallaxLayerMidTexture;
@@ -82,8 +86,6 @@ public class ResourcesManager {
     public ITextureRegion gameGrassBackgroundTextureRegion;
     private ITexture gameScrollCoachMarkerTexture;
     public ITextureRegion gameScrollCoachMarkerRegion;
-    private ITexture gameBackTexture;
-    public ITextureRegion gameBackTextureRegion;
 
     private ITexture gameReplayTexture;
     public ITextureRegion gameReplayTextureRegion;
@@ -124,6 +126,17 @@ public class ResourcesManager {
 
         splashTexture.unload();
         splashTextureRegion = null;
+    }
+
+    public void loadCommonResources() {
+
+        try {
+            commonBackButtonTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/common/back_button.png", TextureOptions.BILINEAR);
+            commonBackButtonTextureRegion = TextureRegionFactory.extractFromTexture(commonBackButtonTexture);
+            commonBackButtonTexture.load();
+        } catch (IOException e) {
+            Debug.e(e);
+        }
     }
 
     public void loadMenuResources() {
@@ -280,10 +293,6 @@ public class ResourcesManager {
             gameReplayTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/retry.png", TextureOptions.BILINEAR);
             gameReplayTextureRegion = TextureRegionFactory.extractFromTexture(gameReplayTexture);
             gameReplayTexture.load();
-
-            gameBackTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/back.png", TextureOptions.BILINEAR);
-            gameBackTextureRegion = TextureRegionFactory.extractFromTexture(gameBackTexture);
-            gameBackTexture.load();
 
         } catch (IOException e) {
             Debug.e(e);
