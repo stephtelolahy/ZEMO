@@ -5,7 +5,7 @@
     <string name="play">Aventure</string>
     <string name="options">Options</string>
     <string name="level_completed">Mission accomplie !</string>
-    <string name="last_level_completed">Jeu terminé. Félicitations!</string>
+    <string name="last_level_completed">Jeu terminé !</string>
     <string name="retry">Réessayer</string>
     <string name="suivant">Suivant</string>
     <string name="ok">OK</string>

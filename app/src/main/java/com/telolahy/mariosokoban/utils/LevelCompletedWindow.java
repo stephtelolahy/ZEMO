@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
-import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.ResourcesManager;
 
 import org.andengine.engine.camera.Camera;
@@ -167,14 +166,7 @@ public class LevelCompletedWindow extends Sprite {
     private void createStars() {
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
-
-        String text = resourcesManager.activity.getResources().getString(R.string.level_completed);
-        boolean isOnLastLevel = GameManager.getInstance().isOnLastLevel();
-        if (isOnLastLevel) {
-            text = resourcesManager.activity.getResources().getString(R.string.last_level_completed);
-        }
-
-        mTitleText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, resourcesManager.menuItemFont, text, resourcesManager.vertexBufferObjectManager);
+        mTitleText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, resourcesManager.menuItemFont, resourcesManager.activity.getResources().getString(R.string.level_completed), resourcesManager.vertexBufferObjectManager);
 
         int padding = (int) resourcesManager.levelCompletedStarsTextureRegion.getWidth() * 3 / 2;
         mStars[0] = new TiledSprite(Constants.SCREEN_WIDTH / 2 - padding, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);

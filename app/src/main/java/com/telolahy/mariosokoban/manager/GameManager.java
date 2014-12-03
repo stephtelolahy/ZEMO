@@ -22,8 +22,11 @@ public class GameManager {
 
     public int maxLevelReached() {
 
-//        return preferences().getInt(LEVEL_PREFS_KEY, 1);
-        return Constants.TOTAL_LEVELS_COUNT;
+        if (Constants.DEBUG) {
+            return Constants.TOTAL_LEVELS_COUNT + 1;
+        }
+
+        return preferences().getInt(LEVEL_PREFS_KEY, 1);
     }
 
     public int displayedLevelsCount() {
@@ -37,16 +40,12 @@ public class GameManager {
 
     public void setLevelCompleted(int level) {
 
-        int nextLevel = Math.min(level + 1, Constants.TOTAL_LEVELS_COUNT);
+        int nextLevel = level + 1;
         if (nextLevel > maxLevelReached()) {
             SharedPreferences.Editor edit = preferences().edit();
             edit.putInt(LEVEL_PREFS_KEY, nextLevel);
             edit.commit();
         }
-    }
-
-    public boolean isOnLastLevel() {
-        return maxLevelReached() >= Constants.TOTAL_LEVELS_COUNT;
     }
 
     public boolean isMusicEnabled() {

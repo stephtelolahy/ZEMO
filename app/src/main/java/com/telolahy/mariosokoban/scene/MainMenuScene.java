@@ -260,7 +260,9 @@ public class MainMenuScene extends BaseScene {
 
         clearChildScene();
         setChildScene(mLevelSelectorMenuScene);
-        mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.play));
+        String title = GameManager.getInstance().maxLevelReached() > Constants.TOTAL_LEVELS_COUNT ? mActivity.getResources().getString(R.string.last_level_completed) :
+                mActivity.getResources().getString(R.string.play);
+        mTitle.setText(title);
         mLevelSelectorMenuScene.setEnabled(true);
         mCurrentMenuType = MENU_TYPE_LEVEL_SELECTOR;
     }
