@@ -56,11 +56,14 @@ public class ResourcesManager {
     public ITextureRegion menuLevelUnlockedRegion;
     private ITexture menuCurrentLevelUnlockedTexture;
     public ITextureRegion menuCurrentLevelUnlockedRegion;
+    private ITexture menuCreditsBackgroundTexture;
+    public ITextureRegion menuCreditsBackgroundTextureRegion;
 
     public Font menuItemFont;
     public Font menuLevelFont;
     public Font menuTitleFont;
     public Font gameTitleFont;
+    public Font menuCreditsFont;
 
     public Music menuMusic;
 
@@ -161,6 +164,10 @@ public class ResourcesManager {
             menuCurrentLevelUnlockedRegion = TextureRegionFactory.extractFromTexture(menuCurrentLevelUnlockedTexture);
             menuCurrentLevelUnlockedTexture.load();
 
+            menuCreditsBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/credits_background.png", TextureOptions.BILINEAR);
+            menuCreditsBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(menuCreditsBackgroundTexture);
+            menuCreditsBackgroundTexture.load();
+
         } catch (IOException e) {
             Debug.e(e);
         }
@@ -183,6 +190,10 @@ public class ResourcesManager {
         final ITexture gameTitleFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         gameTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), gameTitleFontTexture, activity.getAssets(), "font/font.ttf", 34, true, Color.WHITE, 2, Color.TRANSPARENT);
         gameTitleFont.load();
+
+        final ITexture menuCreditsFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        menuCreditsFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuCreditsFontTexture, activity.getAssets(), "font/font.ttf", 28, true, Color.GRAY, 2, Color.TRANSPARENT);
+        menuCreditsFont.load();
     }
 
     private void loadMenuMusics() {
@@ -203,6 +214,7 @@ public class ResourcesManager {
         menuLevelLockedTexture.unload();
         menuLevelUnlockedTexture.unload();
         menuCurrentLevelUnlockedTexture.unload();
+        menuCreditsBackgroundTexture.unload();
 
         menuParallaxLayerBackRegion = null;
         menuParallaxLayerMidRegion = null;
@@ -211,6 +223,7 @@ public class ResourcesManager {
         menuLevelLockedRegion = null;
         menuLevelUnlockedRegion = null;
         menuCurrentLevelUnlockedRegion = null;
+        menuCreditsBackgroundTextureRegion = null;
     }
 
     public void loadMenuTextures() {

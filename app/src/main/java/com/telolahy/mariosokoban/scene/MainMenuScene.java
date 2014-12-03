@@ -39,6 +39,7 @@ public class MainMenuScene extends BaseScene {
     public static final int MENU_TYPE_HOME = 0;
     public static final int MENU_TYPE_LEVEL_SELECTOR = 1;
     public static final int MENU_TYPE_OPTIONS = 2;
+    public static final int MENU_TYPE_CREDITS = 3;
 
     // ===========================================================
     // Fields
@@ -49,6 +50,7 @@ public class MainMenuScene extends BaseScene {
     private TextMenuItem mMusicTextMenuItem;
     private MenuScene mHomeMenuScene;
     private LevelSelectorMenuScene mLevelSelectorMenuScene;
+    private CreditsScene mCreditsScene;
     private MenuScene mOptionsMenuScene;
 
     private int mCurrentMenuType;
@@ -79,6 +81,7 @@ public class MainMenuScene extends BaseScene {
         createHomeMenuChildScene();
         createOptionsMenuChildScene();
         createLevelSelectorChildScene(maxLevelReached);
+        createCreditsChildScene();
         createHUD();
         setupTouchGesture();
 
@@ -105,6 +108,8 @@ public class MainMenuScene extends BaseScene {
 
         if (mCurrentMenuType == MENU_TYPE_HOME) {
             displayExitDialog();
+        } else if (mCurrentMenuType == MENU_TYPE_CREDITS) {
+            displayOptionsMenu();
         } else {
             displayHomeMenu();
         }
@@ -217,18 +222,10 @@ public class MainMenuScene extends BaseScene {
 
                 switch (pMenuItem.getID()) {
                     case MENU_ITEM_MUSIC:
-                        boolean musicEnabled = GameManager.getInstance().isMusicEnabled();
-                        musicEnabled = !musicEnabled;
-                        String musicText = musicEnabled ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
-                        mMusicTextMenuItem.setText(musicText);
-                        GameManager.getInstance().setMusicEnabled(musicEnabled);
-                        if (musicEnabled) {
-                            playMusic();
-                        } else {
-                            pauseMusic();
-                        }
+                        toggleMusic();
                         return true;
                     case MENU_ITEM_CREDITS:
+                        displayCreditsScene();
                         return true;
                     default:
                         return false;
@@ -254,6 +251,10 @@ public class MainMenuScene extends BaseScene {
                         SceneManager.getInstance().createGameScene(level);
                     }
                 });
+    }
+
+    private void createCreditsChildScene() {
+        mCreditsScene = new CreditsScene();
     }
 
     private void displayLevelSelector() {
@@ -287,6 +288,13 @@ public class MainMenuScene extends BaseScene {
         mCurrentMenuType = MENU_TYPE_OPTIONS;
     }
 
+    private void displayCreditsScene() {
+        clearChildScene();
+        setChildScene(mCreditsScene);
+        mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.credits));
+        mCurrentMenuType = MENU_TYPE_CREDITS;
+    }
+
     private void displayExitDialog() {
 
         mActivity.runOnUiThread(new Runnable() {
@@ -295,17 +303,31 @@ public class MainMenuScene extends BaseScene {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setTitle(mResourcesManager.activity.getResources().getString(R.string.exit));
                 builder.setMessage(mResourcesManager.activity.getResources().getString(R.string.exit_message));
-                builder.setPositiveButton((mResourcesManager.activity.getResources().getString(R.string.yes)), new DialogInterface.OnClickListener() {
+                builder.setNegativeButton((mResourcesManager.activity.getResources().getString(R.string.yes)), new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         System.exit(0);
                     }
                 });
-                builder.setNegativeButton(mResourcesManager.activity.getResources().getString(R.string.no), null);
+                builder.setPositiveButton(mResourcesManager.activity.getResources().getString(R.string.no), null);
                 builder.show();
             }
         });
+    }
+
+    private void toggleMusic() {
+
+        boolean musicEnabled = GameManager.getInstance().isMusicEnabled();
+        musicEnabled = !musicEnabled;
+        String musicText = musicEnabled ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
+        mMusicTextMenuItem.setText(musicText);
+        GameManager.getInstance().setMusicEnabled(musicEnabled);
+        if (musicEnabled) {
+            playMusic();
+        } else {
+            pauseMusic();
+        }
     }
 
     // ===========================================================

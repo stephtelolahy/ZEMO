@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name">Mario Sokoban</string>
     <string name="loading">Chargement ...</string>
-    <string name="help">Aide</string>
     <string name="play">Aventure</string>
     <string name="options">Options</string>
     <string name="level_completed">Mission accomplie !</string>
     <string name="last_level_completed">Jeu terminé !</string>
     <string name="retry">Réessayer</string>
     <string name="suivant">Suivant</string>
-    <string name="ok">OK</string>
     <string name="cannot_load_level">Fichier introuvable: </string>
     <string name="error_loading_level">Erreur</string>
     <string name="close">Fermer</string>
@@ -20,4 +18,6 @@
     <string name="exit_message">Êtes vous sûr de vouloir quitter le jeu ?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+    <string name="game_designer">Game designer</string>
+    <string name="game_designer_value">Malalatiana Randriamasy</string>
 </resources>
