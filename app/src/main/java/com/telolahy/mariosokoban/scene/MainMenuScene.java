@@ -198,14 +198,14 @@ public class MainMenuScene extends BaseScene {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
-                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
+                if (mBackButton.isVisible() && pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
                     onBackKeyPressed();
                 }
                 return true;
             }
         };
-        attachChild(mBackButton);
-        registerTouchArea(mBackButton);
+        mHUD.attachChild(mBackButton);
+        mHUD.registerTouchArea(mBackButton);
 
         mCamera.setHUD(mHUD);
     }
@@ -327,6 +327,7 @@ public class MainMenuScene extends BaseScene {
                 mActivity.getResources().getString(R.string.play);
         mTitle.setText(title);
         mLevelSelectorMenuScene.setEnabled(true);
+        mBackButton.setVisible(true);
         mCurrentMenuType = MENU_TYPE_LEVEL_SELECTOR;
     }
 
@@ -339,6 +340,7 @@ public class MainMenuScene extends BaseScene {
         clearChildScene();
         setChildScene(mHomeMenuScene);
         mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.app_name));
+        mBackButton.setVisible(false);
         mCurrentMenuType = MENU_TYPE_HOME;
     }
 
@@ -347,6 +349,7 @@ public class MainMenuScene extends BaseScene {
         clearChildScene();
         setChildScene(mOptionsMenuScene);
         mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.options));
+        mBackButton.setVisible(true);
         mCurrentMenuType = MENU_TYPE_OPTIONS;
     }
 
@@ -354,6 +357,7 @@ public class MainMenuScene extends BaseScene {
         clearChildScene();
         setChildScene(mCreditsScene);
         mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.credits));
+        mBackButton.setVisible(true);
         mCurrentMenuType = MENU_TYPE_CREDITS;
     }
 
