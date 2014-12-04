@@ -25,12 +25,14 @@ import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
+import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.adt.align.HorizontalAlign;
 
 /**
@@ -58,6 +60,7 @@ public class MainMenuScene extends BaseScene {
 
     private HUD mHUD;
     private Text mTitle;
+    private Sprite mBackButton;
     private TextMenuItem mMusicTextMenuItem;
     private MenuScene mHomeMenuScene;
     private LevelSelectorMenuScene mLevelSelectorMenuScene;
@@ -123,6 +126,8 @@ public class MainMenuScene extends BaseScene {
         mLevelSelectorMenuScene.dispose();
         mHomeMenuScene.dispose();
         mOptionsMenuScene.dispose();
+
+
     }
 
     @Override
@@ -186,6 +191,21 @@ public class MainMenuScene extends BaseScene {
         String gameTitle = mResourcesManager.activity.getResources().getString(R.string.app_name);
         mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, mResourcesManager.menuTitleFont, gameTitle, new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         mHUD.attachChild(mTitle);
+
+        final int LEFT_MARGIN = 64;
+        final int TOP_MARGIN = 48;
+        mBackButton = new Sprite(LEFT_MARGIN,Constants.SCREEN_HEIGHT - TOP_MARGIN, mResourcesManager.commonBackButtonTextureRegion, mVertexBufferObjectManager){
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+
+                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
+                    onBackKeyPressed();
+                }
+                return true;
+            }
+        };
+        attachChild(mBackButton);
+        registerTouchArea(mBackButton);
 
         mCamera.setHUD(mHUD);
     }
