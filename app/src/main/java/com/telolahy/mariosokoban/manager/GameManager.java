@@ -58,6 +58,10 @@ public class GameManager {
         edit.commit();
     }
 
+    public boolean isSnowEnabled() {
+        return true;
+    }
+
     private SharedPreferences preferences() {
 
         return ResourcesManager.getInstance().activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

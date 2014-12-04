@@ -2,14 +2,25 @@ package com.telolahy.mariosokoban.scene;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.opengl.GLES20;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
 import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
 import com.telolahy.mariosokoban.utils.LevelSelectorMenuScene;
+import com.telolahy.mariosokoban.utils.snow.RegisterXSwingEntityModifierInitializer;
 
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.entity.Entity;
+import org.andengine.entity.particle.BatchedPseudoSpriteParticleSystem;
+import org.andengine.entity.particle.emitter.RectangleParticleEmitter;
+import org.andengine.entity.particle.initializer.AccelerationParticleInitializer;
+import org.andengine.entity.particle.initializer.ExpireParticleInitializer;
+import org.andengine.entity.particle.initializer.RotationParticleInitializer;
+import org.andengine.entity.particle.initializer.ScaleParticleInitializer;
+import org.andengine.entity.particle.initializer.VelocityParticleInitializer;
+import org.andengine.entity.particle.modifier.AlphaParticleModifier;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -83,6 +94,11 @@ public class MainMenuScene extends BaseScene {
         createOptionsMenuChildScene();
         createLevelSelectorChildScene(maxLevelReached, currentLevel);
         createCreditsChildScene();
+
+        if (GameManager.getInstance().isSnowEnabled()) {
+            createSnowScene();
+        }
+
         createHUD();
         setupTouchGesture();
 
@@ -151,7 +167,7 @@ public class MainMenuScene extends BaseScene {
     private void createBackground() {
 
         final AutoParallaxBackground autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
-        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0, new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.menuParallaxLayerBackRegion, mVertexBufferObjectManager)));
+        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0, new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerBackRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerBackRegion, mVertexBufferObjectManager)));
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-2.f, 2.f, new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerMidRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegion, mVertexBufferObjectManager)));
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.f, new Sprite(Constants.SCREEN_WIDTH / 2, mResourcesManager.menuParallaxLayerFrontRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerFrontRegion, mVertexBufferObjectManager)));
         setBackground(autoParallaxBackground);
@@ -238,6 +254,25 @@ public class MainMenuScene extends BaseScene {
                 }
             }
         });
+    }
+
+    private void createSnowScene() {
+
+        final BatchedPseudoSpriteParticleSystem particleSystem = new BatchedPseudoSpriteParticleSystem(
+                new RectangleParticleEmitter(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT, Constants.SCREEN_WIDTH, 1),
+                2, 5, 100, mResourcesManager.menuSnowParticleTextureRegion,
+                mVertexBufferObjectManager);
+        particleSystem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE);
+        particleSystem.addParticleInitializer(new VelocityParticleInitializer<Entity>(-3, 3, -20, -40));
+        particleSystem.addParticleInitializer(new AccelerationParticleInitializer<Entity>(-3, 3, -3, -5));
+        particleSystem.addParticleInitializer(new RotationParticleInitializer<Entity>(0.0f, 360.0f));
+        particleSystem.addParticleInitializer(new ExpireParticleInitializer<Entity>(10f));
+        particleSystem.addParticleInitializer(new ScaleParticleInitializer<Entity>(0.2f, 0.5f));
+        particleSystem.addParticleInitializer(new RegisterXSwingEntityModifierInitializer<Entity>(10f, 0f, (float) Math.PI * 8, 3f, 25f, true));
+
+        particleSystem.addParticleModifier(new AlphaParticleModifier<Entity>(6f, 10f, 1.0f, 0.0f));
+
+        attachChild(particleSystem);
     }
 
     private void createLevelSelectorChildScene(int maxLevelReached, int currentLevel) {

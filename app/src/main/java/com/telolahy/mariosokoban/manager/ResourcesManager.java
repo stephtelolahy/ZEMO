@@ -62,6 +62,8 @@ public class ResourcesManager {
     public ITextureRegion menuCurrentLevelUnlockedRegion;
     private ITexture menuCreditsBackgroundTexture;
     public ITextureRegion menuCreditsBackgroundTextureRegion;
+    private ITexture menuSnowParticleTexture;
+    public ITextureRegion menuSnowParticleTextureRegion;
 
     public Font menuItemFont;
     public Font menuLevelFont;
@@ -180,6 +182,10 @@ public class ResourcesManager {
             menuCreditsBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/credits_background.png", TextureOptions.BILINEAR);
             menuCreditsBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(menuCreditsBackgroundTexture);
             menuCreditsBackgroundTexture.load();
+
+            menuSnowParticleTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/snow-particle.png", TextureOptions.BILINEAR);
+            menuSnowParticleTextureRegion = TextureRegionFactory.extractFromTexture(menuSnowParticleTexture);
+            menuSnowParticleTexture.load();
 
         } catch (IOException e) {
             Debug.e(e);
