@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.telolahy.mariosokoban.Constants;
 
+import java.io.IOException;
+
 /**
  * Created by stephanohuguestelolahy on 11/25/14.
  */
@@ -65,5 +67,15 @@ public class GameManager {
     private SharedPreferences preferences() {
 
         return ResourcesManager.getInstance().activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
+    public int listLevelsAssetFiles(Context context) {
+
+        try {
+            String[] list = context.getAssets().list("level");
+            return list.length;
+        } catch (IOException e) {
+            return 0;
+        }
     }
 }

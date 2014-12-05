@@ -25,7 +25,6 @@ import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
-import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.AnimatedSprite;
@@ -194,7 +193,7 @@ public class MainMenuScene extends BaseScene {
 
         final int LEFT_MARGIN = 64;
         final int TOP_MARGIN = 48;
-        mBackButton = new Sprite(LEFT_MARGIN,Constants.SCREEN_HEIGHT - TOP_MARGIN, mResourcesManager.commonBackButtonTextureRegion, mVertexBufferObjectManager){
+        mBackButton = new Sprite(LEFT_MARGIN, Constants.SCREEN_HEIGHT - TOP_MARGIN, mResourcesManager.commonBackButtonTextureRegion, mVertexBufferObjectManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 

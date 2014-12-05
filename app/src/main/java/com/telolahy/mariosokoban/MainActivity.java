@@ -37,7 +37,9 @@ public class MainActivity extends BaseGameActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.heightPixels;
         int height = metrics.widthPixels;
-        Constants.initWithScreenSize(width, height);
+        Constants.SCREEN_HEIGHT = height * Constants.SCREEN_WIDTH / width;
+
+        Constants.TOTAL_LEVELS_COUNT = GameManager.getInstance().listLevelsAssetFiles(this);
 
         mCamera = new BoundCamera(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         EngineOptions engineOptions = new EngineOptions(true, Constants.SCREEN_ORIENTATION, new FillResolutionPolicy(), mCamera);
