@@ -1,6 +1,7 @@
 package com.telolahy.mariosokoban.utils;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.manager.ResourcesManager;
@@ -177,6 +178,13 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
     // ===========================================================
     // Methods from SuperClass
     // ===========================================================
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+
+        Log.i("", "finalize " + this.getClass().getName());
+    }
 
     // ===========================================================
     // Methods from Interfaces

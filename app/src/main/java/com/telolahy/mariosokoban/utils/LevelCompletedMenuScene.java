@@ -25,7 +25,7 @@ import java.security.InvalidParameterException;
 /**
  * Created by stephanohuguestelolahy on 11/27/14.
  */
-public class LevelCompletedWindow extends Sprite {
+public class LevelCompletedMenuScene extends MenuScene {
 
     // ===========================================================
     // Constants
@@ -38,19 +38,20 @@ public class LevelCompletedWindow extends Sprite {
     // Fields
     // ===========================================================
 
-    private MenuScene mMenuScene;
+    private Sprite mBackgroundSprite;
     private TiledSprite mStars[] = new TiledSprite[3];
     private Text mTitleText;
-    private LevelCompleteWindowListener mListener;
+    private LevelCompletedMenuSceneListener mListener;
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    public LevelCompletedWindow(LevelCompleteWindowListener listener) {
+    public LevelCompletedMenuScene(Camera pCamera, LevelCompletedMenuSceneListener listener) {
 
-        super(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, ResourcesManager.getInstance().levelCompletedBackgroundTextureRegion, ResourcesManager.getInstance().vertexBufferObjectManager);
+        super(pCamera);
         mListener = listener;
+        createBackground();
         createStars();
         createMenu();
     }
@@ -78,7 +79,7 @@ public class LevelCompletedWindow extends Sprite {
     // Public Methods
     // ===========================================================
 
-    public void display(int starsCount, final Scene scene, Camera camera) {
+    public void display(int starsCount, final Scene parentScene) {
 
         if (starsCount < 1 || starsCount > 3) {
             throw new InvalidParameterException("stars count should be in (1-3)");
@@ -93,20 +94,17 @@ public class LevelCompletedWindow extends Sprite {
         }
 
         // Hide HUD
-        if (camera.getHUD() != null) {
-            camera.getHUD().setVisible(false);
+        if (mCamera.getHUD() != null) {
+            mCamera.getHUD().setVisible(false);
         }
 
         // Disable camera chase entity
-        camera.setChaseEntity(null);
+        mCamera.setChaseEntity(null);
 
         // Attach our level complete panel in the middle of camera
-        setPosition(camera.getCenterX(), camera.getCenterY());
-
-        this.setAlpha(0);
-        scene.attachChild(this);
-
-        this.registerEntityModifier(new FadeInModifier(1.f, new IEntityModifier.IEntityModifierListener() {
+        mBackgroundSprite.setAlpha(0);
+        parentScene.attachChild(mBackgroundSprite);
+        mBackgroundSprite.registerEntityModifier(new FadeInModifier(1.f, new IEntityModifier.IEntityModifierListener() {
             @Override
             public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem) {
 
@@ -115,15 +113,7 @@ public class LevelCompletedWindow extends Sprite {
             @Override
             public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem) {
 
-                attachChild(mTitleText);
-
-                // Attach stars
-                attachChild(mStars[0]);
-                attachChild(mStars[1]);
-                attachChild(mStars[2]);
-
-                // Attach menu childScene
-                scene.setChildScene(mMenuScene);
+                parentScene.setChildScene(LevelCompletedMenuScene.this);
             }
         }));
     }
@@ -132,29 +122,33 @@ public class LevelCompletedWindow extends Sprite {
     // Private Methods
     // ===========================================================
 
-    private void createMenu() {
+    private void createBackground() {
 
-        mMenuScene = new MenuScene(ResourcesManager.getInstance().camera);
+        ResourcesManager resourcesManager = ResourcesManager.getInstance();
+        mBackgroundSprite = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, resourcesManager.levelCompletedBackgroundTextureRegion, resourcesManager.vertexBufferObjectManager);
+    }
+
+    private void createMenu() {
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
         TextMenuItem textMenuItem = new TextMenuItem(MENU_ITEM_NEXT, resourcesManager.menuItemFont, resourcesManager.activity.getResources().getString(R.string.suivant), resourcesManager.vertexBufferObjectManager);
         IMenuItem menuItem = new ScaleMenuItemDecorator(textMenuItem, 1.2f, 1);
-        mMenuScene.addMenuItem(menuItem);
+        addMenuItem(menuItem);
 
-        mMenuScene.buildAnimations();
-        mMenuScene.setBackgroundEnabled(false);
+        buildAnimations();
+        setBackgroundEnabled(false);
         menuItem.setPosition(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 4);
 
-        mMenuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
+        setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
                 switch (pMenuItem.getID()) {
                     case MENU_ITEM_REPLAY:
-                        mListener.levelCompleteWindowReplayButtonClicked();
+                        mListener.levelCompletedMenuSceneReplayButtonClicked();
                         return true;
                     case MENU_ITEM_NEXT:
-                        mListener.levelCompleteWindowNextButtonClicked();
+                        mListener.levelCompletedMenuSceneNextButtonClicked();
                         return true;
                     default:
                         return false;
@@ -167,22 +161,26 @@ public class LevelCompletedWindow extends Sprite {
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
         mTitleText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, resourcesManager.menuItemFont, resourcesManager.activity.getResources().getString(R.string.level_completed), resourcesManager.vertexBufferObjectManager);
+        attachChild(mTitleText);
 
         int padding = (int) resourcesManager.levelCompletedStarsTextureRegion.getWidth() * 3 / 2;
         mStars[0] = new TiledSprite(Constants.SCREEN_WIDTH / 2 - padding, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
         mStars[1] = new TiledSprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
         mStars[2] = new TiledSprite(Constants.SCREEN_WIDTH / 2 + padding, Constants.SCREEN_HEIGHT / 2, resourcesManager.levelCompletedStarsTextureRegion, resourcesManager.vertexBufferObjectManager);
+        attachChild(mStars[0]);
+        attachChild(mStars[1]);
+        attachChild(mStars[2]);
     }
 
     // ===========================================================
     // Inner Classes/Interfaces
     // ===========================================================
 
-    public interface LevelCompleteWindowListener {
+    public interface LevelCompletedMenuSceneListener {
 
-        void levelCompleteWindowNextButtonClicked();
+        void levelCompletedMenuSceneNextButtonClicked();
 
-        void levelCompleteWindowReplayButtonClicked();
+        void levelCompletedMenuSceneReplayButtonClicked();
     }
 
 }

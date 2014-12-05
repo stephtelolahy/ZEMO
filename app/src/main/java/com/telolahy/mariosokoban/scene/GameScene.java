@@ -11,7 +11,7 @@ import com.telolahy.mariosokoban.manager.ResourcesManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
 import com.telolahy.mariosokoban.object.GameCharacter;
 import com.telolahy.mariosokoban.object.GameMap;
-import com.telolahy.mariosokoban.utils.LevelCompletedWindow;
+import com.telolahy.mariosokoban.utils.LevelCompletedMenuScene;
 import com.telolahy.mariosokoban.utils.LongScrollDetector;
 
 import org.andengine.engine.Engine;
@@ -72,7 +72,7 @@ public class GameScene extends BaseScene {
     private static int mY0;
     private static int mBlocSize;
 
-    private LevelCompletedWindow mLevelCompletedWindow;
+    private LevelCompletedMenuScene mLevelCompletedMenuScene;
 
     // ===========================================================
     // Constructors
@@ -106,7 +106,7 @@ public class GameScene extends BaseScene {
         createHUD();
         loadLevel(mLevel);
         setupGestureDetector();
-        createLevelCompletedWindow();
+        createLevelCompletedChildScene();
         if (mLevel == 1) {
             mResourcesManager.engine.registerUpdateHandler(new TimerHandler(1.f, new ITimerCallback() {
                 public void onTimePassed(final TimerHandler pTimerHandler) {
@@ -128,8 +128,8 @@ public class GameScene extends BaseScene {
                 sprite.detachSelf();
         }
 
-        if (mLevelCompletedWindow != null) {
-            mLevelCompletedWindow.detachSelf();
+        if (mLevelCompletedMenuScene != null) {
+            mLevelCompletedMenuScene.detachSelf();
         }
 
         clearChildScene();
@@ -249,17 +249,17 @@ public class GameScene extends BaseScene {
         setChildScene(menuScene);
     }
 
-    private void createLevelCompletedWindow() {
+    private void createLevelCompletedChildScene() {
 
-        mLevelCompletedWindow = new LevelCompletedWindow(new LevelCompletedWindow.LevelCompleteWindowListener() {
+        mLevelCompletedMenuScene = new LevelCompletedMenuScene(mCamera, new LevelCompletedMenuScene.LevelCompletedMenuSceneListener() {
             @Override
-            public void levelCompleteWindowNextButtonClicked() {
+            public void levelCompletedMenuSceneNextButtonClicked() {
                 GameManager.getInstance().setLevelCompleted(mLevel);
                 exitGame(true);
             }
 
             @Override
-            public void levelCompleteWindowReplayButtonClicked() {
+            public void levelCompletedMenuSceneReplayButtonClicked() {
                 reloadGame();
             }
         });
@@ -614,8 +614,11 @@ public class GameScene extends BaseScene {
 
     private void showGameCompleted() {
 
+        clearChildScene();
+        setChildScene(mLevelCompletedMenuScene);
+
         int starsCount = mRetries == 0 ? 3 : 2;
-        mLevelCompletedWindow.display(starsCount, this, mCamera);
+        mLevelCompletedMenuScene.display(starsCount, this);
     }
 
     private void reloadGame() {
