@@ -69,7 +69,7 @@ public class GameManager {
         return ResourcesManager.getInstance().activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    public int listLevelsAssetFiles(Context context) {
+    public int countLevelsAssetFiles(Context context) {
 
         try {
             String[] list = context.getAssets().list("level");

@@ -16,6 +16,7 @@ public class GameMap {
 
     public static final char EMPTY = ' ';
     public static final char WALL = '#';
+    public static final char INTERNAL_WALL = 'x';
     public static final char BOX = '$';
     public static final char BOX_ON_GOAL = '*';
     public static final char GOAL = '.';
@@ -25,6 +26,7 @@ public class GameMap {
     private int mSizeX;
     private int mSizeY;
     private char mElement[][];
+    private boolean mInternalWall[][];
 
     public int getSizeX() {
         return mSizeX;
@@ -59,8 +61,7 @@ public class GameMap {
     public boolean loadLevel(String file, Context context) {
 
         ArrayList<String> lines = new ArrayList<String>();
-        int linesCount = 0;
-        int columnsCount = 0;
+        int maxX = 0;
 
         InputStream inputStream = null;
         try {
@@ -68,10 +69,8 @@ public class GameMap {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
-
                 lines.add(line);
-                linesCount++;
-                columnsCount = Math.max(columnsCount, line.length());
+                maxX = Math.max(maxX, line.length());
             }
 
             inputStream.close();
@@ -81,24 +80,34 @@ public class GameMap {
             return false;
         }
 
-        mSizeX = columnsCount;
-        mSizeY = linesCount;
-        mElement = new char[columnsCount][linesCount];
+        mSizeX = maxX;
+        mSizeY = lines.size();
+        mElement = new char[mSizeX][mSizeY];
+        mInternalWall = new boolean[mSizeX][mSizeY];
 
-        for (int y = 0; y < linesCount; y++) {
+        for (int y = 0; y < mSizeY; y++) {
 
-            String line = lines.get(linesCount - 1 - y);
+            String line = lines.get(mSizeY - 1 - y);
             int lineLength = line.length();
-            for (int x = 0; x < columnsCount; x++) {
+            for (int x = 0; x < mSizeX; x++) {
 
                 if (x < lineLength) {
-                    mElement[x][y] = line.charAt(x);
+                    char el = line.charAt(x);
+                    if (el == INTERNAL_WALL) {
+                        mElement[x][y] = WALL;
+                        mInternalWall[x][y] = true;
+                    } else {
+                        mElement[x][y] = el;
+                        mInternalWall[x][y] = false;
+                    }
                 } else {
                     mElement[x][y] = EMPTY;
+                    mInternalWall[x][y] = false;
                 }
             }
         }
-        return true;
+
+        return validateLevel();
     }
 
     public boolean isLevelCompleted() {
@@ -110,6 +119,41 @@ public class GameMap {
             }
         }
         return true;
+    }
+
+    private boolean validateLevel() {
+
+        int boxesCount = 0;
+        int goalsCount = 0;
+        int playerCount = 0;
+
+        for (int y = 0; y < mSizeY; y++) {
+            for (int x = 0; x < mSizeX; x++) {
+                switch (mElement[x][y]) {
+                    case PLAYER:
+                        playerCount++;
+                        break;
+                    case BOX:
+                        boxesCount++;
+                        break;
+                    case GOAL:
+                        goalsCount++;
+                        break;
+                    case PLAYER_ON_GOAL:
+                        playerCount++;
+                        goalsCount++;
+                        break;
+                    case BOX_ON_GOAL:
+                        boxesCount++;
+                        goalsCount++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return (playerCount == 1 && boxesCount == goalsCount);
     }
 
 }
