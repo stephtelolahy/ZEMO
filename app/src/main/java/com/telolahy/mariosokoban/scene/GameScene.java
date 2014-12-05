@@ -615,8 +615,6 @@ public class GameScene extends BaseScene {
     private void showGameCompleted() {
 
         clearChildScene();
-        setChildScene(mLevelCompletedMenuScene);
-
         int starsCount = mRetries == 0 ? 3 : 2;
         mLevelCompletedMenuScene.display(starsCount, this);
     }
