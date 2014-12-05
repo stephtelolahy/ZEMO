@@ -397,21 +397,56 @@ public class GameScene extends BaseScene {
 
     private ITextureRegion wallTextureForWallAtPosition(int x, int y) {
 
-        if (mGame.getElement(new Point(x - 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y + 1)) != GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
-            return mResourcesManager.gameWallTextureRegion[0];
-        } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y + 1)) != GameMap.WALL && mGame.getElement(new Point(x + 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
-            return mResourcesManager.gameWallTextureRegion[2];
-        } else if (mGame.getElement(new Point(x - 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) != GameMap.WALL) {
-            return mResourcesManager.gameWallTextureRegion[5];
-        } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) != GameMap.WALL && mGame.getElement(new Point(x, y - 1)) != GameMap.WALL) {
+        Point cur = new Point(x, y);
+        Point up = new Point(x, y + 1);
+        Point down = new Point(x, y - 1);
+        Point left = new Point(x - 1, y);
+        Point right = new Point(x + 1, y);
+
+        if (mGame.getWall(cur) == GameMap.INTERNAL_WALL) {
             return mResourcesManager.gameWallTextureRegion[6];
-        } else if (mGame.getElement(new Point(x - 1, y)) == GameMap.WALL && mGame.getElement(new Point(x + 1, y)) == GameMap.WALL) {
+        }
+
+        if (mGame.getWall(left) != GameMap.WALL
+                && mGame.getWall(up) != GameMap.WALL
+                && mGame.getWall(right) == GameMap.WALL
+                && mGame.getWall(down) == GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[0];
+        }
+
+        if (mGame.getWall(left) == GameMap.WALL
+                && mGame.getWall(up) != GameMap.WALL
+                && mGame.getWall(right) != GameMap.WALL
+                && mGame.getWall(down) == GameMap.WALL) {
             return mResourcesManager.gameWallTextureRegion[1];
-        } else if (mGame.getElement(new Point(x, y + 1)) == GameMap.WALL && mGame.getElement(new Point(x, y - 1)) == GameMap.WALL) {
+        }
+
+        if (mGame.getWall(left) == GameMap.WALL
+                && mGame.getWall(up) == GameMap.WALL
+                && mGame.getWall(right) != GameMap.WALL
+                && mGame.getWall(down) != GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[2];
+        }
+
+        if (mGame.getWall(left) != GameMap.WALL
+                && mGame.getWall(up) == GameMap.WALL
+                && mGame.getWall(right) == GameMap.WALL
+                && mGame.getWall(down) != GameMap.WALL) {
             return mResourcesManager.gameWallTextureRegion[3];
-        } else {
+        }
+
+        if (mGame.getWall(left) == GameMap.WALL
+                && mGame.getWall(right) == GameMap.WALL) {
             return mResourcesManager.gameWallTextureRegion[4];
         }
+
+        if (mGame.getWall(up) == GameMap.WALL
+                && mGame.getWall(down) == GameMap.WALL) {
+            return mResourcesManager.gameWallTextureRegion[5];
+        }
+
+        return mResourcesManager.gameWallTextureRegion[6];
+
     }
 
     private boolean canMoveMario(final Point direction) {

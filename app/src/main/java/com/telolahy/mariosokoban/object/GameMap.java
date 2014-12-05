@@ -26,7 +26,7 @@ public class GameMap {
     private int mSizeX;
     private int mSizeY;
     private char mElement[][];
-    private boolean mInternalWall[][];
+    private char mWall[][];
 
     public int getSizeX() {
         return mSizeX;
@@ -36,7 +36,7 @@ public class GameMap {
         return mSizeY;
     }
 
-    public int getElement(Point position) {
+    public char getElement(Point position) {
 
         if (isValidCoordinate(position)) {
             return mElement[position.x][position.y];
@@ -45,8 +45,20 @@ public class GameMap {
         }
     }
 
+    public char getWall(Point position) {
+
+        if (isValidCoordinate(position)) {
+            return mWall[position.x][position.y];
+        } else {
+            return EMPTY;
+        }
+    }
+
     public void setElement(Point position, char element) {
-        mElement[position.x][position.y] = element;
+
+        if (isValidCoordinate(position)) {
+            mElement[position.x][position.y] = element;
+        }
     }
 
     public boolean isValidCoordinate(Point point) {
@@ -83,7 +95,7 @@ public class GameMap {
         mSizeX = maxX;
         mSizeY = lines.size();
         mElement = new char[mSizeX][mSizeY];
-        mInternalWall = new boolean[mSizeX][mSizeY];
+        mWall = new char[mSizeX][mSizeY];
 
         for (int y = 0; y < mSizeY; y++) {
 
@@ -95,14 +107,14 @@ public class GameMap {
                     char el = line.charAt(x);
                     if (el == INTERNAL_WALL) {
                         mElement[x][y] = WALL;
-                        mInternalWall[x][y] = true;
+                        mWall[x][y] = el;
                     } else {
                         mElement[x][y] = el;
-                        mInternalWall[x][y] = false;
+                        mWall[x][y] = el == WALL ? el : EMPTY;
                     }
                 } else {
                     mElement[x][y] = EMPTY;
-                    mInternalWall[x][y] = false;
+                    mWall[x][y] = EMPTY;
                 }
             }
         }
