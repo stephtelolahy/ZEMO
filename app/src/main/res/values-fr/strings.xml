@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ZE'MO</string>
+    <string name="app_name">ZE\'MO</string>
     <string name="loading">Chargement ...</string>
     <string name="play">Aventure</string>
     <string name="options">Options</string>
