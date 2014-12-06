@@ -60,10 +60,6 @@ public class GameManager {
         edit.commit();
     }
 
-    public boolean isSnowEnabled() {
-        return true;
-    }
-
     private SharedPreferences preferences() {
 
         return ResourcesManager.getInstance().activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -77,5 +73,13 @@ public class GameManager {
         } catch (IOException e) {
             return 0;
         }
+    }
+
+    public boolean isSnowEnabled() {
+        return maxLevelReached() >= 12;
+    }
+
+    public boolean isCloudEnabled() {
+        return maxLevelReached() >= 6;
     }
 }

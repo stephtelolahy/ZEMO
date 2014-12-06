@@ -173,6 +173,11 @@ public class MainMenuScene extends BaseScene {
         final AutoParallaxBackground autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0, new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerBackRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerBackRegion, mVertexBufferObjectManager)));
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-1.f, 2.67f, new Sprite(Constants.SCREEN_WIDTH / 2, mResourcesManager.menuParallaxLayerMidRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegion, mVertexBufferObjectManager)));
+
+        if (GameManager.getInstance().isCloudEnabled()) {
+            autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-1.f, new Sprite(Constants.SCREEN_WIDTH / 2,  Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerMidRegionCloud.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegionCloud, mVertexBufferObjectManager)));
+        }
+
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.f, 1.3f, new Sprite(Constants.SCREEN_WIDTH / 2, mResourcesManager.menuParallaxLayerFrontRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerFrontRegion, mVertexBufferObjectManager)));
         setBackground(autoParallaxBackground);
 

@@ -69,6 +69,10 @@ public class ResourcesManager {
     private ITexture menuPlayerTexture;
     public ITextureRegion menuParallaxLayerBackRegion;
     public ITextureRegion menuParallaxLayerMidRegion;
+
+    private ITexture getMenuParallaxLayerMidTextureCloud;
+    public ITextureRegion menuParallaxLayerMidRegionCloud;
+
     public ITextureRegion menuParallaxLayerFrontRegion;
     public TiledTextureRegion menuPlayerTextureRegion;
     public ITextureRegion menuLevelLockedRegion;
@@ -169,6 +173,10 @@ public class ResourcesManager {
             menuParallaxLayerMidTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/parallax_background_layer_mid.png", TextureOptions.BILINEAR);
             menuParallaxLayerMidRegion = TextureRegionFactory.extractFromTexture(menuParallaxLayerMidTexture);
             menuParallaxLayerMidTexture.load();
+
+            getMenuParallaxLayerMidTextureCloud = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/parallax_background_layer_mid_cloud.png", TextureOptions.BILINEAR);
+            menuParallaxLayerMidRegionCloud = TextureRegionFactory.extractFromTexture(getMenuParallaxLayerMidTextureCloud);
+            getMenuParallaxLayerMidTextureCloud.load();
 
             menuParallaxLayerBackTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/parallax_background_layer_back.png", TextureOptions.BILINEAR);
             menuParallaxLayerBackRegion = TextureRegionFactory.extractFromTexture(menuParallaxLayerBackTexture);
