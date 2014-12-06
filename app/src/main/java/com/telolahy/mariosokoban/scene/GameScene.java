@@ -3,7 +3,6 @@ package com.telolahy.mariosokoban.scene;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Point;
-import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
@@ -20,8 +19,10 @@ import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.PathModifier;
 import org.andengine.entity.modifier.PathModifier.Path;
+import org.andengine.entity.modifier.ScaleModifier;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
@@ -33,6 +34,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.PinchZoomDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
+import org.andengine.util.modifier.IModifier;
 import org.andengine.util.modifier.ease.EaseStrongIn;
 import org.andengine.util.modifier.ease.IEaseFunction;
 
@@ -127,11 +129,10 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
         loadLevel(mLevel);
         createLevelCompletedChildScene();
         if (mLevel == 1) {
-            mResourcesManager.engine.registerUpdateHandler(new TimerHandler(1.f, new ITimerCallback() {
-                public void onTimePassed(final TimerHandler pTimerHandler) {
-                    createLevel1CoachMarker();
-                }
-            }));
+            createScrollCoachMarker();
+        }
+        if (mLevel == 2) {
+            createPinchCoachMarker();
         }
         setupGestureDetector();
     }
@@ -296,36 +297,67 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
         });
     }
 
-    private void createLevel1CoachMarker() {
+    private void createScrollCoachMarker() {
 
-        final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH / 5, Constants.SCREEN_HEIGHT / 2 - mResourcesManager.gameScrollCoachMarkerRegion.getHeight(), mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
-        attachChild(scrollCoachMarker);
+        mResourcesManager.engine.registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback() {
+            public void onTimePassed(final TimerHandler pTimerHandler) {
 
-        int x1 = mX0 + 1 * mBlocSize + mBlocSize / 2;
-        int y1 = mY0 + 1 * mBlocSize + mBlocSize / 2 - (int) mResourcesManager.gameScrollCoachMarkerRegion.getHeight();
-        float x2 = mX0 + (mGame.getSizeX() - 1) * mBlocSize + mBlocSize / 2;
-        float y2 = y1;
-        final Path path = new Path(2).to(x1, y1).to(x2, y2);
-        scrollCoachMarker.registerEntityModifier(new PathModifier(2.f, path, null, new PathModifier.IPathModifierListener() {
-            @Override
-            public void onPathStarted(PathModifier pPathModifier, IEntity pEntity) {
+                final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH / 5, Constants.SCREEN_HEIGHT / 2 - mResourcesManager.gameScrollCoachMarkerRegion.getHeight(), mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
+                attachChild(scrollCoachMarker);
 
+                int x1 = mX0 + 1 * mBlocSize + mBlocSize / 2;
+                int y1 = mY0 + 1 * mBlocSize + mBlocSize / 2 - (int) mResourcesManager.gameScrollCoachMarkerRegion.getHeight();
+                float x2 = mX0 + (mGame.getSizeX() - 1) * mBlocSize + mBlocSize / 2;
+                float y2 = y1;
+                final Path path = new Path(2).to(x1, y1).to(x2, y2);
+                scrollCoachMarker.registerEntityModifier(new PathModifier(2.f, path, null, new PathModifier.IPathModifierListener() {
+                    @Override
+                    public void onPathStarted(PathModifier pPathModifier, IEntity pEntity) {
+
+                    }
+
+                    @Override
+                    public void onPathWaypointStarted(PathModifier pPathModifier, IEntity pEntity, int pWaypointIndex) {
+
+                    }
+
+                    @Override
+                    public void onPathWaypointFinished(PathModifier pPathModifier, IEntity pEntity, int pWaypointIndex) {
+
+                    }
+
+                    @Override
+                    public void onPathFinished(PathModifier pPathModifier, IEntity pEntity) {
+
+                        scrollCoachMarker.detachSelf();
+                    }
+                }));
             }
+        }));
 
-            @Override
-            public void onPathWaypointStarted(PathModifier pPathModifier, IEntity pEntity, int pWaypointIndex) {
+    }
 
-            }
+    private void createPinchCoachMarker() {
 
-            @Override
-            public void onPathWaypointFinished(PathModifier pPathModifier, IEntity pEntity, int pWaypointIndex) {
+        mResourcesManager.engine.registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback() {
+            public void onTimePassed(final TimerHandler pTimerHandler) {
 
-            }
+                final Sprite pinchCoachMarker = new Sprite(mCamera.getCenterX(), mCamera.getCenterY() - mResourcesManager.gamePinchCoachMarkerRegion.getHeight(), mResourcesManager.gamePinchCoachMarkerRegion, mVertexBufferObjectManager);
+                attachChild(pinchCoachMarker);
 
-            @Override
-            public void onPathFinished(PathModifier pPathModifier, IEntity pEntity) {
+                pinchCoachMarker.registerEntityModifier(new ScaleModifier(3.f, 1.f, 1.f, new IEntityModifier.IEntityModifierListener() {
+                    @Override
+                    public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem) {
 
-                scrollCoachMarker.detachSelf();
+                    }
+
+                    @Override
+                    public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem) {
+
+                        pinchCoachMarker.detachSelf();
+
+                    }
+                }));
             }
         }));
     }
