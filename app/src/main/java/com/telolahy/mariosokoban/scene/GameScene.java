@@ -124,7 +124,7 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
 
         mLevel = params[0];
 
-        mCamera.setZoomFactor(Constants.GAME_MAX_SCENE_SCALE);
+        mCamera.setZoomFactor(Constants.GAME_DEFAULT_SCENE_SCALE);
 
         createBackground();
         createHUD();
