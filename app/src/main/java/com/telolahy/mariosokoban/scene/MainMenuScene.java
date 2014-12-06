@@ -192,7 +192,7 @@ public class MainMenuScene extends BaseScene {
 
         final int LEFT_MARGIN = 64;
         final int TOP_MARGIN = 48;
-        mBackButton = new Sprite(LEFT_MARGIN, Constants.SCREEN_HEIGHT - TOP_MARGIN, mResourcesManager.commonBackButtonTextureRegion, mVertexBufferObjectManager) {
+        mBackButton = new Sprite(LEFT_MARGIN, Constants.SCREEN_HEIGHT - TOP_MARGIN, mResourcesManager.menuBackButtonTextureRegion, mVertexBufferObjectManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 

@@ -28,6 +28,25 @@ import java.io.IOException;
  */
 public class ResourcesManager {
 
+    public static class TextureDescription {
+
+        protected final String textureFile;
+        protected ITexture texture;
+        public ITextureRegion textureRegion;
+
+        public TextureDescription(String file) {
+            textureFile = file;
+        }
+
+        public void load() {
+
+        }
+
+        public void unload() {
+
+        }
+    }
+
     private static final ResourcesManager INSTANCE = new ResourcesManager();
 
     private static final int GAME_WALL_TEXTURES_COUNT = 7;
@@ -40,10 +59,6 @@ public class ResourcesManager {
     // splash resources
     private ITexture splashTexture;
     public ITextureRegion splashTextureRegion;
-
-    // common resources
-    private ITexture commonBackButtonTexture;
-    public ITextureRegion commonBackButtonTextureRegion;
 
     // menu resources
     private ITexture menuParallaxLayerBackTexture;
@@ -64,6 +79,8 @@ public class ResourcesManager {
     public ITextureRegion menuCreditsBackgroundTextureRegion;
     private ITexture menuSnowParticleTexture;
     public ITextureRegion menuSnowParticleTextureRegion;
+    private ITexture menuBackButtonTexture;
+    public ITextureRegion menuBackButtonTextureRegion;
 
     public Font menuItemFont;
     public Font menuLevelFont;
@@ -89,6 +106,10 @@ public class ResourcesManager {
     public ITextureRegion gameGrassBackgroundTextureRegion;
     private ITexture gameScrollCoachMarkerTexture;
     public ITextureRegion gameScrollCoachMarkerRegion;
+    private ITexture gamePinchCoachMarkerTexture;
+    public ITextureRegion gamePinchCoachMarkerRegion;
+    private ITexture gameBackButtonTexture;
+    public ITextureRegion gameBackButtonTextureRegion;
 
     private ITexture gameReplayTexture;
     public ITextureRegion gameReplayTextureRegion;
@@ -129,17 +150,6 @@ public class ResourcesManager {
 
         splashTexture.unload();
         splashTextureRegion = null;
-    }
-
-    public void loadCommonResources() {
-
-        try {
-            commonBackButtonTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/common/back_button.png", TextureOptions.BILINEAR);
-            commonBackButtonTextureRegion = TextureRegionFactory.extractFromTexture(commonBackButtonTexture);
-            commonBackButtonTexture.load();
-        } catch (IOException e) {
-            Debug.e(e);
-        }
     }
 
     public void loadMenuResources() {
@@ -187,6 +197,10 @@ public class ResourcesManager {
             menuSnowParticleTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/snow-particle.png", TextureOptions.BILINEAR);
             menuSnowParticleTextureRegion = TextureRegionFactory.extractFromTexture(menuSnowParticleTexture);
             menuSnowParticleTexture.load();
+
+            menuBackButtonTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/menu/back_button.png", TextureOptions.BILINEAR);
+            menuBackButtonTextureRegion = TextureRegionFactory.extractFromTexture(menuBackButtonTexture);
+            menuBackButtonTexture.load();
 
         } catch (IOException e) {
             Debug.e(e);
@@ -239,6 +253,8 @@ public class ResourcesManager {
         menuLevelUnlockedTexture.unload();
         menuCurrentLevelUnlockedTexture.unload();
         menuCreditsBackgroundTexture.unload();
+        menuSnowParticleTexture.unload();
+        menuBackButtonTexture.unload();
 
         menuParallaxLayerBackRegion = null;
         menuParallaxLayerMidRegion = null;
@@ -248,6 +264,8 @@ public class ResourcesManager {
         menuLevelUnlockedRegion = null;
         menuCurrentLevelUnlockedRegion = null;
         menuCreditsBackgroundTextureRegion = null;
+        menuSnowParticleTextureRegion = null;
+        menuBackButtonTextureRegion = null;
     }
 
     public void loadMenuTextures() {
@@ -297,13 +315,21 @@ public class ResourcesManager {
             levelCompletedStarsTextureRegion = TextureRegionFactory.extractTiledFromTexture(levelCompletedStarsTexture, 2, 1);
             levelCompletedStarsTexture.load();
 
-            gameScrollCoachMarkerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/game_scroll_coach_marker.png", TextureOptions.BILINEAR);
+            gameScrollCoachMarkerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/coach_marker/scroll.png", TextureOptions.BILINEAR);
             gameScrollCoachMarkerRegion = TextureRegionFactory.extractFromTexture(gameScrollCoachMarkerTexture);
             gameScrollCoachMarkerTexture.load();
+
+            gamePinchCoachMarkerTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/coach_marker/pinch.png", TextureOptions.BILINEAR);
+            gamePinchCoachMarkerRegion = TextureRegionFactory.extractFromTexture(gamePinchCoachMarkerTexture);
+            gamePinchCoachMarkerTexture.load();
 
             gameReplayTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/retry.png", TextureOptions.BILINEAR);
             gameReplayTextureRegion = TextureRegionFactory.extractFromTexture(gameReplayTexture);
             gameReplayTexture.load();
+
+            gameBackButtonTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/back.png", TextureOptions.BILINEAR);
+            gameBackButtonTextureRegion = TextureRegionFactory.extractFromTexture(gameBackButtonTexture);
+            gameBackButtonTexture.load();
 
         } catch (IOException e) {
             Debug.e(e);
@@ -323,7 +349,9 @@ public class ResourcesManager {
         levelCompletedBackgroundTexture.unload();
         levelCompletedStarsTexture.unload();
         gameScrollCoachMarkerTexture.unload();
+        gamePinchCoachMarkerTexture.unload();
         gameReplayTexture.unload();
+        gameBackButtonTexture.unload();
 
         gameBoxTextureRegion = null;
         gameTargetTextureRegion = null;
@@ -332,6 +360,8 @@ public class ResourcesManager {
         levelCompletedBackgroundTextureRegion = null;
         levelCompletedStarsTextureRegion = null;
         gameScrollCoachMarkerRegion = null;
+        gamePinchCoachMarkerRegion = null;
         gameReplayTextureRegion = null;
+        gameBackButtonTextureRegion = null;
     }
 }
