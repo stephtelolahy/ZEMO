@@ -3,6 +3,7 @@ package com.telolahy.mariosokoban.scene;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.util.Log;
 
 import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
@@ -29,6 +30,7 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.PinchZoomDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.modifier.ease.EaseStrongIn;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
 /**
  * Created by stephanohuguestelolahy on 11/16/14.
  */
-public class GameScene extends BaseScene {
+public class GameScene extends BaseScene implements LongScrollDetector.IScrollDetectorListener, PinchZoomDetector.IPinchZoomDetectorListener {
 
     // ===========================================================
     // Constants
@@ -68,7 +70,10 @@ public class GameScene extends BaseScene {
     private GameMap mGame;
     private GameCharacter mMario;
     private ArrayList<GameCharacter> mBoxes;
+
     private LongScrollDetector mLongScrollDetector;
+    private PinchZoomDetector mPinchZoomDetector;
+    private float mPinchZoomStartedCameraZoomFactor;
 
     private static int mX0;
     private static int mY0;
@@ -95,7 +100,17 @@ public class GameScene extends BaseScene {
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
 
-        mLongScrollDetector.onTouchEvent(pSceneTouchEvent);
+        this.mPinchZoomDetector.onTouchEvent(pSceneTouchEvent);
+
+        if (this.mPinchZoomDetector.isZooming()) {
+            mLongScrollDetector.setEnabled(false);
+        } else {
+            if (pSceneTouchEvent.isActionDown()) {
+                mLongScrollDetector.setEnabled(true);
+            }
+            mLongScrollDetector.onTouchEvent(pSceneTouchEvent);
+        }
+
         return super.onSceneTouchEvent(pSceneTouchEvent);
     }
 
@@ -105,12 +120,11 @@ public class GameScene extends BaseScene {
 
         mLevel = params[0];
 
-        mCamera.setZoomFactor(Constants.GAME_SCENE_SCALE);
+        mCamera.setZoomFactor(Constants.GAME_MAX_SCENE_SCALE);
 
         createBackground();
         createHUD();
         loadLevel(mLevel);
-        setupGestureDetector();
         createLevelCompletedChildScene();
         if (mLevel == 1) {
             mResourcesManager.engine.registerUpdateHandler(new TimerHandler(1.f, new ITimerCallback() {
@@ -119,6 +133,7 @@ public class GameScene extends BaseScene {
                 }
             }));
         }
+        setupGestureDetector();
     }
 
     @Override
@@ -163,6 +178,35 @@ public class GameScene extends BaseScene {
     // Methods for Interfaces
     // ===========================================================
 
+    @Override
+    public void onScrollVector(LongScrollDetector pScollDetector, int pPointerID, Point vector) {
+
+        if (!mMario.moving && canMoveMario(vector)) {
+            moveMario(vector);
+        }
+    }
+
+    @Override
+    public void onPinchZoomStarted(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent) {
+        mPinchZoomStartedCameraZoomFactor = mCamera.getZoomFactor();
+    }
+
+    @Override
+    public void onPinchZoom(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
+        scaleCamera(pZoomFactor);
+    }
+
+    @Override
+    public void onPinchZoomFinished(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
+        scaleCamera(pZoomFactor);
+    }
+
+    private void scaleCamera(float factor) {
+
+        float scale = Math.min(Math.max(mPinchZoomStartedCameraZoomFactor * factor, Constants.GAME_MIN_SCENE_SCALE), Constants.GAME_MAX_SCENE_SCALE);
+        mCamera.setZoomFactor(scale);
+    }
+
     // ===========================================================
     // Methods from Interfaces
     // ===========================================================
@@ -185,26 +229,9 @@ public class GameScene extends BaseScene {
 
     private void setupGestureDetector() {
 
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                mLongScrollDetector = new LongScrollDetector(new LongScrollDetector.IScrollDetectorListener() {
-
-                    @Override
-                    public void onScrollVector(LongScrollDetector pScollDetector, int pPointerID, Point vector) {
-
-                        if (mMario.moving) {
-                            return; // mario is busy
-                        }
-
-                        if (canMoveMario(vector)) {
-                            moveMario(vector);
-                        }
-                    }
-                });
-            }
-        });
+        mLongScrollDetector = new LongScrollDetector(this);
+        mPinchZoomDetector = new PinchZoomDetector(this);
+        setTouchAreaBindingOnActionDownEnabled(true);
     }
 
     private void createBackground() {

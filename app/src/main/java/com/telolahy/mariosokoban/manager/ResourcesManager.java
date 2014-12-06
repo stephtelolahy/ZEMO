@@ -208,7 +208,7 @@ public class ResourcesManager {
         menuTitleFont.load();
 
         final ITexture gameTitleFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        gameTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), gameTitleFontTexture, activity.getAssets(), "font/font.ttf", 38, true, Color.argb(256*6/10, 255, 255, 255), 2, Color.TRANSPARENT);
+        gameTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), gameTitleFontTexture, activity.getAssets(), "font/font.ttf", 38, true, Color.argb(256 * 6 / 10, 255, 255, 255), 2, Color.TRANSPARENT);
         gameTitleFont.load();
 
         final ITexture menuCreditsFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
@@ -285,8 +285,8 @@ public class ResourcesManager {
 
             gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/grass.png", TextureOptions.REPEATING_NEAREST_PREMULTIPLYALPHA);
             gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
-            gameGrassBackgroundTextureRegion.setTextureWidth(Constants.SCREEN_WIDTH * 5);
-            gameGrassBackgroundTextureRegion.setTextureHeight(Constants.SCREEN_HEIGHT * 3);
+            gameGrassBackgroundTextureRegion.setTextureWidth(Constants.SCREEN_WIDTH * 10);
+            gameGrassBackgroundTextureRegion.setTextureHeight(Constants.SCREEN_HEIGHT * 5);
             gameBackgroundTexture.load();
 
             levelCompletedBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/level_completed/background.png", TextureOptions.BILINEAR);

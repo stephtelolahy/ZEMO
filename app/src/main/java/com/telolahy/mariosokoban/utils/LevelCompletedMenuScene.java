@@ -38,7 +38,6 @@ public class LevelCompletedMenuScene extends MenuScene {
     // Fields
     // ===========================================================
 
-    private Sprite mBackgroundSprite;
     private TiledSprite mStars[] = new TiledSprite[3];
     private Text mTitleText;
     private LevelCompletedMenuSceneListener mListener;
@@ -51,7 +50,6 @@ public class LevelCompletedMenuScene extends MenuScene {
 
         super(camera);
         mListener = listener;
-        createBackground(camera);
         createStars();
         createMenu();
     }
@@ -102,10 +100,11 @@ public class LevelCompletedMenuScene extends MenuScene {
         mCamera.setChaseEntity(null);
 
         // Attach our level complete panel in the middle of camera
-        mBackgroundSprite.setAlpha(0);
-        mBackgroundSprite.setPosition(camera.getCenterX(), camera.getCenterY());
-        parentScene.attachChild(mBackgroundSprite);
-        mBackgroundSprite.registerEntityModifier(new FadeInModifier(1.f, new IEntityModifier.IEntityModifierListener() {
+        ResourcesManager resourcesManager = ResourcesManager.getInstance();
+        Sprite backgroundSprite = new Sprite(camera.getCenterX(), camera.getCenterY(), (float) Constants.SCREEN_WIDTH / camera.getZoomFactor(), (float) Constants.SCREEN_HEIGHT / camera.getZoomFactor(), resourcesManager.levelCompletedBackgroundTextureRegion, resourcesManager.vertexBufferObjectManager);
+        backgroundSprite.setAlpha(0);
+        parentScene.attachChild(backgroundSprite);
+        backgroundSprite.registerEntityModifier(new FadeInModifier(1.f, new IEntityModifier.IEntityModifierListener() {
             @Override
             public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem) {
 
@@ -122,12 +121,6 @@ public class LevelCompletedMenuScene extends MenuScene {
     // ===========================================================
     // Private Methods
     // ===========================================================
-
-    private void createBackground(ZoomCamera camera) {
-
-        ResourcesManager resourcesManager = ResourcesManager.getInstance();
-        mBackgroundSprite = new Sprite(0, 0, (float) Constants.SCREEN_WIDTH / camera.getZoomFactor(), (float) Constants.SCREEN_HEIGHT / camera.getZoomFactor(), resourcesManager.levelCompletedBackgroundTextureRegion, resourcesManager.vertexBufferObjectManager);
-    }
 
     private void createMenu() {
 
