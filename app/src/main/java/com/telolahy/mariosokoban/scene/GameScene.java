@@ -45,6 +45,8 @@ public class GameScene extends BaseScene {
     // Constants
     // ===========================================================
 
+    private static final int MARGIN = 48;
+
     private static final int REPLAY_MENU_ITEM = 1;
     private static final int BACK_MENU_ITEM = 2;
 
@@ -103,7 +105,7 @@ public class GameScene extends BaseScene {
 
         mLevel = params[0];
 
-        mCamera.setZoomFactor(0.75f);
+        mCamera.setZoomFactor(Constants.GAME_SCENE_SCALE);
 
         createBackground();
         createHUD();
@@ -216,11 +218,8 @@ public class GameScene extends BaseScene {
 
     private void createHUD() {
 
-        final int TOP_MARGIN = 48;
-        final int LEFT_MARGIN = 64;
-
         HUD gameHUD = new HUD();
-        Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - TOP_MARGIN, mResourcesManager.gameTitleFont, "Level 0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - MARGIN, mResourcesManager.gameTitleFont, "Level 0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         levelText.setText(mActivity.getResources().getString(R.string.level) + " " + mLevel);
         gameHUD.attachChild(levelText);
         mCamera.setHUD(gameHUD);
@@ -233,8 +232,8 @@ public class GameScene extends BaseScene {
 
         menuScene.buildAnimations();
         menuScene.setBackgroundEnabled(false);
-        retryMenuItem.setPosition(Constants.SCREEN_WIDTH - LEFT_MARGIN, Constants.SCREEN_HEIGHT - TOP_MARGIN);
-        backMenuItem.setPosition(LEFT_MARGIN, Constants.SCREEN_HEIGHT - TOP_MARGIN);
+        retryMenuItem.setPosition(Constants.SCREEN_WIDTH - MARGIN, Constants.SCREEN_HEIGHT - MARGIN);
+        backMenuItem.setPosition(MARGIN, Constants.SCREEN_HEIGHT - MARGIN);
         menuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
@@ -275,10 +274,11 @@ public class GameScene extends BaseScene {
         final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH / 5, Constants.SCREEN_HEIGHT / 2 - mResourcesManager.gameScrollCoachMarkerRegion.getHeight(), mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
         attachChild(scrollCoachMarker);
 
-        float x1 = scrollCoachMarker.getX();
-        float x2 = Constants.SCREEN_WIDTH * 4 / 5;
-        float y = scrollCoachMarker.getY();
-        final Path path = new Path(2).to(x1, y).to(x2, y);
+        int x1 = mX0 + 1 * mBlocSize + mBlocSize / 2;
+        int y1 = mY0 + 1 * mBlocSize + mBlocSize / 2 - (int) mResourcesManager.gameScrollCoachMarkerRegion.getHeight();
+        float x2 = mX0 + (mGame.getSizeX() - 1) * mBlocSize + mBlocSize / 2;
+        float y2 = y1;
+        final Path path = new Path(2).to(x1, y1).to(x2, y2);
         scrollCoachMarker.registerEntityModifier(new PathModifier(2.f, path, null, new PathModifier.IPathModifierListener() {
             @Override
             public void onPathStarted(PathModifier pPathModifier, IEntity pEntity) {
@@ -656,7 +656,7 @@ public class GameScene extends BaseScene {
 
         clearChildScene();
         int starsCount = mRetries == 0 ? 3 : 2;
-        mLevelCompletedMenuScene.display(starsCount, this);
+        mLevelCompletedMenuScene.display(starsCount, this, mCamera);
     }
 
     private void reloadGame() {

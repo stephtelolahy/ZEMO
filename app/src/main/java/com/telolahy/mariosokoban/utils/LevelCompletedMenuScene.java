@@ -6,7 +6,7 @@ import com.telolahy.mariosokoban.Constants;
 import com.telolahy.mariosokoban.R;
 import com.telolahy.mariosokoban.manager.ResourcesManager;
 
-import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.FadeInModifier;
 import org.andengine.entity.modifier.IEntityModifier;
@@ -47,11 +47,11 @@ public class LevelCompletedMenuScene extends MenuScene {
     // Constructors
     // ===========================================================
 
-    public LevelCompletedMenuScene(Camera pCamera, LevelCompletedMenuSceneListener listener) {
+    public LevelCompletedMenuScene(ZoomCamera camera, LevelCompletedMenuSceneListener listener) {
 
-        super(pCamera);
+        super(camera);
         mListener = listener;
-        createBackground();
+        createBackground(camera);
         createStars();
         createMenu();
     }
@@ -79,7 +79,7 @@ public class LevelCompletedMenuScene extends MenuScene {
     // Public Methods
     // ===========================================================
 
-    public void display(int starsCount, final Scene parentScene) {
+    public void display(int starsCount, final Scene parentScene, final ZoomCamera camera) {
 
         if (starsCount < 1 || starsCount > 3) {
             throw new InvalidParameterException("stars count should be in (1-3)");
@@ -103,7 +103,7 @@ public class LevelCompletedMenuScene extends MenuScene {
 
         // Attach our level complete panel in the middle of camera
         mBackgroundSprite.setAlpha(0);
-        mBackgroundSprite.setPosition(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2);
+        mBackgroundSprite.setPosition(camera.getCenterX(), camera.getCenterY());
         parentScene.attachChild(mBackgroundSprite);
         mBackgroundSprite.registerEntityModifier(new FadeInModifier(1.f, new IEntityModifier.IEntityModifierListener() {
             @Override
@@ -123,10 +123,10 @@ public class LevelCompletedMenuScene extends MenuScene {
     // Private Methods
     // ===========================================================
 
-    private void createBackground() {
+    private void createBackground(ZoomCamera camera) {
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
-        mBackgroundSprite = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, resourcesManager.levelCompletedBackgroundTextureRegion, resourcesManager.vertexBufferObjectManager);
+        mBackgroundSprite = new Sprite(0, 0, (float) Constants.SCREEN_WIDTH / camera.getZoomFactor(), (float) Constants.SCREEN_HEIGHT / camera.getZoomFactor(), resourcesManager.levelCompletedBackgroundTextureRegion, resourcesManager.vertexBufferObjectManager);
     }
 
     private void createMenu() {

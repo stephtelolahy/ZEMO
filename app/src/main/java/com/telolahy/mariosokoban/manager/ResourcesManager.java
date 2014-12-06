@@ -8,7 +8,6 @@ import com.telolahy.mariosokoban.MainActivity;
 import org.andengine.audio.music.Music;
 import org.andengine.audio.music.MusicFactory;
 import org.andengine.engine.Engine;
-import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
@@ -209,7 +208,7 @@ public class ResourcesManager {
         menuTitleFont.load();
 
         final ITexture gameTitleFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        gameTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), gameTitleFontTexture, activity.getAssets(), "font/font.ttf", 34, true, Color.WHITE, 2, Color.TRANSPARENT);
+        gameTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), gameTitleFontTexture, activity.getAssets(), "font/font.ttf", 38, true, Color.WHITE, 2, Color.TRANSPARENT);
         gameTitleFont.load();
 
         final ITexture menuCreditsFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
@@ -286,8 +285,8 @@ public class ResourcesManager {
 
             gameBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/grass.png", TextureOptions.REPEATING_NEAREST_PREMULTIPLYALPHA);
             gameGrassBackgroundTextureRegion = TextureRegionFactory.extractFromTexture(gameBackgroundTexture);
-            gameGrassBackgroundTextureRegion.setTextureWidth(Constants.SCREEN_WIDTH * 4);
-            gameGrassBackgroundTextureRegion.setTextureHeight(Constants.SCREEN_HEIGHT * 4);
+            gameGrassBackgroundTextureRegion.setTextureWidth(Constants.SCREEN_WIDTH * 5);
+            gameGrassBackgroundTextureRegion.setTextureHeight(Constants.SCREEN_HEIGHT * 3);
             gameBackgroundTexture.load();
 
             levelCompletedBackgroundTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/level_completed/background.png", TextureOptions.BILINEAR);

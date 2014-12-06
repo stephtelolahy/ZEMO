@@ -3,8 +3,8 @@
     <string name="loading">Chargement ...</string>
     <string name="play">Aventure</string>
     <string name="options">Options</string>
-    <string name="level_completed">Mission accomplie !</string>
-    <string name="last_level_completed">Jeu Terminé !</string>
+    <string name="level_completed">Bravo !</string>
+    <string name="last_level_completed">Terminé !</string>
     <string name="retry">Réessayer</string>
     <string name="next">Suivant</string>
     <string name="cannot_load_level">Fichier invalide </string>

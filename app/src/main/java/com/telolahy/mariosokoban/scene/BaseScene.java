@@ -6,7 +6,6 @@ import com.telolahy.mariosokoban.MainActivity;
 import com.telolahy.mariosokoban.manager.ResourcesManager;
 
 import org.andengine.engine.Engine;
-import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;

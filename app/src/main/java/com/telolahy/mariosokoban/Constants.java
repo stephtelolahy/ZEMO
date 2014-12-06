@@ -15,6 +15,8 @@ public class Constants {
     public static final int LEVEL_COLUMNS_PER_SCREEN = 3;
     public static final int LEVEL_ROWS_PER_SCREEN = 2;
 
+    public static final float GAME_SCENE_SCALE = 0.75f;
+
     public static final boolean DEBUG = true;
 
 }
