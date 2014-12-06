@@ -25,4 +25,6 @@
     <string name="game_engine">Game engine </string>
     <string name="game_engine_value">AndEngine</string>
     <string name="game_studio">Creative Games (c) 2006-</string>
+    <string name="coach_marker_scroll">Move Zemo with one finger</string>
+    <string name="coach_marker_pinch">Zoom with two fingers</string>
 </resources>

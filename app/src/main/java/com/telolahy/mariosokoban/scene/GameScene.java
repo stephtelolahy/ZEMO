@@ -36,7 +36,6 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.modifier.IModifier;
 import org.andengine.util.modifier.ease.EaseLinear;
-import org.andengine.util.modifier.ease.EaseStrongIn;
 import org.andengine.util.modifier.ease.IEaseFunction;
 
 import java.util.ArrayList;
@@ -77,6 +76,8 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
     private LongScrollDetector mLongScrollDetector;
     private PinchZoomDetector mPinchZoomDetector;
     private float mPinchZoomStartedCameraZoomFactor;
+
+    private HUD mGameHUD;
 
     private static int mX0;
     private static int mY0;
@@ -244,11 +245,11 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
 
     private void createHUD() {
 
-        HUD gameHUD = new HUD();
+        mGameHUD = new HUD();
         Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - MARGIN, mResourcesManager.gameTitleFont, "Level 0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         levelText.setText(mActivity.getResources().getString(R.string.level) + " " + mLevel);
-        gameHUD.attachChild(levelText);
-        mCamera.setHUD(gameHUD);
+        mGameHUD.attachChild(levelText);
+        mCamera.setHUD(mGameHUD);
 
         MenuScene menuScene = new MenuScene(ResourcesManager.getInstance().camera);
         IMenuItem backMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(BACK_MENU_ITEM, mResourcesManager.gameBackButtonTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
@@ -303,6 +304,9 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
                 final Sprite scrollCoachMarker = new Sprite(Constants.SCREEN_WIDTH / 5, Constants.SCREEN_HEIGHT / 2 - mResourcesManager.gameScrollCoachMarkerRegion.getHeight(), mResourcesManager.gameScrollCoachMarkerRegion, mVertexBufferObjectManager);
                 attachChild(scrollCoachMarker);
 
+                final Text descriptionText = new Text(Constants.SCREEN_WIDTH / 2, MARGIN, mResourcesManager.menuLevelFont, mResourcesManager.activity.getResources().getString(R.string.coach_marker_scroll), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+                mGameHUD.attachChild(descriptionText);
+
                 int x1 = mX0 + 1 * mBlocSize + mBlocSize / 2;
                 int y1 = mY0 + 1 * mBlocSize + mBlocSize / 2 - (int) mResourcesManager.gameScrollCoachMarkerRegion.getHeight();
                 float x2 = mX0 + (mGame.getSizeX() - 1) * mBlocSize + mBlocSize / 2;
@@ -327,7 +331,7 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
                     @Override
                     public void onPathFinished(PathModifier pPathModifier, IEntity pEntity) {
 
-                        scrollCoachMarker.detachSelf();
+                        scrollCoachMarker.setVisible(false);
                     }
                 }));
             }
@@ -343,6 +347,9 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
                 final Sprite pinchCoachMarker = new Sprite(mCamera.getCenterX(), mCamera.getCenterY() - mResourcesManager.gamePinchCoachMarkerRegion.getHeight(), mResourcesManager.gamePinchCoachMarkerRegion, mVertexBufferObjectManager);
                 attachChild(pinchCoachMarker);
 
+                final Text descriptionText = new Text(Constants.SCREEN_WIDTH / 2, MARGIN, mResourcesManager.menuLevelFont, mResourcesManager.activity.getResources().getString(R.string.coach_marker_pinch), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+                mGameHUD.attachChild(descriptionText);
+
                 pinchCoachMarker.registerEntityModifier(new ScaleModifier(3.f, 1.f, 1.f, new IEntityModifier.IEntityModifierListener() {
                     @Override
                     public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem) {
@@ -352,8 +359,7 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
                     @Override
                     public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem) {
 
-                        pinchCoachMarker.detachSelf();
-
+                        pinchCoachMarker.setVisible(false);
                     }
                 }));
             }
