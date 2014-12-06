@@ -294,7 +294,7 @@ public class ResourcesManager {
             gameTargetTexture.load();
 
             gameBoxTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/box.png", TextureOptions.BILINEAR);
-            gameBoxTextureRegion = TextureRegionFactory.extractTiledFromTexture(gameBoxTexture, 2, 1);
+            gameBoxTextureRegion = TextureRegionFactory.extractTiledFromTexture(gameBoxTexture, 16, 1);
             gameBoxTexture.load();
 
             gameMarioTexture = new AssetBitmapTexture(engine.getTextureManager(), activity.getAssets(), "gfx/game/player.png", TextureOptions.BILINEAR);

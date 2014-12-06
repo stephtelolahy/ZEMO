@@ -35,6 +35,7 @@ import org.andengine.input.touch.detector.PinchZoomDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.modifier.IModifier;
+import org.andengine.util.modifier.ease.EaseLinear;
 import org.andengine.util.modifier.ease.EaseStrongIn;
 import org.andengine.util.modifier.ease.IEaseFunction;
 
@@ -239,9 +240,6 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
 
         Sprite repeatingBackground = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
         attachChild(repeatingBackground);
-
-//        RepeatingSpriteBackground grassBackground = new RepeatingSpriteBackground(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, mResourcesManager.gameGrassBackgroundTextureRegion, mVertexBufferObjectManager);
-//        setBackground(grassBackground);
     }
 
     private void createHUD() {
@@ -618,6 +616,7 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
 
     private void animateBox(final Point source, final Point destination) {
 
+        final int direction = getDirection(source, destination);
         final GameCharacter box = getBoxAt(source);
 
         if (mGame.getElement(source) == GameMap.BOX_ON_GOAL) {
@@ -642,13 +641,15 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
         float y2 = mY0 + destination.y * mBlocSize + mBlocSize / 2;
         final Path boxPath = new Path(2).to(x1, y1).to(x2, y2);
         float pathAnimationDuration = (float) STEP_DURATION_MILLIS / 1000;
-        final IEaseFunction easeFunction = EaseStrongIn.getInstance();
+        final IEaseFunction easeFunction = EaseLinear.getInstance();//EaseStrongIn.getInstance();
         box.registerEntityModifier(new PathModifier(pathAnimationDuration, boxPath, null, new PathModifier.IPathModifierListener() {
 
             @Override
             public void onPathStarted(final PathModifier pPathModifier, final IEntity pEntity) {
 
                 box.moving = true;
+                final long tileDuration = STEP_DURATION_MILLIS / 4;
+                box.animate(new long[]{tileDuration, tileDuration, tileDuration, tileDuration}, direction * 4, direction * 4 + 3, true);
             }
 
             @Override
@@ -665,9 +666,9 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
             public void onPathFinished(final PathModifier pPathModifier, final IEntity pEntity) {
 
                 box.moving = false;
+                box.stopAnimation();
+                box.setCurrentTileIndex(direction * 4);
                 if (mGame.getElement(destination) == GameMap.BOX_ON_GOAL) {
-                    box.setCurrentTileIndex(1);
-                } else {
                     box.setCurrentTileIndex(0);
                 }
             }
