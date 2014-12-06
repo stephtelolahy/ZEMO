@@ -13,7 +13,6 @@ public class GameCharacter extends AnimatedSprite {
 
     public Point gamePosition;
     public boolean moving;
-    public int state;
 
     public GameCharacter(float pX, float pY, ITiledTextureRegion pTiledTextureRegion, VertexBufferObjectManager pVertexBufferObjectManager, int pXPos, int pYPos) {
         super(pX, pY, pTiledTextureRegion, pVertexBufferObjectManager);

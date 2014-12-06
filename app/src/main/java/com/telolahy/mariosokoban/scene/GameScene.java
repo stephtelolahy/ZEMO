@@ -226,9 +226,9 @@ public class GameScene extends BaseScene {
 
         MenuScene menuScene = new MenuScene(ResourcesManager.getInstance().camera);
         IMenuItem backMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(BACK_MENU_ITEM, mResourcesManager.commonBackButtonTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
-        backMenuItem.setAlpha(.4f);
+        backMenuItem.setAlpha(.6f);
         IMenuItem retryMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(REPLAY_MENU_ITEM, mResourcesManager.gameReplayTextureRegion, mVertexBufferObjectManager), 1.2f, 1);
-        retryMenuItem.setAlpha(.4f);
+        retryMenuItem.setAlpha(.6f);
         menuScene.addMenuItem(retryMenuItem);
         menuScene.addMenuItem(backMenuItem);
 
