@@ -131,7 +131,7 @@ public class LevelCompletedMenuScene extends MenuScene {
     private void createMenu() {
 
         ResourcesManager resourcesManager = ResourcesManager.getInstance();
-        TextMenuItem textMenuItem = new TextMenuItem(MENU_ITEM_NEXT, resourcesManager.menuItemFont, resourcesManager.activity.getResources().getString(R.string.suivant), resourcesManager.vertexBufferObjectManager);
+        TextMenuItem textMenuItem = new TextMenuItem(MENU_ITEM_NEXT, resourcesManager.menuItemFont, resourcesManager.activity.getResources().getString(R.string.next), resourcesManager.vertexBufferObjectManager);
         IMenuItem menuItem = new ScaleMenuItemDecorator(textMenuItem, 1.2f, 1);
         addMenuItem(menuItem);
 
