@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">ZE'MO</string>
+    <string name="loading">Loading ...</string>
+    <string name="play">Adventure</string>
+    <string name="options">Options</string>
+    <string name="level_completed">Great !</string>
+    <string name="last_level_completed">Completed !</string>
+    <string name="retry">Retry</string>
+    <string name="next">Next</string>
+    <string name="cannot_load_level">Invalid file </string>
+    <string name="error_loading_level">Error</string>
+    <string name="close">Close</string>
+    <string name="level">Level</string>
+    <string name="music_on">Music ON</string>
+    <string name="credits">Credits</string>
+    <string name="music_off">Music OFF</string>
+    <string name="exit">Exit</string>
+    <string name="exit_message">Are you sure to quit the game ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="game_designer">Game designer</string>
+    <string name="game_designer_value">Malalatiana Randriamasy</string>
+    <string name="game_developer">Game developer</string>
+    <string name="game_developer_value">Stéphano Telolahy</string>
+    <string name="game_engine">Game engine </string>
+    <string name="game_engine_value">AndEngine</string>
+    <string name="game_studio">Creative Games (c) 2006-</string>
+</resources>
