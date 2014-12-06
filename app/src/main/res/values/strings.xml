@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Mario Sokoban</string>
+    <string name="app_name">Sokoban</string>
     <string name="loading">Chargement ...</string>
     <string name="play">Aventure</string>
     <string name="options">Options</string>
     <string name="level_completed">Mission accomplie !</string>
-    <string name="last_level_completed">Jeu terminé !</string>
+    <string name="last_level_completed">Jeu Terminé !</string>
     <string name="retry">Réessayer</string>
     <string name="next">Suivant</string>
     <string name="cannot_load_level">Fichier invalide </string>
@@ -24,5 +24,5 @@
     <string name="game_developer_value">Stéphano Telolahy</string>
     <string name="game_engine">Game engine </string>
     <string name="game_engine_value">AndEngine</string>
-    <string name="game_studio">Creative Games Studio (c) 2006-</string>
+    <string name="game_studio">Creative Games (c) 2006-</string>
 </resources>

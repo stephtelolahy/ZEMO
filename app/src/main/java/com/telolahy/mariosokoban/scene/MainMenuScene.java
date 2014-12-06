@@ -187,8 +187,7 @@ public class MainMenuScene extends BaseScene {
 
         mHUD = new HUD();
 
-        String gameTitle = mResourcesManager.activity.getResources().getString(R.string.app_name);
-        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, mResourcesManager.menuTitleFont, gameTitle, new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, mResourcesManager.menuTitleFont, "abcdefghijklmnopqrstuvwxyz", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         mHUD.attachChild(mTitle);
 
         final int LEFT_MARGIN = 64;

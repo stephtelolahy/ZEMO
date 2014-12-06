@@ -102,6 +102,9 @@ public class GameScene extends BaseScene {
     protected void onCreateScene(int... params) {
 
         mLevel = params[0];
+
+        mCamera.setZoomFactor(0.75f);
+
         createBackground();
         createHUD();
         loadLevel(mLevel);
@@ -141,6 +144,8 @@ public class GameScene extends BaseScene {
 
         // Disable camera chase entity
         mCamera.setChaseEntity(null);
+
+        mCamera.setZoomFactor(1f);
 
         // Reset camera position
         mCamera.setCenter(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2);

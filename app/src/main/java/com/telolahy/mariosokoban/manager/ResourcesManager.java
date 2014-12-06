@@ -9,6 +9,7 @@ import org.andengine.audio.music.Music;
 import org.andengine.audio.music.MusicFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
+import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
@@ -34,7 +35,7 @@ public class ResourcesManager {
 
     public Engine engine;
     public MainActivity activity;
-    public BoundCamera camera;
+    public ZoomCamera camera;
     public VertexBufferObjectManager vertexBufferObjectManager;
 
     // splash resources
@@ -70,6 +71,7 @@ public class ResourcesManager {
     public Font menuTitleFont;
     public Font gameTitleFont;
     public Font menuCreditsFont;
+    public Font menuCreditsTinyFont;
 
     public Music menuMusic;
 
@@ -105,7 +107,7 @@ public class ResourcesManager {
         return INSTANCE;
     }
 
-    public static void prepareManager(Engine engine, MainActivity activity, BoundCamera camera, VertexBufferObjectManager vertexBufferObjectManager) {
+    public static void prepareManager(Engine engine, MainActivity activity, ZoomCamera camera, VertexBufferObjectManager vertexBufferObjectManager) {
 
         getInstance().engine = engine;
         getInstance().activity = activity;
@@ -202,7 +204,7 @@ public class ResourcesManager {
         menuLevelFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuLevelFontTexture, activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 2, Color.TRANSPARENT);
         menuLevelFont.load();
 
-        final ITexture menuTitleFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        final ITexture menuTitleFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         menuTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuTitleFontTexture, activity.getAssets(), "font/font.ttf", 64, true, Color.WHITE, 2, Color.BLACK);
         menuTitleFont.load();
 
@@ -213,6 +215,10 @@ public class ResourcesManager {
         final ITexture menuCreditsFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         menuCreditsFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuCreditsFontTexture, activity.getAssets(), "font/font.ttf", 24, true, Color.GRAY, 2, Color.TRANSPARENT);
         menuCreditsFont.load();
+
+        final ITexture menuCreditsTinyFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        menuCreditsTinyFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuCreditsTinyFontTexture, activity.getAssets(), "font/font.ttf", 20, true, Color.GRAY, 2, Color.TRANSPARENT);
+        menuCreditsTinyFont.load();
     }
 
     private void loadMenuMusics() {

@@ -103,6 +103,7 @@ public class LevelCompletedMenuScene extends MenuScene {
 
         // Attach our level complete panel in the middle of camera
         mBackgroundSprite.setAlpha(0);
+        mBackgroundSprite.setPosition(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2);
         parentScene.attachChild(mBackgroundSprite);
         mBackgroundSprite.registerEntityModifier(new FadeInModifier(1.f, new IEntityModifier.IEntityModifierListener() {
             @Override

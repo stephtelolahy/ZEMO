@@ -10,9 +10,12 @@ import com.telolahy.mariosokoban.manager.SceneManager;
 import org.andengine.engine.Engine;
 import org.andengine.engine.LimitedFPSEngine;
 import org.andengine.engine.camera.BoundCamera;
+import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.options.EngineOptions;
+import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.WakeLockOptions;
 import org.andengine.engine.options.resolutionpolicy.FillResolutionPolicy;
+import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.ui.activity.BaseGameActivity;
 
@@ -23,7 +26,7 @@ import java.io.IOException;
  */
 public class MainActivity extends BaseGameActivity {
 
-    private BoundCamera mCamera;
+    private ZoomCamera mCamera;
 
     @Override
     public Engine onCreateEngine(EngineOptions pEngineOptions) {
@@ -41,7 +44,8 @@ public class MainActivity extends BaseGameActivity {
 
         Constants.TOTAL_LEVELS_COUNT = GameManager.getInstance().countLevelsAssetFiles(this);
 
-        mCamera = new BoundCamera(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+//        mCamera = new BoundCamera(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        mCamera = new ZoomCamera(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         EngineOptions engineOptions = new EngineOptions(true, Constants.SCREEN_ORIENTATION, new FillResolutionPolicy(), mCamera);
         engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
         engineOptions.getRenderOptions().getConfigChooserOptions().setRequestedMultiSampling(true);
