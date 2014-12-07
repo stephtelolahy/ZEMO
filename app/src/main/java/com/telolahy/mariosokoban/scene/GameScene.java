@@ -764,7 +764,6 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
                 AlertDialog.Builder ad = new AlertDialog.Builder(mActivity);
                 ad.setTitle(title);
                 ad.setMessage(message);
-                ad.setIcon(android.R.drawable.ic_dialog_alert);
                 ad.setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
