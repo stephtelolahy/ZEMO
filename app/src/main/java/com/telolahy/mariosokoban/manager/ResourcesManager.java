@@ -154,6 +154,12 @@ public class ResourcesManager {
         } catch (IOException e) {
             Debug.e(e);
         }
+
+        try {
+            menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/mainscreen.ogg");
+        } catch (final IOException e) {
+            Debug.e(e);
+        }
     }
 
     public void unloadSplashResources() {
@@ -251,7 +257,6 @@ public class ResourcesManager {
     private void loadMenuMusics() {
 
         try {
-            menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/mainscreen.ogg");
             menuItemClickedSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/item_click.ogg");
             gameBoxOnGoalSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/on_goal.ogg");
             gameLevelCompletedSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/level_completed.ogg");

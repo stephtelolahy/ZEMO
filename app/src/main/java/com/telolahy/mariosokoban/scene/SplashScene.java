@@ -42,6 +42,7 @@ public class SplashScene extends BaseScene {
 
         mBackground = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.splashTextureRegion, mVertexBufferObjectManager);
         attachChild(mBackground);
+        playMusic();
 
         mBackground.setAlpha(0);
         IEntityModifier sequenceModifier = new SequenceEntityModifier(new AlphaModifier(1.f, 0.f, 0.f), new AlphaModifier(1.f, 0.f, 1.f), new AlphaModifier(1.f, 1.f, 1.f));
@@ -57,6 +58,14 @@ public class SplashScene extends BaseScene {
             }
         });
         mBackground.registerEntityModifier(sequenceModifier);
+    }
+
+    private void playMusic() {
+
+        if (mResourcesManager.menuMusic != null && !mResourcesManager.menuMusic.isPlaying()) {
+            mResourcesManager.menuMusic.setLooping(true);
+            mResourcesManager.menuMusic.play();
+        }
     }
 
     @Override
