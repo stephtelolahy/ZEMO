@@ -27,4 +27,8 @@
     <string name="game_studio">Creative Games (c) 2006-</string>
     <string name="coach_marker_scroll">Déplacez Zemo avec un doigt</string>
     <string name="coach_marker_pinch">Zoomez avec un deux doigts</string>
+    <string name="rate">Noter</string>
+    <string name="if_you_enjoy">Si vous avez aimé %s, nous vous prions de prendre un moment pour le noter. Merci pour votre support!</string>
+    <string name="remind_me_later">Plus tard</string>
+    <string name="no_thanks">Non, merci</string>
 </resources>

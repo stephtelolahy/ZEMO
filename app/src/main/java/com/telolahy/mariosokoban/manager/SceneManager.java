@@ -5,6 +5,7 @@ import com.telolahy.mariosokoban.scene.GameScene;
 import com.telolahy.mariosokoban.scene.LoadingScene;
 import com.telolahy.mariosokoban.scene.MainMenuScene;
 import com.telolahy.mariosokoban.scene.SplashScene;
+import com.telolahy.mariosokoban.utils.AppRater;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.handler.timer.ITimerCallback;
@@ -63,6 +64,7 @@ public class SceneManager {
         mLoadingScene = new LoadingScene();
         setScene(mMenuScene);
         disposeSplashScene();
+        AppRater.app_launched(ResourcesManager.getInstance().activity);
     }
 
     private void disposeMenuScene() {

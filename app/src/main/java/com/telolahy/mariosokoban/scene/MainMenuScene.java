@@ -378,6 +378,7 @@ public class MainMenuScene extends BaseScene {
                     }
                 });
                 builder.setNegativeButton(mResourcesManager.activity.getResources().getString(R.string.no), null);
+                builder.setCancelable(false);
                 builder.show();
             }
         });
