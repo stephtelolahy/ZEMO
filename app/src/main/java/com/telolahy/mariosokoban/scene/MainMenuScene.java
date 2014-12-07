@@ -155,8 +155,6 @@ public class MainMenuScene extends BaseScene {
     private void playMusic() {
 
         if (mResourcesManager.menuMusic != null && !mResourcesManager.menuMusic.isPlaying()) {
-            mResourcesManager.menuMusic.setLooping(true);
-            mResourcesManager.menuMusic.setVolume(0.4f);
             mResourcesManager.menuMusic.play();
         }
     }
@@ -317,6 +315,7 @@ public class MainMenuScene extends BaseScene {
                     public void levelSelectorItemClicked(int level) {
 
                         mResourcesManager.menuItemClickedSound.play();
+                        pauseMusic();
                         SceneManager.getInstance().createGameScene(level);
                     }
                 });

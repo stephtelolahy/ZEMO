@@ -96,7 +96,7 @@ public class MainActivity extends BaseGameActivity {
     protected synchronized void onResume() {
         super.onResume();
         System.gc();
-        if (ResourcesManager.getInstance().menuMusic != null && GameManager.getInstance().isMusicEnabled()) {
+        if (ResourcesManager.getInstance().menuMusic != null && SceneManager.getInstance().isOnMenu() && GameManager.getInstance().isMusicEnabled()) {
             ResourcesManager.getInstance().menuMusic.play();
         }
     }

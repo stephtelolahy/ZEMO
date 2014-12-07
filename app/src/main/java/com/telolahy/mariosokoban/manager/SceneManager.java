@@ -108,4 +108,8 @@ public class SceneManager {
             }
         }));
     }
+
+    public boolean isOnMenu() {
+        return mCurrentScene == mMenuScene;
+    }
 }
