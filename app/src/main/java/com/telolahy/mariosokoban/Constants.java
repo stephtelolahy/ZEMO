@@ -19,6 +19,6 @@ public class Constants {
     public static final float GAME_MAX_SCENE_SCALE = 1.f;
     public static final float GAME_MIN_SCENE_SCALE = 0.24f;
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
 }
