@@ -109,10 +109,7 @@ public class MainMenuScene extends BaseScene {
         } else if (menuType == MENU_TYPE_LEVEL_SELECTOR) {
             displayLevelSelector();
         }
-
-        if (GameManager.getInstance().isMusicEnabled()) {
-            playMusic();
-        }
+        playMusic();
     }
 
     @Override
@@ -154,7 +151,7 @@ public class MainMenuScene extends BaseScene {
 
     private void playMusic() {
 
-        if (mResourcesManager.menuMusic != null && !mResourcesManager.menuMusic.isPlaying()) {
+        if (mResourcesManager.menuMusic != null && !mResourcesManager.menuMusic.isPlaying() && GameManager.getInstance().isMusicEnabled()) {
             mResourcesManager.menuMusic.setLooping(true);
             mResourcesManager.menuMusic.play();
         }
@@ -174,7 +171,7 @@ public class MainMenuScene extends BaseScene {
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-1.f, 2.67f, new Sprite(Constants.SCREEN_WIDTH / 2, mResourcesManager.menuParallaxLayerMidRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegion, mVertexBufferObjectManager)));
 
         if (GameManager.getInstance().isCloudEnabled()) {
-            autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-1.f, new Sprite(Constants.SCREEN_WIDTH / 2,  Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerMidRegionCloud.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegionCloud, mVertexBufferObjectManager)));
+            autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-1.f, new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerMidRegionCloud.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegionCloud, mVertexBufferObjectManager)));
         }
 
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.f, 1.3f, new Sprite(Constants.SCREEN_WIDTH / 2, mResourcesManager.menuParallaxLayerFrontRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerFrontRegion, mVertexBufferObjectManager)));

@@ -1,6 +1,7 @@
 package com.telolahy.mariosokoban.scene;
 
 import com.telolahy.mariosokoban.Constants;
+import com.telolahy.mariosokoban.manager.GameManager;
 import com.telolahy.mariosokoban.manager.SceneManager;
 
 import org.andengine.entity.IEntity;
@@ -62,7 +63,7 @@ public class SplashScene extends BaseScene {
 
     private void playMusic() {
 
-        if (mResourcesManager.menuMusic != null && !mResourcesManager.menuMusic.isPlaying()) {
+        if (mResourcesManager.menuMusic != null && !mResourcesManager.menuMusic.isPlaying() && GameManager.getInstance().isMusicEnabled()) {
             mResourcesManager.menuMusic.setLooping(true);
             mResourcesManager.menuMusic.play();
         }
