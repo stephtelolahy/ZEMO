@@ -265,6 +265,7 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
+                mResourcesManager.menuItemClickedSound.play();
                 switch (pMenuItem.getID()) {
                     case BACK_MENU_ITEM:
                         exitGame(false);
@@ -676,6 +677,7 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
                 box.setCurrentTileIndex(direction * 4);
                 if (mGame.getElement(destination) == GameMap.BOX_ON_GOAL) {
                     box.setCurrentTileIndex(0);
+                    mResourcesManager.gameBoxOnGoalSound.play();
                 }
             }
         }, easeFunction));
@@ -722,6 +724,7 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
 
         clearChildScene();
         int starsCount = mRetries == 0 ? 3 : 2;
+        mResourcesManager.gameLevelCompletedSound.play();
         mLevelCompletedMenuScene.display(starsCount, this, mCamera);
     }
 

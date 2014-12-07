@@ -7,6 +7,8 @@ import com.telolahy.mariosokoban.MainActivity;
 
 import org.andengine.audio.music.Music;
 import org.andengine.audio.music.MusicFactory;
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.opengl.font.Font;
@@ -92,6 +94,10 @@ public class ResourcesManager {
     public Font gameTitleFont;
     public Font menuCreditsFont;
     public Font menuCreditsTinyFont;
+
+    public Sound gameBoxOnGoalSound;
+    public Sound gameLevelCompletedSound;
+    public Sound menuItemClickedSound;
 
     public Music menuMusic;
 
@@ -246,6 +252,9 @@ public class ResourcesManager {
 
         try {
             menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/mainscreen.ogg");
+            menuItemClickedSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/item_click.ogg");
+            gameBoxOnGoalSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/on_goal.ogg");
+            gameLevelCompletedSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/level_completed.ogg");
         } catch (final IOException e) {
             Debug.e(e);
         }

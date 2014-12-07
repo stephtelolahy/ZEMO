@@ -202,6 +202,7 @@ public class MainMenuScene extends BaseScene {
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
                 if (mBackButton.isVisible() && pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
+                    mResourcesManager.menuItemClickedSound.play();
                     onBackKeyPressed();
                 }
                 return true;
@@ -231,6 +232,7 @@ public class MainMenuScene extends BaseScene {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
+                mResourcesManager.menuItemClickedSound.play();
                 switch (pMenuItem.getID()) {
                     case MENU_ITEM_PLAY:
                         displayLevelSelector();
@@ -265,6 +267,7 @@ public class MainMenuScene extends BaseScene {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
+                mResourcesManager.menuItemClickedSound.play();
                 switch (pMenuItem.getID()) {
                     case MENU_ITEM_MUSIC:
                         toggleMusic();
@@ -313,6 +316,7 @@ public class MainMenuScene extends BaseScene {
                     @Override
                     public void levelSelectorItemClicked(int level) {
 
+                        mResourcesManager.menuItemClickedSound.play();
                         SceneManager.getInstance().createGameScene(level);
                     }
                 });
