@@ -54,7 +54,7 @@ public class GameScene extends BaseScene implements LongScrollDetector.IScrollDe
     private static final int REPLAY_MENU_ITEM = 1;
     private static final int BACK_MENU_ITEM = 2;
 
-    private static final int STEP_DURATION_MILLIS = 600; // time to move one block
+    private static final int STEP_DURATION_MILLIS = 400; // time to move one block
 
     private static final int DIRECTION_NONE = -1;
     private static final int DIRECTION_DOWN = 0;
