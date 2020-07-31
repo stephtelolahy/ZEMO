@@ -58,13 +58,13 @@ public class MainActivity extends BaseGameActivity {
     }
 
     @Override
-    public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback) throws Exception {
+    public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback) {
 
         SceneManager.getInstance().createSplashScene(pOnCreateSceneCallback);
     }
 
     @Override
-    public void onPopulateScene(Scene pScene, OnPopulateSceneCallback pOnPopulateSceneCallback) throws Exception {
+    public void onPopulateScene(Scene pScene, OnPopulateSceneCallback pOnPopulateSceneCallback) {
 
         pOnPopulateSceneCallback.onPopulateSceneFinished();
     }

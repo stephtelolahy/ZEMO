@@ -165,16 +165,26 @@ public class MainMenuScene extends BaseScene {
     }
 
     private void createBackground() {
-
         final AutoParallaxBackground autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
-        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0, new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerBackRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerBackRegion, mVertexBufferObjectManager)));
-        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-1.f, 2.67f, new Sprite(Constants.SCREEN_WIDTH / 2, mResourcesManager.menuParallaxLayerMidRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegion, mVertexBufferObjectManager)));
+
+        Entity backEntity = new Sprite(0, Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerBackRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerBackRegion, mVertexBufferObjectManager);
+        backEntity.setOffsetCenterX(0);
+        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0f, backEntity));
+
+        Entity midEntity = new Sprite(0, mResourcesManager.menuParallaxLayerMidRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegion, mVertexBufferObjectManager);
+        midEntity.setOffsetCenterX(0);
+        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-1f, midEntity));
 
         if (GameManager.getInstance().isCloudEnabled()) {
-            autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-1.f, new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerMidRegionCloud.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegionCloud, mVertexBufferObjectManager)));
+            Entity cloudEntity = new Sprite(0, Constants.SCREEN_HEIGHT - mResourcesManager.menuParallaxLayerMidRegionCloud.getHeight() / 2, mResourcesManager.menuParallaxLayerMidRegionCloud, mVertexBufferObjectManager);
+            cloudEntity.setOffsetCenterX(0);
+            autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-1.1f, cloudEntity));
         }
 
-        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.f, 1.3f, new Sprite(Constants.SCREEN_WIDTH / 2, mResourcesManager.menuParallaxLayerFrontRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerFrontRegion, mVertexBufferObjectManager)));
+        //Entity frontEntity = new Sprite(0, mResourcesManager.menuParallaxLayerFrontRegion.getHeight() / 2, mResourcesManager.menuParallaxLayerFrontRegion, mVertexBufferObjectManager);
+        //frontEntity.setOffsetCenterX(0);
+        //autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.f, frontEntity));
+        
         setBackground(autoParallaxBackground);
 
         final int groundY = 28;
