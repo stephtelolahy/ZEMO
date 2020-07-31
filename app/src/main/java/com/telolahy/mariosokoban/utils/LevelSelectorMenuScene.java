@@ -296,6 +296,13 @@ public class LevelSelectorMenuScene extends MenuScene implements ScrollDetector.
         getLayer().setPosition(xPos, 0);
     }
 
+    // <Workaround: undefined method>
+    @Deprecated
+    private Entity getLayer() {
+        return this;
+    }
+    // </Workaround>
+
     // ===========================================================
     // Inner Classes/Interfaces
     // ===========================================================
