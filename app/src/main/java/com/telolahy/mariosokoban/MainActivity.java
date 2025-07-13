@@ -1,5 +1,7 @@
 package com.telolahy.mariosokoban;
 
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 
