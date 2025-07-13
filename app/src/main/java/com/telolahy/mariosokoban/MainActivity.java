@@ -1,5 +1,7 @@
 package com.telolahy.mariosokoban;
 
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 
@@ -24,6 +26,13 @@ import java.io.IOException;
 public class MainActivity extends BaseGameActivity {
 
     private ZoomCamera mCamera;
+
+    @Override
+    protected void onCreate(Bundle pSavedInstanceState) {
+        super.onCreate(pSavedInstanceState);
+        // Lock orientation as early as possible
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
 
     @Override
     public Engine onCreateEngine(EngineOptions pEngineOptions) {

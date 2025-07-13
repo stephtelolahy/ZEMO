@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 36
 
     defaultConfig {
         applicationId "com.telolahy.mariosokoban"
         minSdkVersion 17
-        targetSdkVersion 34
+        targetSdkVersion 36
         versionCode 7
         versionName "1.4.0"
     }
